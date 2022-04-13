@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import CreateFactoryDetails from './createFactoryDetails';
 import emptyList from '../../assets/images/emptyList.svg';
 import { ApiEndpoints } from '../../const/apiEndpoints';
-import loading from '../../assets/images/strech.gif';
+import loading from '../../assets/images/memphis.gif';
 import { httpRequest } from '../../services/http';
 import Button from '../../components/button';
 import { Context } from '../../hooks/store';

@@ -35,11 +35,11 @@ export async function httpRequest(method, endPointUrl, data = {}, headers = {}, 
     } catch (err) {
         if (err?.response?.data?.message !== undefined && err?.response?.status === SHOWABLE_ERROR_STATUS_CODE) {
             message.error({
-                key: 'strechErrorMessage',
+                key: 'memphisErrorMessage',
                 content: err?.response?.data?.message,
                 duration: 3,
                 style: { cursor: 'pointer' },
-                onClick: () => message.destroy('strechErrorMessage')
+                onClick: () => message.destroy('memphisErrorMessage')
             });
         }
         throw err.response;

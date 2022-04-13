@@ -9,7 +9,7 @@ import { CopyBlock, atomOneLight } from 'react-code-blocks';
 
 const ConnectionDetails = () => {
     const connectionDetails = {
-        host: 'https://stream-staging.strech.io/json/2a0f1f21-cd0d-4a1b-9538-f938e2eed8cd',
+        host: 'https://stream-staging.memphis.io/json/2a0f1f21-cd0d-4a1b-9538-f938e2eed8cd',
         AuthType: 'Api key',
         jwt: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
     };

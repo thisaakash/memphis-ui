@@ -31,15 +31,15 @@ const functions = [
 const FunctionsBox = () => {
     return (
         <div className="functions-box-container">
-            <div className="coming-soon-wrapper">
-                <img src={comingSoonBox} width={40} height={70} />
-                <p>Coming soon</p>
-            </div>
             <div className="header">
-                <p className="title">Factory</p>
-                <p className="add-functions-button">Add functions</p>
+                <p className="title">Station</p>
+                {/* <p className="add-functions-button">Add functions</p> */}
             </div>
             <div className="function-list">
+                <div className="coming-soon-wrapper function">
+                    <img src={comingSoonBox} width={40} height={70} />
+                    <p>Coming soon</p>
+                </div>
                 <FunctionsOverview functions={functions} horizontal={false} editable={false} />
             </div>
         </div>

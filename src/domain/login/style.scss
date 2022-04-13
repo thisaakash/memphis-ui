@@ -16,7 +16,6 @@
             position: relative;
             display: grid;
             grid-template-rows: 25% 25% 50%;
-            overflow: auto;
             .logoImg {
                 padding: 50px;
                 img {
@@ -53,7 +52,7 @@
                 }
                 .ant-form-item-explain.ant-form-item-explain-error {
                     padding-left: 14px;
-                    min-width: 280px;
+                    min-width: 285px;
                 }
             }
         }

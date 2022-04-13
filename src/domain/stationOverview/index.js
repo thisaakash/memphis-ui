@@ -5,6 +5,7 @@ import React, { useEffect, useContext, useState, createContext, useReducer } fro
 import StationOverviewHeader from './stationOverviewHeader';
 import StationObservabilty from './stationObservabilty';
 import { ApiEndpoints } from '../../const/apiEndpoints';
+import loading from '../../assets/images/memphis.gif';
 import ConnectionDetails from './connectionDetails';
 import { httpRequest } from '../../services/http';
 import { Context } from '../../hooks/store';
@@ -28,23 +29,29 @@ const StationOverview = () => {
     const getStaionDetails = async () => {
         const url = window.location.href;
         const stationName = url.split('factories/')[1].split('/')[1];
-        setisLoading(true);
         try {
+            setisLoading(true);
             let data = await httpRequest('GET', `${ApiEndpoints.GET_STATION}?station_name=${stationName}`);
             const consumers = await httpRequest('GET', `${ApiEndpoints.GET_ALL_CONSUMERS_BY_STATION}?station_name=${stationName}`);
             const producers = await httpRequest('GET', `${ApiEndpoints.GET_ALL_PRODUCERS_BY_STATION}?station_name=${stationName}`);
             data['consumers'] = consumers;
             data['producers'] = producers;
             stationDispatch({ type: 'SET_STATION_DATA', payload: data });
-            setisLoading(false);
         } catch (err) {
             setisLoading(false);
             return;
         }
+        setisLoading(false);
     };
 
     return (
         <StationStoreContext.Provider value={[stationState, stationDispatch]}>
+            {isLoading && (
+                <div className="loader-uploading">
+                    <div></div>
+                    <img alt="loading" src={loading}></img>
+                </div>
+            )}
             {!isLoading && (
                 <div className="station-overview-container">
                     <div className="overview-header">

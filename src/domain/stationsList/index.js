@@ -9,7 +9,7 @@ import { useHistory } from 'react-router-dom';
 import CreateStationDetails from '../../components/createStationDetails';
 import { ApiEndpoints } from '../../const/apiEndpoints';
 import StationBoxOverview from './stationBoxOverview';
-import loading from '../../assets/images/strech.gif';
+import loading from '../../assets/images/memphis.gif';
 import emptyList from '../../assets/images/emptyList.svg';
 import { httpRequest } from '../../services/http';
 import Button from '../../components/button';

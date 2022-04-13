@@ -19,7 +19,6 @@ node {
 
     stage('Build docker image') {
         sh "docker buildx build --push -t ${dockerImagesRepo}/${imageName}:latest --platform linux/amd64,linux/arm64 ."
-        sh "docker image rm ${dockerImagesRepo}/${imageName}:latest"
     }
     
     notifySuccessful()

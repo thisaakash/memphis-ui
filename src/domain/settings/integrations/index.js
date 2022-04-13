@@ -14,7 +14,7 @@ const Integrations = () => {
             <div>
                 <div className="hub-connect-integration">
                     <div className="alert-integration-type">
-                        <label className="integration-label-bold">Strech hub</label>
+                        <label className="integration-label-bold">Memphis hub</label>
                         <Switcher onChange={() => setHubIntegration(!hubIntegration)} checked={hubIntegration} checkedChildren="on" unCheckedChildren="off" />
                     </div>
                     {!hubIntegration && <p>Signin placeholder</p>}

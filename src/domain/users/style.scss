@@ -2,6 +2,8 @@
     width: calc(100% - 70px);
     position: absolute;
     padding: 1vw;
+    min-width: 700px;
+    height: 100%;
     .add-search-user {
         display: flex;
         justify-content: space-between;
@@ -26,8 +28,12 @@
                 padding-left: 350px;
             }
         }
-    }
-    
+        .users-list {
+            height: calc(95vh - 160px);
+            overflow: auto;
+            margin-top: 5px;
+        }
+    }  
 }
 .user-details-modal{
     font-size: 14px;

@@ -1,9 +1,10 @@
 .station-observabilty-container {
     display: flex;
     justify-content: space-between;
+    min-height: 220px;
     .thunnel-from-sub,
     .thunnel-to-pub {
-        width: 8.5vw;
+        width: 10.5vw;
     }
     .thunnel-to-pub{
         display: flex;

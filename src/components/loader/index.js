@@ -1,6 +1,6 @@
 import './style.scss';
 
-import loading from '../../assets/images/strech.gif';
+import loading from '../../assets/images/memphis.gif';
 
 const Loader = () => {
     return (

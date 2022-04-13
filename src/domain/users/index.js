@@ -4,13 +4,14 @@ import React, { useEffect, useContext, useState, useRef } from 'react';
 import { SearchOutlined } from '@ant-design/icons';
 
 import SearchInput from '../../components/searchInput';
-import { Context } from '../../hooks/store';
-import UserItem from './userItem';
-import Button from '../../components/button';
 import { ApiEndpoints } from '../../const/apiEndpoints';
-import { httpRequest } from '../../services/http';
-import Modal from '../../components/modal';
+import loading from '../../assets/images/memphis.gif';
 import CreateUserDetails from './createUserDetails';
+import { httpRequest } from '../../services/http';
+import Button from '../../components/button';
+import { Context } from '../../hooks/store';
+import Modal from '../../components/modal';
+import UserItem from './userItem';
 
 function Users() {
     const [state, dispatch] = useContext(Context);
@@ -20,6 +21,7 @@ function Users() {
     const [userDetailsModal, setUserDetailsModal] = useState(false);
     const createUserRef = useRef(null);
     const [searchInput, setSearchInput] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         dispatch({ type: 'SET_ROUTE', payload: 'users' });
@@ -28,6 +30,7 @@ function Users() {
 
     const getAllUsers = async () => {
         try {
+            setIsLoading(true);
             const data = await httpRequest('GET', ApiEndpoints.GET_ALL_USERS);
             if (data) {
                 data.sort((a, b) => new Date(a.creation_date) - new Date(b.creation_date));
@@ -35,10 +38,11 @@ function Users() {
                 setCopyOfUserList(data);
             }
         } catch (error) {}
+        setIsLoading(false);
     };
 
     useEffect(() => {
-        if (searchInput.length > 2) {
+        if (searchInput.length > 1) {
             const results = userList.filter(
                 (userData) => userData?.username?.toLowerCase().includes(searchInput) || userData?.user_type?.toLowerCase().includes(searchInput)
             );
@@ -46,7 +50,7 @@ function Users() {
         } else {
             setUsersList(copyOfUserList);
         }
-    }, [searchInput.length > 2]);
+    }, [searchInput.length > 1]);
 
     const handleSearch = (e) => {
         setSearchInput(e.target.value);
@@ -106,9 +110,16 @@ function Users() {
                     <p className="type-title">Type</p>
                 </div>
                 <div className="users-list">
-                    {userList.map((user) => {
-                        return <UserItem key={user.id} content={user} removeUser={() => removeUser(user.username)} />;
-                    })}
+                    {isLoading && (
+                        <div className="loader-uploading">
+                            <div></div>
+                            <img alt="loading" src={loading}></img>
+                        </div>
+                    )}
+                    {!isLoading &&
+                        userList.map((user) => {
+                            return <UserItem key={user.id} content={user} removeUser={() => removeUser(user.username)} />;
+                        })}
                 </div>
             </div>
             <Modal

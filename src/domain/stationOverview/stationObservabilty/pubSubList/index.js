@@ -17,9 +17,9 @@ const PubSubList = (props) => {
                 {/* <p className="add-connector-button">{props.producer ? 'Add producer' : 'Add consumer'}</p> */}
             </div>
             <div className="coulmns-table">
-                <span style={{ width: '90px' }}>Name</span>
-                <span style={{ width: '90px' }}>Type</span>
-                <span style={{ width: '90px' }}>User</span>
+                <span style={{ width: '100px' }}>Name</span>
+                <span style={{ width: '100px' }}>Type</span>
+                <span style={{ width: '100px' }}>User</span>
                 <span style={{ width: '15px' }}></span>
             </div>
             <div className="rows-wrapper">
@@ -28,13 +28,13 @@ const PubSubList = (props) => {
                     stationState?.station?.producers?.map((row, index) => {
                         return (
                             <div className="pubSub-row" key={index}>
-                                <OverflowTip text={row.name} width={'80px'}>
+                                <OverflowTip text={row.name} width={'100px'}>
                                     {row.name}
                                 </OverflowTip>
-                                <OverflowTip text={row.type} width={'80px'}>
+                                <OverflowTip text={row.type} width={'100px'}>
                                     {row.type}
                                 </OverflowTip>
-                                <OverflowTip text={row.created_by_user} width={'80px'}>
+                                <OverflowTip text={row.created_by_user} width={'100px'}>
                                     {row.created_by_user}
                                 </OverflowTip>
                                 <span className="link-row" style={{ width: '15px' }}>
@@ -48,13 +48,13 @@ const PubSubList = (props) => {
                     stationState?.station?.consumers?.map((row, index) => {
                         return (
                             <div className="pubSub-row" key={index}>
-                                <OverflowTip text={row.name} width={'80px'}>
+                                <OverflowTip text={row.name} width={'100px'}>
                                     {row.name}
                                 </OverflowTip>
-                                <OverflowTip text={row.type} width={'80px'}>
+                                <OverflowTip text={row.type} width={'100px'}>
                                     {row.type}
                                 </OverflowTip>
-                                <OverflowTip text={row.created_by_user} width={'80px'}>
+                                <OverflowTip text={row.created_by_user} width={'100px'}>
                                     {row.created_by_user}
                                 </OverflowTip>
                                 <span className="link-row" style={{ width: '15px' }}>
@@ -63,12 +63,11 @@ const PubSubList = (props) => {
                             </div>
                         );
                     })}
-                {(props.producer && stationState?.station?.producers?.length === 0) ||
-                    (!props.producer && stationState?.station?.consumers?.length === 0 && (
-                        <div className="empty-pub-sub">
-                            <p>Waiting for {props.producer ? 'producers' : 'consumers'}</p>
-                        </div>
-                    ))}
+                {((props.producer && stationState?.station?.producers?.length === 0) || (!props.producer && stationState?.station?.consumers?.length === 0)) && (
+                    <div className="empty-pub-sub">
+                        <p>Waiting for {props.producer ? 'producers' : 'consumers'}</p>
+                    </div>
+                )}
             </div>
         </div>
     );

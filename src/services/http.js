@@ -37,7 +37,7 @@ export async function httpRequest(method, endPointUrl, data = {}, headers = {}, 
             message.error({
                 key: 'memphisErrorMessage',
                 content: err?.response?.data?.message,
-                duration: 3,
+                duration: 5,
                 style: { cursor: 'pointer' },
                 onClick: () => message.destroy('memphisErrorMessage')
             });

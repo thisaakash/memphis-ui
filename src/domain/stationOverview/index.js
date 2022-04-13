@@ -6,7 +6,6 @@ import StationOverviewHeader from './stationOverviewHeader';
 import StationObservabilty from './stationObservabilty';
 import { ApiEndpoints } from '../../const/apiEndpoints';
 import loading from '../../assets/images/memphis.gif';
-import ConnectionDetails from './connectionDetails';
 import { httpRequest } from '../../services/http';
 import { Context } from '../../hooks/store';
 import Throughput from './throughput';
@@ -60,9 +59,6 @@ const StationOverview = () => {
                     <div className="overview-top">
                         <div className="station-observability">
                             <StationObservabilty />
-                        </div>
-                        <div className="connection-details">
-                            <ConnectionDetails />
                         </div>
                     </div>
                     <div className="overview-bottom">

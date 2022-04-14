@@ -16,6 +16,7 @@ import accountIcon from '../../assets/images/accountIcon.svg';
 import logoutIcon from '../../assets/images/logoutIcon.svg';
 import usersIcon from '../../assets/images/usersIcon.svg';
 import Logo from '../../assets/images/logo.svg';
+import BetaLogo from '../../assets/images/betaLogo.svg';
 import { Context } from '../../hooks/store';
 import pathControllers from '../../router';
 import AuthService from '../../services/auth';
@@ -75,7 +76,7 @@ function SideBar() {
         <div className="sidebar-container">
             <div className="upper-icons">
                 <Link to={pathControllers.overview}>
-                    <img src={Logo} width="30" height="25" className="logoimg" alt="logo" />
+                    <img src={BetaLogo} width="55" height="40" className="logoimg" alt="logo" />
                 </Link>
                 <div className="item-wrapper">
                     <Link to={pathControllers.overview}>

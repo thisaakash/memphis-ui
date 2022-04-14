@@ -59,12 +59,7 @@ const Button = (props) => {
             minWidth: minWidth || '60px',
             padding,
             zIndex: zIndex,
-            display: 'block',
-            justifyItems: 'center',
-            alignItems: 'center',
-            boxShadow,
-            alignContent: 'center',
-            position: 'relative'
+            boxShadow
         },
         loading: isLoading
     };

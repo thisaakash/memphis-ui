@@ -3,6 +3,8 @@
     height: 100%;
     position: absolute;
     background: white;
+    min-width: 800px;
+    overflow: auto;
     .desktop-container {
         position: absolute;
         width: 100%;
@@ -14,7 +16,6 @@
             position: relative;
             display: grid;
             grid-template-rows: 25% 25% 50%;
-            overflow: auto;
             .logoImg {
                 padding: 50px;
                 img {
@@ -44,14 +45,13 @@
                     }
                 }
                 .button-container {
-                    margin-top: 20px;
+                    padding-top: 20px;
                 }
                 .ant-form-item-control {
                     margin: 0;
                 }
-                .ant-form-item-explain.ant-form-item-explain-error {
-                    padding-left: 14px;
-                    min-width: 280px;
+                .ant-form-item-explain-error{
+                    min-width: 195px;
                 }
             }
         }

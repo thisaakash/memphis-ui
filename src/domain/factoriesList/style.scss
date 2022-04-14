@@ -4,7 +4,7 @@
     padding: 1vw;
     min-width: 700px;
     height: 100%;
-    overflow: auto;
+    
 
     .one-edge-shadow {
         height: 100px !important;
@@ -22,7 +22,7 @@
     }
 
     .factories-list {
-        height: calc(95vh - 110px);
+        height: calc(95vh - 115px);
         width: 100%;
         position: relative;
         display: inline-flex;

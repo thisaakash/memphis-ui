@@ -1,23 +1,36 @@
 .station-overview-header {
-    width: calc(100% - 1vw);
+    width: calc(100);
     align-items: center;
     justify-content: space-between;
     .title-wrapper {
         display: flex;
         justify-content: space-between;
+        height: 35px;
         .station-name {
             font-size: 24px;
             font-weight: 600;
             line-height: 29px;
         }
     }
+   
     .details {
-        margin-top: 20px;
+        margin-top: 5px;
         display: flex;
         justify-content: space-between;
         height: 85px;
+        align-items: center;
+        .icons-wrapper{
+            display: flex;
+            width: 90%;
+            height: 100%;
+            justify-content: space-around;
+            position: relative;
+        }
         .main-details {
             font-size: 12px;
+            p{
+                margin-bottom: 5px;
+            }
         }
         .details-wrapper {
             display: flex;
@@ -34,7 +47,7 @@
             }
             .more-details {
                 margin-left: 10px;
-                color: #a8a8a8;
+                color: #1D1D1D;
                 width: 8vw;
                 min-width: 110px;
                 p {
@@ -60,5 +73,54 @@
                 }
             }
         }
+    }
+   
+}
+.sdk-details-container{
+    gap: 30px;
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 50px);
+    font-size: 12px;
+    font-weight: 400;
+    .installation{
+        .install-copy{
+            border: 1px solid var(--gray);
+            box-sizing: border-box;
+            border-radius: 4px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            p{
+                margin: 0;
+                
+            }
+        }
+    }
+    .code-example {
+        .code-content {
+            border: 1px solid var(--gray);
+            box-sizing: border-box;
+            border-radius: 4px;
+            height: 320px;
+            overflow:auto;
+            p{
+                margin: 0;
+                white-space:pre-line;
+            }
+            
+        }
+    }
+    .iKtiIo{
+        background: white;
+        width: 100%;
+        span{
+            background: white !important;
+        }
+        .hpPViG, .hzFDPg{
+            border: none;
+            background: white;
+        }
+        
     }
 }

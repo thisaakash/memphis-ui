@@ -8,7 +8,7 @@ import reportWebVitals from './reportWebVitals';
 import Store from './hooks/store';
 import App from './App';
 
-function StrechApp() {
+function MemphisApp() {
     return (
         <Store>
             <BrowserRouter>
@@ -17,6 +17,6 @@ function StrechApp() {
         </Store>
     );
 }
-ReactDOM.render(<StrechApp />, document.getElementById('root'));
+ReactDOM.render(<MemphisApp />, document.getElementById('root'));
 
 reportWebVitals();

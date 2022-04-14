@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { Form } from 'antd';
 
 import { LOCAL_STORAGE_TOKEN } from '../../const/localStorageConsts';
-import fullLogo from '../../assets/images/fullLogo.svg';
+import betaFullLogo from '../../assets/images/betaFullLogo.svg';
 import { ApiEndpoints } from '../../const/apiEndpoints';
 import sharps from '../../assets/images/sharps.svg';
 import { httpRequest } from '../../services/http';
@@ -85,7 +85,7 @@ const Login = (props) => {
             <div className="desktop-container">
                 <div className="desktop-content">
                     <div className="logoImg">
-                        <img alt="logo" src={fullLogo}></img>
+                        <img alt="logo" src={betaFullLogo}></img>
                     </div>
                     <div className="title">
                         <p>Hey Memphiser,</p>

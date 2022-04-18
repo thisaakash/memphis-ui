@@ -38,5 +38,3 @@ spec:
           env:
           - name: ENVIRONMENT
             value: "staging"
-          - name: CONTROL_PLANE
-            value: "control-plane"

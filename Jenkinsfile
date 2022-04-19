@@ -1,8 +1,8 @@
 def dockerImagesRepo = "memphisos"
 def imageName = "memphis-ui"
 def gitURL = "git@github.com:Memphis-OS/memphis-ui.git"
-def gitBranch = "beta"
-def versionTag = "0.1.0-beta"
+def gitBranch = "docker-installation"
+def versionTag = "0.1.0-docker"
 unique_Id = UUID.randomUUID().toString()
 def DOCKER_HUB_CREDS = credentials('docker-hub')
 

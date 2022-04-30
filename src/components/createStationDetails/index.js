@@ -187,7 +187,9 @@ const CreateStationDetails = (props) => {
                     style={{ height: '90px', marginBottom: '0' }}
                 >
                     <div className="station-name">
-                        <p className="field-title">Station name</p>
+                        <p className="field-title">
+                            <span className="required-field-mark">* </span>Station name
+                        </p>
                         <Input
                             placeholder="Type station name"
                             type="text"
@@ -273,7 +275,7 @@ const CreateStationDetails = (props) => {
                                     onChange={(e) => handleRetentionSizeChange(e)}
                                     value={retentionSizeValue}
                                 />
-                                <p>byts</p>
+                                <p>bytes</p>
                             </div>
                         </Form.Item>
                     )}

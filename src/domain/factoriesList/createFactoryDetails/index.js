@@ -57,7 +57,9 @@ const CreateFactoryDetails = (props) => {
                     ]}
                 >
                     <div className="field name">
-                        <p>Factory name</p>
+                        <p>
+                            <span className="required-field-mark">* </span>Factory name
+                        </p>
                         <Input
                             placeholder="Type factory name"
                             type="text"

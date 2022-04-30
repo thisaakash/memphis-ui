@@ -13,7 +13,7 @@ import { Context } from '../../hooks/store';
 import Button from '../../components/button';
 import CreateStationDetails from '../../components/createStationDetails';
 import Modal from '../../components/modal';
-import { LOCAL_STORAGE_AVATAR_ID, LOCAL_STORAGE_USER_NAME } from '../../const/localStorageConsts';
+import { LOCAL_STORAGE_ALREADY_LOGGED_IN, LOCAL_STORAGE_AVATAR_ID, LOCAL_STORAGE_USER_NAME } from '../../const/localStorageConsts';
 
 const Desktop = ({ children }) => {
     const isDesktop = useMediaQuery({ minWidth: 850 });
@@ -47,7 +47,11 @@ function OverView() {
                             <img src={botUrl} width={40} height={40} alt="bot"></img>
                         </div>
                         <div className="dynamic-sentences">
-                            <h1>Welcome Back, {localStorage.getItem(LOCAL_STORAGE_USER_NAME)}</h1>
+                            {localStorage.getItem(LOCAL_STORAGE_ALREADY_LOGGED_IN) === 'true' ? (
+                                <h1>Welcome Back, {localStorage.getItem(LOCAL_STORAGE_USER_NAME)}</h1>
+                            ) : (
+                                <h1>Welcome Aboard, {localStorage.getItem(LOCAL_STORAGE_USER_NAME)}</h1>
+                            )}
                             <p className="ok-status">You’re a memphis superhero! All looks good!</p>
                         </div>
                     </div>

@@ -94,7 +94,7 @@ function Users() {
                     className="modal-btn"
                     width="160px"
                     height="36px"
-                    placeholder={'Add new user'}
+                    placeholder={'Add a new user'}
                     colorType="white"
                     radiusType="circle"
                     backgroundColorType="purple"
@@ -123,7 +123,7 @@ function Users() {
                 </div>
             </div>
             <Modal
-                header="Add new user"
+                header="Add a new user"
                 minHeight="600px"
                 minWidth="564px"
                 rBtnText="Add"
@@ -159,7 +159,7 @@ function Users() {
                     <p className="creds">
                         Broker token: <span>{userList[userList.length - 1]?.broker_connection_creds}</span>
                     </p>
-                    <p className="note">Please note that when you close this modal, you will not be able to restore your user details!!</p>
+                    <p className="note">Please note when you close this modal, you will not be able to restore your user details!!</p>
                 </div>
             </Modal>
         </div>

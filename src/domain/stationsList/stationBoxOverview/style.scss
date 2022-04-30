@@ -48,7 +48,7 @@
             margin-right: 20px;
             .hover-section{
                 display: flex;
-                color: transparent;
+                color: var(--purple);
             }
             .action {
                 display: flex;
@@ -70,8 +70,4 @@
             }
         }
     }
-}
-.station-box-container:hover .hover-section{
-    display: block;
-    color: var(--purple) !important;
 }

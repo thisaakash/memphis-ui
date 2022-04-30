@@ -51,13 +51,9 @@
             cursor: pointer;
             margin: 0;
             padding-right: 50px;
-            color: transparent;
+            color: var(--purple);
             font-weight: 600;
             font-size: 12px;
         }
     }
-}
-.users-item:hover .user-actions p {
-    display: block;
-    color: var(--purple);
 }

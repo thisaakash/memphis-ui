@@ -12,6 +12,7 @@ import Button from '../../components/button';
 import { Context } from '../../hooks/store';
 import Modal from '../../components/modal';
 import UserItem from './userItem';
+import Loader from '../../components/loader';
 
 function Users() {
     const [state, dispatch] = useContext(Context);
@@ -112,8 +113,7 @@ function Users() {
                 <div className="users-list">
                     {isLoading && (
                         <div className="loader-uploading">
-                            <div></div>
-                            <img alt="loading" src={loading}></img>
+                            <Loader />
                         </div>
                     )}
                     {!isLoading &&

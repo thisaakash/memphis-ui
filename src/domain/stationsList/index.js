@@ -16,6 +16,7 @@ import Button from '../../components/button';
 import { Context } from '../../hooks/store';
 import Modal from '../../components/modal';
 import pathDomains from '../../router';
+import Loader from '../../components/loader';
 
 const StationsList = () => {
     const [state, dispatch] = useContext(Context);
@@ -182,8 +183,7 @@ const StationsList = () => {
             <div className="stations-content">
                 {isLoading && (
                     <div className="loader-uploading">
-                        <div></div>
-                        <img src={loading} alt="loading"></img>
+                        <Loader />
                     </div>
                 )}
                 {factoryDetails?.stations?.length > 0 &&

@@ -89,8 +89,8 @@ function SideBar() {
                                 )}
                             </div>
                         </div>
+                        <p className={state.route === 'overview' ? 'checked' : 'name'}>Overview</p>
                     </Link>
-                    <p className={state.route === 'overview' ? 'checked' : 'name'}>Overview</p>
                 </div>
                 <div className="item-wrapper">
                     <Link to={pathControllers.factoriesList}>
@@ -103,8 +103,8 @@ function SideBar() {
                                 )}
                             </div>
                         </div>
+                        <p className={state.route === 'factories' ? 'checked' : 'name'}>Factories</p>
                     </Link>
-                    <p className={state.route === 'factories' ? 'checked' : 'name'}>Factories</p>
                 </div>
 
                 <div className="item-wrapper">
@@ -118,8 +118,8 @@ function SideBar() {
                                 )}
                             </div>
                         </div>
+                        <p className={state.route === 'users' ? 'checked' : 'name'}>Users</p>
                     </Link>
-                    <p className={state.route === 'users' ? 'checked' : 'name'}>Users</p>
                 </div>
             </div>
             <div className="bottom-icons">

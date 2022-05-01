@@ -9,20 +9,20 @@ import PubSubList from './pubSubList';
 import { StationStoreContext } from '..';
 
 const StationObservabilty = () => {
-    const anime = useRef(null);
-    const anime1 = useRef(null);
+    const fromProducer = useRef(null);
+    const toConsumer = useRef(null);
     const [stationState, stationDispatch] = useContext(StationStoreContext);
 
     useEffect(() => {
         lottie.loadAnimation({
-            container: anime.current,
+            container: fromProducer.current,
             renderer: 'svg',
             loop: true,
             autoplay: true,
             animationData: animationData
         });
         lottie.loadAnimation({
-            container: anime1.current,
+            container: toConsumer.current,
             renderer: 'svg',
             loop: true,
             autoplay: true,
@@ -35,11 +35,13 @@ const StationObservabilty = () => {
             <div className="pub-list">
                 <PubSubList producer={true} />
             </div>
-            <div className="thunnel-from-sub">{stationState?.station?.producers?.length > 0 && <div style={{ height: '10vw', width: '10vw' }} ref={anime}></div>}</div>
+            <div className="thunnel-from-sub">
+                {stationState?.station?.producers?.length > 0 && <div style={{ height: '10vw', width: '10vw' }} ref={fromProducer}></div>}
+            </div>
             <div className="functions-box-overview">
                 <FunctionsBox />
             </div>
-            <div className="thunnel-to-pub">{stationState?.station?.consumers?.length > 0 && <div style={{ height: '10vw', width: '10vw' }} ref={anime1}></div>}</div>
+            <div className="thunnel-to-pub">{stationState?.station?.consumers?.length > 0 && <div style={{ height: '10vw', width: '10vw' }} ref={toConsumer}></div>}</div>
             <div className="sub-list">
                 <PubSubList producer={false} />
             </div>

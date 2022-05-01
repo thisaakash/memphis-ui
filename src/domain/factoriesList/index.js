@@ -12,6 +12,7 @@ import Button from '../../components/button';
 import { Context } from '../../hooks/store';
 import Modal from '../../components/modal';
 import Factory from './factory';
+import Loader from '../../components/loader';
 
 function FactoriesList() {
     const [state, dispatch] = useContext(Context);
@@ -66,8 +67,7 @@ function FactoriesList() {
                 <div className="factories-list">
                     {isLoading && (
                         <div className="loader-uploading">
-                            <div></div>
-                            <img alt="loading" src={loading}></img>
+                            <Loader />
                         </div>
                     )}
                     {factoriesList.map((factory) => {

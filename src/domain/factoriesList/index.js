@@ -19,13 +19,12 @@ import { useHistory } from 'react-router-dom';
 import CreateFactoryDetails from './createFactoryDetails';
 import emptyList from '../../assets/images/emptyList.svg';
 import { ApiEndpoints } from '../../const/apiEndpoints';
-import loading from '../../assets/images/memphis.gif';
 import { httpRequest } from '../../services/http';
-import Loader from '../../components/loader';
 import Button from '../../components/button';
 import { Context } from '../../hooks/store';
 import Modal from '../../components/modal';
 import Factory from './factory';
+import Loader from '../../components/loader';
 
 function FactoriesList() {
     const [state, dispatch] = useContext(Context);

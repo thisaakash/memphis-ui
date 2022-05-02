@@ -24,7 +24,7 @@ node {
         sh "docker image rm ${repoUrlPrefix}/${imageName}:latest"
         sh "docker image rm ${repoUrlPrefix}/${imageName}:${unique_Id}"
     }
-    
+
     stage('Push image to kubernetes') {
 	    sh "kubectl --kubeconfig=\"/var/lib/jenkins/.kube/memphis-staging-kubeconfig.yaml\" apply -f \"k8s-template.yaml\" -n ${k8sNamespace}"
   	    sh "kubectl --kubeconfig=\"/var/lib/jenkins/.kube/memphis-staging-kubeconfig.yaml\" set image deployment/${containerName} ${containerName}=${repoUrlPrefix}/${imageName}:${unique_Id} -n ${k8sNamespace}"
@@ -37,7 +37,6 @@ node {
       throw e
   }
 }
-
 def notifySuccessful() {
   emailext (
       subject: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
@@ -46,7 +45,6 @@ def notifySuccessful() {
       recipientProviders: [[$class: 'DevelopersRecipientProvider']]
     )
 }
-
 def notifyFailed() {
   emailext (
       subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",

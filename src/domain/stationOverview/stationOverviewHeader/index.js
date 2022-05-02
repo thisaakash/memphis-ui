@@ -1,3 +1,16 @@
+// Copyright 2021-2022 The Memphis Authors
+// Licensed under the Apache License, Version 2.0 (the “License”);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an “AS IS” BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 import './style.scss';
 
 import CloseIcon from '@material-ui/icons/Close';
@@ -35,71 +48,49 @@ const StationOverviewHeader = (props) => {
     const selectLngOption = ['Node.js'];
     const [langSelected, setLangSelected] = useState('Node.js');
     const codeExample = `const memphis = require("memphis-dev");
-
-        (async function () {
-            try {
-                await memphis.connect({
-                    host: "<host-name>",
-                    port: 6666,
-                    brokerHost: "<broker-host>",
-                    brokerPort: 7766,
-                    username: "<username (type application)>",
-                    connectionToken: "<broker-token>",
-                    reconnect: true, // optional
-                    maxReconnect: 10, // optional
-                    reconnectIntervalMs: 1500, // optional
-                    timeoutMs: 1500 // optional
-                });
-        
-                const factory = await memphis.factory({
-                    name: "<factory-name>",
-                    description: "" // optional
-                });
-        
-                const station = await memphis.station({
-                    name: "<station-name>",
-                    factoryName: "<factory-name>",
-                    retentionType: memphis.retentionTypes.MAX_MESSAGE_AGE_SECONDS, // optional
-                    retentionValue: 604800, // optional
-                    storageType: memphis.storageTypes.FILE, // optional
-                    replicas: 1, // optional
-                    dedupEnabled: false, // optional
-                    dedupWindowMs: 0 // optional
-                });
-        
-                const producer = await memphis.producer({
-                    stationName: "<station-name>",
-                    producerName: "<producer-name>"
-                });
-        
-                const consumer = await memphis.consumer({
-                    stationName: "<station-name>",
-                    consumerName: "<consumer-name>",
-                    consumerGroup: "<group-name>", // optional
-                    pullIntervalMs: 1000, // optional
-                    batchSize: 10, // optional
-                    batchMaxTimeToWaitMs: 5000 // optional
-                });
-        
-                consumer.on("message", message => {
-                    console.log(message);
-                    message.ack();
-                });
-        
-                consumer.on("error", error => {
-                    console.log(error);
-                });
-        
-                await station.destroy();
-                await factory.destroy();
-                await producer.destroy();
-                await consumer.destroy();
-                memphis.close();
-            } catch (ex) {
-                console.log(ex)
-                memphis.close()
-            }
-        }());`;
+    ​
+    (async function () {
+        try {
+    ​
+            // Consumer code
+    ​
+            await memphis.connect({
+                host: "<control-plane>",
+                brokerHost: "<broker>",
+                username: "<application type username>",
+                connectionToken: "<broker-token>"
+            });
+    ​
+            const consumer = await memphis.consumer({
+                stationName: "<station-name>",
+                consumerName: "<consumer-name>",
+                consumerGroup: ""
+            });
+    ​
+            consumer.on("message", message => {
+                console.log(message.getData().toString());
+                message.ack();
+            });
+    ​
+            consumer.on("error", error => {
+                console.log(error);
+            });
+    ​
+            // Producer code
+    ​
+            const producer = await memphis.producer({
+                stationName: "<station-name>",
+                producerName: "<producer-name>"
+            });
+    ​
+            await producer.produce({
+                message: Buffer.from('Hello world')
+            });
+        } catch (ex) {
+            console.log(ex);
+            memphis.close();
+        }
+    }());`;
 
     const handleSelectLang = (e) => {
         setLangSelected(e);

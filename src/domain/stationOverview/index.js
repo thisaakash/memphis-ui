@@ -18,7 +18,6 @@ import React, { useEffect, useContext, useState, createContext, useReducer } fro
 import StationOverviewHeader from './stationOverviewHeader';
 import StationObservabilty from './stationObservabilty';
 import { ApiEndpoints } from '../../const/apiEndpoints';
-import loading from '../../assets/images/memphis.gif';
 import { httpRequest } from '../../services/http';
 import { Context } from '../../hooks/store';
 import Throughput from './throughput';

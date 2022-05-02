@@ -6,7 +6,7 @@
     height: 100%;
     overflow: auto;
     .factory-details-header {
-        height: 160px;
+        height: 180px;
         display: flex;
         justify-content: space-between;
         .left-side {
@@ -78,7 +78,7 @@
                 }
             }
             .factory-owner {
-                height: 45px;
+                height: 65px;
                 display: flex;
                 align-items: center;
 
@@ -113,7 +113,7 @@
         }
     }
     .stations-content {
-        height: calc(100% - 160px);
+        height: calc(100% - 180px);
         padding: 3px 3px 2px 3px;
         position: relative;
         overflow: auto;

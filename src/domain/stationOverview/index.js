@@ -11,6 +11,7 @@ import { Context } from '../../hooks/store';
 import Throughput from './throughput';
 import Auditing from './auditing';
 import Reducer from './hooks/reducer';
+import Loader from '../../components/loader';
 
 export const StationStoreContext = createContext({});
 
@@ -47,8 +48,7 @@ const StationOverview = () => {
         <StationStoreContext.Provider value={[stationState, stationDispatch]}>
             {isLoading && (
                 <div className="loader-uploading">
-                    <div></div>
-                    <img alt="loading" src={loading}></img>
+                    <Loader />
                 </div>
             )}
             {!isLoading && (

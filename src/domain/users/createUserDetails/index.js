@@ -34,7 +34,7 @@ const CreateUserDetails = ({ createUserRef, closeModal }) => {
     const [generatedPassword, setGeneratedPassword] = useState('');
     useEffect(() => {
         createUserRef.current = onFinish;
-        setGeneratedPassword(generator());
+        generateNewPassword();
     }, []);
 
     const passwordTypeChange = (e) => {
@@ -58,6 +58,9 @@ const CreateUserDetails = ({ createUserRef, closeModal }) => {
         if (fieldsValue?.errorFields) {
             return;
         } else {
+            if (passwordType === 0) {
+                fieldsValue['password'] = fieldsValue['generatedPassword'];
+            }
             try {
                 const bodyRequest = fieldsValue;
                 const data = await httpRequest('POST', ApiEndpoints.ADD_USER, bodyRequest);
@@ -66,6 +69,12 @@ const CreateUserDetails = ({ createUserRef, closeModal }) => {
                 }
             } catch (error) {}
         }
+    };
+
+    const generateNewPassword = () => {
+        const newPassword = generator();
+        setGeneratedPassword(newPassword);
+        creationForm.setFieldsValue({ ['generatedPassword']: newPassword });
     };
 
     return (
@@ -77,11 +86,17 @@ const CreateUserDetails = ({ createUserRef, closeModal }) => {
                         {
                             required: true,
                             message: 'Please input username!'
+                        },
+                        {
+                            message: 'Username has to include only letters/numbers and . or /',
+                            pattern: new RegExp(/^[a-zA-Z0-9_.]*$/)
                         }
                     ]}
                 >
                     <div className="field username">
-                        <p>Username</p>
+                        <p>
+                            <span className="required-field-mark">* </span>Username
+                        </p>
                         <Input
                             placeholder="Type username"
                             type="text"
@@ -121,7 +136,7 @@ const CreateUserDetails = ({ createUserRef, closeModal }) => {
                         <RadioButton options={passwordOptions} radioValue={passwordType} onChange={(e) => passwordTypeChange(e)} />
 
                         {passwordType === 0 && (
-                            <Form.Item name="password" initialValue={generatedPassword}>
+                            <Form.Item name="generatedPassword" initialValue={generatedPassword}>
                                 <div className="field password">
                                     <Input
                                         type="text"
@@ -135,7 +150,7 @@ const CreateUserDetails = ({ createUserRef, closeModal }) => {
                                         fontSize="12px"
                                         value={generatedPassword}
                                     />
-                                    <p onClick={() => setGeneratedPassword(generator())}>Generate again</p>
+                                    <p onClick={() => generateNewPassword()}>Generate again</p>
                                 </div>
                             </Form.Item>
                         )}

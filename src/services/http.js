@@ -1,7 +1,7 @@
 import { message } from 'antd';
 import axios from 'axios';
 
-import { SERVER_URL, SHOWABLE_ERROR_STATUS_CODE } from '../config';
+import { SERVER_URL, SHOWABLE_ERROR_STATUS_CODE, AUTHENTICATION_ERROR_STATUS_CODE } from '../config';
 import { ApiEndpoints } from '../const/apiEndpoints';
 import { LOCAL_STORAGE_TOKEN } from '../const/localStorageConsts.js';
 import AuthService from './auth';
@@ -33,6 +33,10 @@ export async function httpRequest(method, endPointUrl, data = {}, headers = {}, 
         const results = res.data;
         return results;
     } catch (err) {
+        if (err?.response?.status === AUTHENTICATION_ERROR_STATUS_CODE) {
+            localStorage.clear();
+            window.location.assign('/login');
+        }
         if (err?.response?.data?.message !== undefined && err?.response?.status === SHOWABLE_ERROR_STATUS_CODE) {
             message.error({
                 key: 'memphisErrorMessage',

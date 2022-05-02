@@ -29,11 +29,11 @@ const GenericList = (props) => {
                     {rows?.map((row, index) => {
                         return (
                             <div className={selectedRowIndex === index ? 'pubSub-row selected' : 'pubSub-row'} key={index} onClick={() => onSelectedRow(index)}>
-                                <OverflowTip text={row.logData || row.publisher} width={'250px'}>
-                                    {row.logData || row.publisher}
+                                <OverflowTip text={row.logData || row.producer} width={'250px'}>
+                                    {row.logData || row.producer}
                                 </OverflowTip>
-                                <OverflowTip text={row.source || row.subscriber} width={'250px'}>
-                                    {row.source || row.subscriber}
+                                <OverflowTip text={row.source || row.consumer} width={'250px'}>
+                                    {row.source || row.consumer}
                                 </OverflowTip>
                                 <OverflowTip text={row.date} width={'200px'}>
                                     {row.date}

@@ -26,6 +26,7 @@ import Button from '../../components/button';
 import { Context } from '../../hooks/store';
 import Modal from '../../components/modal';
 import Factory from './factory';
+import Loader from '../../components/loader';
 
 function FactoriesList() {
     const [state, dispatch] = useContext(Context);

@@ -48,7 +48,7 @@
                 width: 100%;
                 cursor: pointer;
                 .link-row {
-                    color: transparent;
+                    color: var(--purple);
                     font-weight: 600;
                     cursor: pointer;
                 }
@@ -68,10 +68,6 @@
             }
             .factory-row:nth-child(even) {
                 background-color: #f8f8f8;
-            }
-            .factory-row:hover .link-row {
-                display: block;
-                color: var(--purple);
             }
         }
         span {

@@ -15,6 +15,8 @@ import { httpRequest } from '../../services/http';
 import Button from '../../components/button';
 import { Context } from '../../hooks/store';
 import Modal from '../../components/modal';
+import pathDomains from '../../router';
+import Loader from '../../components/loader';
 
 const StationsList = () => {
     const [state, dispatch] = useContext(Context);
@@ -29,6 +31,7 @@ const StationsList = () => {
     const [parseDate, setParseDate] = useState(new Date().toLocaleDateString());
     const botId = 1;
     const [botUrl, SetBotUrl] = useState('');
+    const history = useHistory();
 
     useEffect(() => {
         dispatch({ type: 'SET_ROUTE', payload: 'factories' });
@@ -74,6 +77,7 @@ const StationsList = () => {
                 });
                 setFactoryDetails({ ...factoryDetails, name: e.target.value });
                 seteditName(false);
+                history.push(`${pathDomains.factoriesList}/${e.target.value}`);
             } catch (err) {
                 setFactoryName(factoryDetails.name);
             }
@@ -179,8 +183,7 @@ const StationsList = () => {
             <div className="stations-content">
                 {isLoading && (
                     <div className="loader-uploading">
-                        <div></div>
-                        <img src={loading} alt="loading"></img>
+                        <Loader />
                     </div>
                 )}
                 {factoryDetails?.stations?.length > 0 &&

@@ -58,8 +58,8 @@ const Throughput = () => {
                 <p>Coming soon</p>
             </div>
             <AntTabs value={value} onChange={handleChangeMenuItem}>
-                <AntTab label="Subscribers" />
-                <AntTab label="Publishers" />
+                <AntTab label="Consumers" />
+                <AntTab label="Producers" />
             </AntTabs>
             <p className="overview-components-header">Throughput</p>
             <div className="throughput-chart">

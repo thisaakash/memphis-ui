@@ -46,6 +46,9 @@
             margin-bottom: 0;
         }
     }
+    .replicas-value p {
+        margin-bottom: 10px;
+    }
     .storage,
     .replicas {
         margin-top: 20px;
@@ -69,6 +72,9 @@
     }
     .ant-input-number-handler-wrap {
         opacity: 1;
+    }
+    .ant-form-item{
+        margin-bottom: 10px;
     }
     // .ant-form-item {
     //     margin-bottom: 0px !important;

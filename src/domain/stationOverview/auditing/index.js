@@ -28,12 +28,12 @@ const auditColumns = [
 const messagesColumns = [
     {
         key: '1',
-        title: 'Publisher',
+        title: 'Producer',
         width: '250px'
     },
     {
         key: '2',
-        title: 'Subscriber',
+        title: 'Consumer',
         width: '250px'
     },
     {
@@ -73,29 +73,29 @@ const auditRows = [
 const messagesRows = [
     {
         key: '1',
-        publisher: 'external apllication',
-        subscriber: 'kafka connector',
+        producer: 'external apllication',
+        consumer: 'kafka connector',
         date: '12/02/22',
         data: '{"type":"message","subtype":"message_changed","hidden":true,"factory":"C2147483705","ts":"1358878755.000001","message":{"type":"message","user":"U2147483697","text":"Hello, world!","ts":"1355517523.000005","edited":{"user":"U2147483697","ts":"1358878755.000001"}}}'
     },
     {
         key: '2',
-        publisher: 'kafka connector',
-        subscriber: 'kafka connector',
+        producer: 'kafka connector',
+        consumer: 'kafka connector',
         date: '12/02/22',
         data: '{"type":"message","subtype":"message_changed","hidden":true,"factory":"C2147483705","ts":"1358878755.000001","message":{"type":"message","user":"U2147483697","text":"Hello, world!","ts":"1355517523.000005"}}'
     },
     {
         key: '3',
-        publisher: 'SalesForce connector',
-        subscriber: 'external apllication',
+        producer: 'SalesForce connector',
+        consumer: 'external apllication',
         date: '12/02/22',
         data: '{"type":"message","subtype":"message_changed","hidden":true,"factory":"C2147483705","ts":"1358878755.000001","message":{"type":"message","user":"U2147483697"}}'
     },
     {
         key: '4',
-        publisher: 'external apllication',
-        subscriber: 'kafka connector',
+        producer: 'external apllication',
+        consumer: 'kafka connector',
         date: '12/02/22',
         data: '{"type":"message","subtype":"message_changed","hidden":true,"factory":"C2147483705","ts":"1358878755.000001"}'
     }

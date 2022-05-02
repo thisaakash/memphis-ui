@@ -104,9 +104,9 @@ const StationBoxOverview = (props) => {
                         >
                             <p>Overview </p>
                         </div>
-                        <div className="action edit">
+                        {/* <div className="action edit">
                             <p onClick={() => functionModalFlip(true)}>Add functions</p>
-                        </div>
+                        </div> */}
                     </div>
                     {/* <div className="action">
                         <HealthyBadge status={props.station.status || 'healthy'} />

@@ -12,6 +12,7 @@ import Button from '../../components/button';
 import { Context } from '../../hooks/store';
 import Modal from '../../components/modal';
 import UserItem from './userItem';
+import Loader from '../../components/loader';
 
 function Users() {
     const [state, dispatch] = useContext(Context);
@@ -94,7 +95,7 @@ function Users() {
                     className="modal-btn"
                     width="160px"
                     height="36px"
-                    placeholder={'Add new user'}
+                    placeholder={'Add a new user'}
                     colorType="white"
                     radiusType="circle"
                     backgroundColorType="purple"
@@ -112,8 +113,7 @@ function Users() {
                 <div className="users-list">
                     {isLoading && (
                         <div className="loader-uploading">
-                            <div></div>
-                            <img alt="loading" src={loading}></img>
+                            <Loader />
                         </div>
                     )}
                     {!isLoading &&
@@ -123,7 +123,7 @@ function Users() {
                 </div>
             </div>
             <Modal
-                header="Add new user"
+                header="Add a new user"
                 minHeight="600px"
                 minWidth="564px"
                 rBtnText="Add"
@@ -157,9 +157,9 @@ function Users() {
                         Username: <span>{userList[userList.length - 1]?.username}</span>
                     </p>
                     <p className="creds">
-                        Broker token: <span>{userList[userList.length - 1]?.broker_connection_creds}</span>
+                        Connection token: <span>{userList[userList.length - 1]?.broker_connection_creds}</span>
                     </p>
-                    <p className="note">Please note that when you close this modal, you will not be able to restore your user details!!</p>
+                    <p className="note">Please note when you close this modal, you will not be able to restore your user details!!</p>
                 </div>
             </Modal>
         </div>

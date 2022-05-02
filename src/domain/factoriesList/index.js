@@ -12,6 +12,7 @@ import Button from '../../components/button';
 import { Context } from '../../hooks/store';
 import Modal from '../../components/modal';
 import Factory from './factory';
+import Loader from '../../components/loader';
 
 function FactoriesList() {
     const [state, dispatch] = useContext(Context);
@@ -47,7 +48,7 @@ function FactoriesList() {
                 <div className="one-edge-shadow">
                     <h1 className="main-header-h1">Factories</h1>
                     <div className="factories-header-flex">
-                        <h3>Select an factory to edit</h3>
+                        <h3>Select a factory to edit</h3>
                         <Button
                             className="modal-btn"
                             width="160px"
@@ -66,8 +67,7 @@ function FactoriesList() {
                 <div className="factories-list">
                     {isLoading && (
                         <div className="loader-uploading">
-                            <div></div>
-                            <img alt="loading" src={loading}></img>
+                            <Loader />
                         </div>
                     )}
                     {factoriesList.map((factory) => {
@@ -97,7 +97,7 @@ function FactoriesList() {
                 </div>
             </div>
             <Modal
-                header="Create factory"
+                header="Create a factory"
                 height="475px"
                 minWidth="440px"
                 rBtnText="Create"

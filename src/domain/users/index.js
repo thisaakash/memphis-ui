@@ -18,7 +18,6 @@ import { SearchOutlined } from '@ant-design/icons';
 
 import SearchInput from '../../components/searchInput';
 import { ApiEndpoints } from '../../const/apiEndpoints';
-import loading from '../../assets/images/memphis.gif';
 import CreateUserDetails from './createUserDetails';
 import { httpRequest } from '../../services/http';
 import Button from '../../components/button';

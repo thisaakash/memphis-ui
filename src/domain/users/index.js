@@ -41,6 +41,10 @@ function Users() {
         getAllUsers();
     }, []);
 
+    function sum(a, b) {
+        return a + b;
+    }
+
     const getAllUsers = async () => {
         try {
             setIsLoading(true);

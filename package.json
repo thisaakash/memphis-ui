@@ -30,8 +30,7 @@
     "start": "react-scripts start",
     "build": "GENERATE_SOURCEMAP=false react-scripts build",
     "test": "jest",
-    "eject": "react-scripts eject",
-    "lint": "eslint src/**/*.js src/**/*.jsx"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [

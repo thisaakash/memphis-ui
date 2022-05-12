@@ -33,6 +33,7 @@ import Modal from '../../../components/modal';
 import SelectComponent from '../../../components/select';
 import { CopyBlock, atomOneLight } from 'react-code-blocks';
 import comingSoonBox from '../../../assets/images/comingSoonBox.svg';
+import { codeExample, dockerCodeExample } from '../../../const/SDKExample';
 
 const StationOverviewHeader = (props) => {
     const [state, dispatch] = useContext(Context);
@@ -47,50 +48,7 @@ const StationOverviewHeader = (props) => {
     const [open, modalFlip] = useState(false);
     const selectLngOption = ['Node.js'];
     const [langSelected, setLangSelected] = useState('Node.js');
-    const codeExample = `const memphis = require("memphis-dev");
-    ​
-    (async function () {
-        try {
-    ​
-            // Consumer code
-    ​
-            await memphis.connect({
-                host: "<control-plane>",
-                brokerHost: "<broker>",
-                username: "<application type username>",
-                connectionToken: "<broker-token>"
-            });
-    ​
-            const consumer = await memphis.consumer({
-                stationName: "<station-name>",
-                consumerName: "<consumer-name>",
-                consumerGroup: ""
-            });
-    ​
-            consumer.on("message", message => {
-                console.log(message.getData().toString());
-                message.ack();
-            });
-    ​
-            consumer.on("error", error => {
-                console.log(error);
-            });
-    ​
-            // Producer code
-    ​
-            const producer = await memphis.producer({
-                stationName: "<station-name>",
-                producerName: "<producer-name>"
-            });
-    ​
-            await producer.produce({
-                message: Buffer.from('Hello world')
-            });
-        } catch (ex) {
-            console.log(ex);
-            memphis.close();
-        }
-    }());`;
+    const codeExample = (process.env.DOCKER_ENV = 'true' ? dockerCodeExample : codeExample);
 
     const handleSelectLang = (e) => {
         setLangSelected(e);

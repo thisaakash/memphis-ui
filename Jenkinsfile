@@ -1,17 +1,15 @@
 def dockerImagesRepo = "memphisos"
 def imageName = "memphis-ui"
 def gitURL = "git@github.com:Memphis-OS/memphis-ui.git"
-def gitBranch = "beta"
-def versionTag = "0.1.0-beta"
+def gitBranch = "master"
 unique_Id = UUID.randomUUID().toString()
 def DOCKER_HUB_CREDS = credentials('docker-hub')
-
+  
 node {
   try{
     stage('SCM checkout') {
         git credentialsId: 'main-github', url: gitURL, branch: gitBranch
     }
-
     stage('Push docker image') {
         withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_HUB_CREDS_USR', passwordVariable: 'DOCKER_HUB_CREDS_PSW')]) {
                 sh "docker login -u $DOCKER_HUB_CREDS_USR -p $DOCKER_HUB_CREDS_PSW"
@@ -19,11 +17,11 @@ node {
     }
 
     stage('Build docker image') {
-      sh "docker buildx build --push -t ${dockerImagesRepo}/${imageName}:${versionTag} --platform linux/amd64,linux/arm64 ."
+        sh "docker buildx build --push -t ${dockerImagesRepo}/${imageName}:latest --platform linux/amd64,linux/arm64 ."
     }
-    
-    notifySuccessful()
 
+    notifySuccessful()
+    
   } catch (e) {
       currentBuild.result = "FAILED"
       notifyFailed()

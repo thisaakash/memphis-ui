@@ -24,6 +24,7 @@ export const ApiEndpoints = {
     GET_COMPANY_LOGO: '/usermgmt/getCompanyLogo',
     EDIT_COMPANY_LOGO: '/usermgmt/editCompanyLogo',
     REMOVE_COMPANY_LOGO: '/usermgmt/removeCompanyLogo',
+    EDIT_ANALYTICS: '/usermgmt/editAnalytics',
 
     //Factory
     CREATE_FACTORY: '/factories/createFactory',

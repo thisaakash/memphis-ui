@@ -1,27 +1,34 @@
-def dockerImagesRepo = "memphisos"
-def imageName = "memphis-ui"
+def imageName = "memphis-ui-staging"
+def containerName = "memphis-ui"
 def gitURL = "git@github.com:Memphis-OS/memphis-ui.git"
-def gitBranch = "beta"
-def versionTag = "0.1.0-beta"
+def gitBranch = "staging"
+def repoUrlPrefix = "221323242847.dkr.ecr.eu-central-1.amazonaws.com"
 unique_Id = UUID.randomUUID().toString()
-def DOCKER_HUB_CREDS = credentials('docker-hub')
+def k8sNamespace = "memphis"
 
 node {
   try{
     stage('SCM checkout') {
         git credentialsId: 'main-github', url: gitURL, branch: gitBranch
     }
+    stage('Build docker image') {
+        sh "docker build -t ${repoUrlPrefix}/${imageName} ."
+    }
 
     stage('Push docker image') {
-        withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_HUB_CREDS_USR', passwordVariable: 'DOCKER_HUB_CREDS_PSW')]) {
-                sh "docker login -u $DOCKER_HUB_CREDS_USR -p $DOCKER_HUB_CREDS_PSW"
-        }
+	sh "aws ecr describe-repositories --repository-names ${imageName} --region eu-central-1 || aws ecr create-repository --repository-name ${imageName} --region eu-central-1 && aws ecr put-lifecycle-policy --repository-name ${imageName} --region eu-central-1 --lifecycle-policy-text 'file:///var/lib/jenkins/utils/ecr-lifecycle-policy.json'"
+        sh "docker tag ${repoUrlPrefix}/${imageName} ${repoUrlPrefix}/${imageName}:${unique_Id}"
+        sh "aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 221323242847.dkr.ecr.eu-central-1.amazonaws.com"
+        sh "docker push ${repoUrlPrefix}/${imageName}:${unique_Id}"
+        sh "docker push ${repoUrlPrefix}/${imageName}:latest"
+        sh "docker image rm ${repoUrlPrefix}/${imageName}:latest"
+        sh "docker image rm ${repoUrlPrefix}/${imageName}:${unique_Id}"
     }
 
-    stage('Build docker image') {
-      sh "docker buildx build --push -t ${dockerImagesRepo}/${imageName}:${versionTag} --platform linux/amd64,linux/arm64 ."
+    stage('Push image to kubernetes') {
+	    sh "kubectl --kubeconfig=\"/var/lib/jenkins/.kube/memphis-staging-kubeconfig.yaml\" apply -f \"k8s-template.yaml\" -n ${k8sNamespace}"
+  	    sh "kubectl --kubeconfig=\"/var/lib/jenkins/.kube/memphis-staging-kubeconfig.yaml\" set image deployment/${containerName} ${containerName}=${repoUrlPrefix}/${imageName}:${unique_Id} -n ${k8sNamespace}"
     }
-    
     notifySuccessful()
 
   } catch (e) {
@@ -30,7 +37,6 @@ node {
       throw e
   }
 }
-
 def notifySuccessful() {
   emailext (
       subject: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
@@ -39,7 +45,6 @@ def notifySuccessful() {
       recipientProviders: [[$class: 'DevelopersRecipientProvider']]
     )
 }
-
 def notifyFailed() {
   emailext (
       subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",

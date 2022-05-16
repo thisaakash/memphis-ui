@@ -40,7 +40,7 @@ const Login = (props) => {
     const referer = props?.location?.state?.referer || '/overview';
     const [loadingSubmit, setLoadingSubmit] = useState(false);
 
-    useEffect(async () => {
+    useEffect(() => {
         if (localStorage.getItem(LOCAL_STORAGE_TOKEN) && AuthService.isValidToken()) {
             history.push(referer);
         }

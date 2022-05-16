@@ -2,7 +2,8 @@
     width: calc(100% - 70px);
     position: absolute;
     padding: 1vw;
-    .settings-panel-body {
+    height: 100%;
+    .settings-panel-tabs {
         padding-left: 2vw;
         color: var(--blue);
         .ant-divider {
@@ -10,6 +11,14 @@
             position: absolute;
             left: 0px;
         }
+    }
+    .tabs-body{
+        width: calc(100% - 70px);
+        position: absolute;
+        padding: 1vw;
+        height: calc(100% - 100px);
+        overflow: auto;
+        margin-top: 10px;
     }
 }
 

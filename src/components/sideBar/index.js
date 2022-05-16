@@ -36,6 +36,7 @@ import AuthService from '../../services/auth';
 import { LOCAL_STORAGE_AVATAR_ID, LOCAL_STORAGE_COMPANY_LOGO, LOCAL_STORAGE_USER_NAME } from '../../const/localStorageConsts';
 import { httpRequest } from '../../services/http';
 import { ApiEndpoints } from '../../const/apiEndpoints';
+import { DOC_URL } from '../../config';
 
 const { SubMenu } = Menu;
 
@@ -162,10 +163,12 @@ function SideBar() {
                                 </div>
                             </Menu.Item>
                             <Menu.Item key={2}>
-                                <div className="item-wrapp">
-                                    <img src={supportIcon} width="15" height="15" alt="supportIcon" />
-                                    <p>Support</p>
-                                </div>
+                                <Link to={{ pathname: DOC_URL }} target="_blank">
+                                    <div className="item-wrapp">
+                                        <img src={supportIcon} width="15" height="15" alt="supportIcon" />
+                                        <p>Support</p>
+                                    </div>
+                                </Link>
                             </Menu.Item>
                             <Menu.Item key={3}>
                                 <div className="item-wrapp">

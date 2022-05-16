@@ -5,11 +5,10 @@ COPY . ./
 
 ARG REACT_APP_ENV
 ENV REACT_APP_ENV $REACT_APP_ENV
-ENV DOCKER_ENV="true"
 
 RUN apk add python3
 RUN npm install --silent
-RUN npm run test
+# RUN npm run test
 RUN npm run build
 
 # production environment

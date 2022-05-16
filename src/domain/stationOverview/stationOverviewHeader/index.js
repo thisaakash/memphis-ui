@@ -13,43 +13,37 @@
 
 import './style.scss';
 
+import React, { useContext, useEffect, useState } from 'react';
+import { CopyBlock, atomOneLight } from 'react-code-blocks';
 import CloseIcon from '@material-ui/icons/Close';
 import { useHistory } from 'react-router-dom';
-import React, { useContext, useEffect, useState } from 'react';
 import { Progress } from 'antd';
 
-import HealthyBadge from '../../../components/healthyBadge';
-import { Context } from '../../../hooks/store';
-import { StationStoreContext } from '..';
+import { CODE_EXAMPLE, DOCKER_CODE_EXAMPLE } from '../../../const/SDKExample';
 import { convertSecondsToDate } from '../../../services/dateConvertor';
-import pathDomains from '../../../router';
-import awaitingIcon from '../../../assets/images/awaitingIcon.svg';
 import averageMesIcon from '../../../assets/images/averageMesIcon.svg';
-import cpuIcon from '../../../assets/images/cpuIcon.svg';
-import memoryIcon from '../../../assets/images/memoryIcon.svg';
-import storageIcon from '../../../assets/images/storageIcon.svg';
-import Button from '../../../components/button';
-import Modal from '../../../components/modal';
-import SelectComponent from '../../../components/select';
-import { CopyBlock, atomOneLight } from 'react-code-blocks';
 import comingSoonBox from '../../../assets/images/comingSoonBox.svg';
-import { codeExample, dockerCodeExample } from '../../../const/SDKExample';
+import awaitingIcon from '../../../assets/images/awaitingIcon.svg';
+import storageIcon from '../../../assets/images/storageIcon.svg';
+import memoryIcon from '../../../assets/images/memoryIcon.svg';
+import HealthyBadge from '../../../components/healthyBadge';
+import cpuIcon from '../../../assets/images/cpuIcon.svg';
+import SelectComponent from '../../../components/select';
+import Button from '../../../components/button';
+import { Context } from '../../../hooks/store';
+import Modal from '../../../components/modal';
+import pathDomains from '../../../router';
+import { StationStoreContext } from '..';
 
 const StationOverviewHeader = (props) => {
     const [state, dispatch] = useContext(Context);
     const [stationState, stationDispatch] = useContext(StationStoreContext);
     const history = useHistory();
     const [retentionValue, setRetentionValue] = useState('');
-    const connectionDetails = {
-        host: 'https://stream-staging.memphis.io/json/2a0f1f21-cd0d-4a1b-9538-f938e2eed8cd',
-        AuthType: 'Api key',
-        jwt: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
-    };
     const [open, modalFlip] = useState(false);
     const selectLngOption = ['Node.js'];
     const [langSelected, setLangSelected] = useState('Node.js');
-    const codeExample = (process.env.DOCKER_ENV = 'true' ? dockerCodeExample : codeExample);
-
+    const codeExample = process.env.DOCKER_ENV ? DOCKER_CODE_EXAMPLE : CODE_EXAMPLE;
     const handleSelectLang = (e) => {
         setLangSelected(e);
     };
@@ -109,12 +103,12 @@ const StationOverviewHeader = (props) => {
                 </div>
                 <div className="icons-wrapper">
                     <div className="coming-soon-wrapper icons-coming-soon">
-                        <img src={comingSoonBox} width={20} height={40} />
+                        <img src={comingSoonBox} width={20} height={40} alt="comingSoonBox" />
                         <p>Coming soon</p>
                     </div>
                     <div className="details-wrapper">
                         <div className="icon">
-                            <img src={awaitingIcon} width={22} height={44} />
+                            <img src={awaitingIcon} width={22} height={44} alt="awaitingIcon" />
                         </div>
                         <div className="more-details">
                             <p className="number">1000</p>
@@ -123,7 +117,7 @@ const StationOverviewHeader = (props) => {
                     </div>
                     <div className="details-wrapper">
                         <div className="icon">
-                            <img src={averageMesIcon} width={24} height={24} />
+                            <img src={averageMesIcon} width={24} height={24} alt="averageMesIcon" />
                         </div>
                         <div className="more-details">
                             <p className="number">500Mb</p>
@@ -132,7 +126,7 @@ const StationOverviewHeader = (props) => {
                     </div>
                     <div className="details-wrapper">
                         <div className="icon">
-                            <img src={memoryIcon} width={24} height={24} />
+                            <img src={memoryIcon} width={24} height={24} alt="memoryIcon" />
                         </div>
                         <div className="more-details">
                             <p className="number">20Mb/80Mb</p>
@@ -142,7 +136,7 @@ const StationOverviewHeader = (props) => {
                     </div>
                     <div className="details-wrapper">
                         <div className="icon">
-                            <img src={cpuIcon} width={22} height={22} />
+                            <img src={cpuIcon} width={22} height={22} alt="cpuIcon" />
                         </div>
                         <div className="more-details">
                             <p className="number">50%</p>
@@ -152,7 +146,7 @@ const StationOverviewHeader = (props) => {
                     </div>
                     <div className="details-wrapper">
                         <div className="icon">
-                            <img src={storageIcon} width={30} height={30} />
+                            <img src={storageIcon} width={30} height={30} alt="storageIcon" />
                         </div>
                         <div className="more-details">
                             <p className="number">{60}Mb/100Mb</p>

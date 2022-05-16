@@ -71,7 +71,7 @@ const CreateUserDetails = ({ createUserRef, closeModal }) => {
         if (fieldsValue?.errorFields) {
             return;
         } else {
-            if (passwordType === 0) {
+            if (fieldsValue?.passwordType === 0 ?? passwordType === 0) {
                 fieldsValue['password'] = fieldsValue['generatedPassword'];
             }
             try {
@@ -146,7 +146,9 @@ const CreateUserDetails = ({ createUserRef, closeModal }) => {
                 {formFields.user_type === 'management' && (
                     <div className="password-section">
                         <p>Password</p>
-                        <RadioButton options={passwordOptions} radioValue={passwordType} onChange={(e) => passwordTypeChange(e)} />
+                        <Form.Item name="passwordType" initialValue={passwordType}>
+                            <RadioButton options={passwordOptions} radioValue={passwordType} onChange={(e) => passwordTypeChange(e)} />
+                        </Form.Item>
 
                         {passwordType === 0 && (
                             <Form.Item name="generatedPassword" initialValue={generatedPassword}>
@@ -193,7 +195,7 @@ const CreateUserDetails = ({ createUserRef, closeModal }) => {
                                         />
                                     </Form.Item>
                                 </div>
-                                <div className="field description">
+                                <div className="field confirm">
                                     <p>Confirm Password</p>
                                     <Form.Item
                                         name="confirm"

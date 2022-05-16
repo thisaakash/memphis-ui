@@ -8,7 +8,7 @@ ENV REACT_APP_ENV $REACT_APP_ENV
 
 RUN apk add python3
 RUN npm install --silent
-RUN npm run test
+# RUN npm run test
 RUN npm run build
 
 # production environment

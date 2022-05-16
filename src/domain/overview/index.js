@@ -26,7 +26,10 @@ import { Context } from '../../hooks/store';
 import Button from '../../components/button';
 import CreateStationDetails from '../../components/createStationDetails';
 import Modal from '../../components/modal';
-import { LOCAL_STORAGE_ALREADY_LOGGED_IN, LOCAL_STORAGE_AVATAR_ID, LOCAL_STORAGE_USER_NAME } from '../../const/localStorageConsts';
+import { LOCAL_STORAGE_ALLOW_ANALYTICS, LOCAL_STORAGE_ALREADY_LOGGED_IN, LOCAL_STORAGE_AVATAR_ID, LOCAL_STORAGE_USER_NAME } from '../../const/localStorageConsts';
+import { PRIVACY_URL } from '../../config';
+import { ApiEndpoints } from '../../const/apiEndpoints';
+import { httpRequest } from '../../services/http';
 
 const Desktop = ({ children }) => {
     const isDesktop = useMediaQuery({ minWidth: 850 });
@@ -40,15 +43,28 @@ const Mobile = ({ children }) => {
 function OverView() {
     const [state, dispatch] = useContext(Context);
     const [open, modalFlip] = useState(false);
+    const [analyticsModal, analyticsModalFlip] = useState(true);
     const createStationRef = useRef(null);
     const [botUrl, SetBotUrl] = useState(require('../../assets/images/bots/1.svg'));
+
     useEffect(() => {
         dispatch({ type: 'SET_ROUTE', payload: 'overview' });
         setBotImage(state?.userData?.avatar_id || localStorage.getItem(LOCAL_STORAGE_AVATAR_ID));
+        analyticsModalFlip(localStorage.getItem(LOCAL_STORAGE_ALREADY_LOGGED_IN) === 'false' && localStorage.getItem(LOCAL_STORAGE_ALLOW_ANALYTICS) === 'true');
     }, []);
 
     const setBotImage = (botId) => {
         SetBotUrl(require(`../../assets/images/bots/${botId}.svg`));
+    };
+
+    const dontSendAnalytics = async () => {
+        try {
+            await httpRequest('PUT', `${ApiEndpoints.EDIT_ANALYTICS}`, { send_analytics: false });
+            localStorage.setItem(LOCAL_STORAGE_ALLOW_ANALYTICS, false);
+            analyticsModalFlip(false);
+        } catch (err) {
+            return;
+        }
     };
 
     return (
@@ -111,6 +127,30 @@ function OverView() {
                 open={open}
             >
                 <CreateStationDetails chooseFactoryField={true} createStationRef={createStationRef} />
+            </Modal>
+            <Modal
+                header="Memphis Analytics"
+                height="260px"
+                minWidth="460px"
+                rBtnText="Send"
+                lBtnText="Don't send"
+                closeAction={() => analyticsModalFlip(false)}
+                lBtnClick={() => {
+                    dontSendAnalytics();
+                }}
+                clickOutside={() => analyticsModalFlip(false)}
+                rBtnClick={() => analyticsModalFlip(false)}
+                open={analyticsModal}
+            >
+                <label>As Memphis is in beta mode, we are collecting anonymous metadata to help improve its superpowers.</label>
+                <br />
+                <br />
+                <label>
+                    More details you can find{' '}
+                    <a to={{ pathname: PRIVACY_URL }} target="_blank">
+                        here
+                    </a>
+                </label>
             </Modal>
         </div>
     );

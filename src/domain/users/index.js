@@ -41,6 +41,10 @@ function Users() {
         getAllUsers();
     }, []);
 
+    function sum(a, b) {
+        return a + b;
+    }
+
     const getAllUsers = async () => {
         try {
             setIsLoading(true);
@@ -136,7 +140,7 @@ function Users() {
             </div>
             <Modal
                 header="Add a new user"
-                minHeight="600px"
+                minHeight="630px"
                 minWidth="564px"
                 rBtnText="Add"
                 lBtnText="Cancel"

@@ -84,7 +84,7 @@ const TransitionsModal = (props) => {
                 props.clickOutside();
             }
         }
-        document.addEventListener('click', handleEscapeKey);
+        document.addEventListener('keyup', handleEscapeKey);
         return () => document.removeEventListener('keydown', handleEscapeKey);
     }, []);
 

@@ -46,7 +46,7 @@ export async function httpRequest(method, endPointUrl, data = {}, headers = {}, 
         const results = res.data;
         return results;
     } catch (err) {
-        if (err?.response?.status === AUTHENTICATION_ERROR_STATUS_CODE) {
+        if (endPointUrl !== ApiEndpoints.LOGIN && err?.response?.status === AUTHENTICATION_ERROR_STATUS_CODE) {
             localStorage.clear();
             window.location.assign('/login');
         }

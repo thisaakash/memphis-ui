@@ -20,7 +20,8 @@ import {
     LOCAL_STORAGE_EXPIRED_TOKEN,
     LOCAL_STORAGE_USER_ID,
     LOCAL_STORAGE_USER_NAME,
-    LOCAL_STORAGE_USER_TYPE
+    LOCAL_STORAGE_USER_TYPE,
+    LOCAL_STORAGE_ALLOW_ANALYTICS
 } from '../const/localStorageConsts';
 import pathDomains from '../router';
 import { httpRequest } from './http';
@@ -38,6 +39,7 @@ const AuthService = (function () {
         localStorage.setItem(LOCAL_STORAGE_USER_NAME, userData.username);
         localStorage.setItem(LOCAL_STORAGE_USER_TYPE, userData.user_type);
         localStorage.setItem(LOCAL_STORAGE_EXPIRED_TOKEN, expiryToken);
+        localStorage.setItem(LOCAL_STORAGE_ALLOW_ANALYTICS, userData.send_analytics);
     };
 
     const logout = async () => {

@@ -40,7 +40,7 @@ const Login = (props) => {
     const referer = props?.location?.state?.referer || '/overview';
     const [loadingSubmit, setLoadingSubmit] = useState(false);
 
-    useEffect(async () => {
+    useEffect(() => {
         if (localStorage.getItem(LOCAL_STORAGE_TOKEN) && AuthService.isValidToken()) {
             history.push(referer);
         }
@@ -102,7 +102,7 @@ const Login = (props) => {
                     </div>
                     <div className="title">
                         <p>Hey Memphiser,</p>
-                        <p>Welcome Back</p>
+                        <p>Welcome</p>
                     </div>
                     <div className="login-form">
                         <Form

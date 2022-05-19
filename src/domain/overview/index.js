@@ -146,7 +146,7 @@ function OverView() {
                 lBtnClick={() => dontSendAnalytics()}
                 clickOutside={() => sendAnalytics()}
                 rBtnClick={() => sendAnalytics()}
-                open={!analyticsModal}
+                open={analyticsModal}
             >
                 <label>As Memphis is in beta mode, we are collecting anonymous metadata to help improve its superpowers.</label>
                 <br />

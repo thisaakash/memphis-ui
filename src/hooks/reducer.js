@@ -38,6 +38,12 @@ const Reducer = (state, action) => {
                 ...state,
                 isAuthentication: action.payload
             };
+        case 'ANALYTICS_MODAL':
+            return {
+                ...state,
+                analytics_modal: action.payload
+            };
+
         default:
             return state;
     }

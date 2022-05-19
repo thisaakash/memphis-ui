@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, { createContext, useEffect, useReducer } from 'react';
+import React, { createContext, useReducer } from 'react';
 
 import Reducer from './reducer';
 
@@ -27,7 +27,8 @@ const initialState = {
     loading: false,
     error: null,
     route: '',
-    isAuthentication: false
+    isAuthentication: false,
+    analytics_modal: true
 };
 
 const Store = ({ children }) => {

@@ -21,7 +21,7 @@
             }
         }
         .rows-wrapper {
-            position: absolute;
+            position: relative;
             width: calc(100% - 1px);
             height: calc(100% - 40px);
             overflow: auto;
@@ -32,12 +32,13 @@
                 color: #1d1d1d;
                 justify-content: space-between;
                 align-items: center;
-                cursor: pointer;
                 font-weight: 400;
                 font-size: 12px;
                 padding-left: 22px; 
+                cursor: pointer;
                 div {
                     margin-right: 10px;
+                    cursor: pointer !important;
                 }
             }
             .selected {
@@ -49,12 +50,11 @@
         }
     }
     .row-data{
-        width: 20vw;
-        height: 16vh;
+        width: 18vw;
         overflow-wrap: anywhere;
         overflow: auto;
         margin: 1vh;
-        margin-top: 55px;
+        margin-top: 45px;
     }
     
 }

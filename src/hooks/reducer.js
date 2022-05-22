@@ -43,6 +43,13 @@ const Reducer = (state, action) => {
                 ...state,
                 analytics_modal: action.payload
             };
+        case 'SET_AVATAR_ID':
+            let newUserData = state.userData;
+            newUserData.avatar_id = action.payload;
+            return {
+                ...state,
+                userData: newUserData
+            };
 
         default:
             return state;

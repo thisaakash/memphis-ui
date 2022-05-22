@@ -89,7 +89,7 @@ function OverView() {
                             ) : (
                                 <h1>Welcome Aboard, {localStorage.getItem(LOCAL_STORAGE_USER_NAME)}</h1>
                             )}
-                            <p className="ok-status">You’re a memphis superhero! All looks good!</p>
+                            {/* <p className="ok-status">You’re a memphis superhero! All looks good!</p> */}
                         </div>
                     </div>
                     <Button

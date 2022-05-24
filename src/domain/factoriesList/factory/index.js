@@ -74,7 +74,7 @@ const Factory = (props) => {
                                 {props.content.name}
                             </OverflowTip>
                         </h2>
-                        <div>
+                        <div id="e2e-tests-factoty-open">
                             <MoreVertIcon
                                 aria-controls="long-button"
                                 aria-haspopup="true"
@@ -118,7 +118,7 @@ const Factory = (props) => {
                         }}
                     >
                         <DeleteOutline className="menu-item-icon" />
-                        <label className="menu-item-label">Remove</label>
+                        <label id="e2e-tests-factoty-remove" className="menu-item-label">Remove</label>
                     </MenuItem>
                 </Popover>
             </div>

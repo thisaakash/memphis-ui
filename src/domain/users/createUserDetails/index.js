@@ -80,7 +80,7 @@ const CreateUserDetails = ({ createUserRef, closeModal }) => {
                 if (data) {
                     closeModal(data);
                 }
-            } catch (error) {}
+            } catch (error) { }
         }
     };
 
@@ -106,7 +106,7 @@ const CreateUserDetails = ({ createUserRef, closeModal }) => {
                         }
                     ]}
                 >
-                    <div className="field username">
+                    <div id="e2e-tests-user-name" className="field username">
                         <p>
                             <span className="required-field-mark">* </span>Username
                         </p>
@@ -129,18 +129,20 @@ const CreateUserDetails = ({ createUserRef, closeModal }) => {
                 <div className="field user-type">
                     <p>Type</p>
                     <Form.Item name="user_type" initialValue={formFields.user_type}>
-                        <SelectComponent
-                            value={formFields.user_type}
-                            colorType="black"
-                            backgroundColorType="none"
-                            borderColorType="gray"
-                            radiusType="semi-round"
-                            width="508px"
-                            height="40px"
-                            options={userTypeOptions}
-                            onChange={(e) => handleSelectUserType(e)}
-                            dropdownClassName="select-options"
-                        />
+                        <div id="e2e-tests-user-type" className="field username">
+                            <SelectComponent
+                                value={formFields.user_type}
+                                colorType="black"
+                                backgroundColorType="none"
+                                borderColorType="gray"
+                                radiusType="semi-round"
+                                width="508px"
+                                height="40px"
+                                options={userTypeOptions}
+                                onChange={(e) => handleSelectUserType(e)}
+                                dropdownClassName="select-options"
+                            />
+                        </div>
                     </Form.Item>
                 </div>
                 {formFields.user_type === 'management' && (

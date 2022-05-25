@@ -1,9 +1,9 @@
 // Copyright 2021-2022 The Memphis Authors
-// Licensed under the Apache License, Version 2.0 (the “License”);
+// Licensed under the GNU General Public License v3.0 (the “License”);
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.gnu.org/licenses/gpl-3.0.en.html
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an “AS IS” BASIS,
@@ -13,7 +13,7 @@
 
 import './style.scss';
 
-import React, { useEffect, useContext, useState, createContext, useReducer } from 'react';
+import React, { useEffect, useContext, useState, createContext, useReducer, useCallback } from 'react';
 
 import StationOverviewHeader from './stationOverviewHeader';
 import StationObservabilty from './stationObservabilty';
@@ -24,67 +24,81 @@ import Throughput from './throughput';
 import Auditing from './auditing';
 import Reducer from './hooks/reducer';
 import Loader from '../../components/loader';
-
-export const StationStoreContext = createContext({});
+import io from 'socket.io-client';
+import { SOCKET_URL } from '../../config';
+import { LOCAL_STORAGE_TOKEN } from '../../const/localStorageConsts';
 
 const StationOverview = () => {
     const [stationState, stationDispatch] = useReducer(Reducer);
-
+    const url = window.location.href;
+    const stationName = url.split('factories/')[1].split('/')[1];
     const [state, dispatch] = useContext(Context);
     const [isLoading, setisLoading] = useState(false);
-    const [staionDetails, setStaionDetails] = useState('');
-    useEffect(() => {
-        dispatch({ type: 'SET_ROUTE', payload: 'factories' });
-        getStaionDetails();
+
+    const getStaionDetails = useCallback(async () => {
+        const data = await httpRequest('GET', `${ApiEndpoints.GET_STATION}?station_name=${stationName}`);
+        stationDispatch({ type: 'SET_STATION_META_DATA', payload: data });
     }, []);
 
-    const getStaionDetails = async () => {
-        const url = window.location.href;
-        const stationName = url.split('factories/')[1].split('/')[1];
-        try {
-            setisLoading(true);
-            let data = await httpRequest('GET', `${ApiEndpoints.GET_STATION}?station_name=${stationName}`);
-            const consumers = await httpRequest('GET', `${ApiEndpoints.GET_ALL_CONSUMERS_BY_STATION}?station_name=${stationName}`);
-            const producers = await httpRequest('GET', `${ApiEndpoints.GET_ALL_PRODUCERS_BY_STATION}?station_name=${stationName}`);
-            data['consumers'] = consumers;
-            data['producers'] = producers;
-            stationDispatch({ type: 'SET_STATION_DATA', payload: data });
-        } catch (err) {
+    useEffect(() => {
+        setisLoading(true);
+        dispatch({ type: 'SET_ROUTE', payload: 'factories' });
+        getStaionDetails().catch(console.error);
+
+        const socket = io.connect(SOCKET_URL, {
+            path: '/api/socket.io',
+            query: {
+                authorization: localStorage.getItem(LOCAL_STORAGE_TOKEN)
+            },
+            reconnection: false
+        });
+
+        socket.on('station_overview_data', (data) => {
+            console.log(data);
+            stationDispatch({ type: 'SET_SOCKET_DATA', payload: data });
+        });
+
+        setTimeout(() => {
+            socket.emit('register_station_overview_data', stationName);
             setisLoading(false);
-            return;
-        }
-        setisLoading(false);
-    };
+        }, 3000);
+        return () => {
+            socket.emit('deregister');
+            socket.close();
+        };
+    }, []);
 
     return (
         <StationStoreContext.Provider value={[stationState, stationDispatch]}>
-            {isLoading && (
-                <div className="loader-uploading">
-                    <Loader />
-                </div>
-            )}
-            {!isLoading && (
-                <div className="station-overview-container">
-                    <div className="overview-header">
-                        <StationOverviewHeader />
+            <React.Fragment>
+                {isLoading && (
+                    <div className="loader-uploading">
+                        <Loader />
                     </div>
-                    <div className="overview-top">
-                        <div className="station-observability">
-                            <StationObservabilty />
+                )}
+                {!isLoading && (
+                    <div className="station-overview-container">
+                        <div className="overview-header">
+                            <StationOverviewHeader />
+                        </div>
+                        <div className="overview-top">
+                            <div className="station-observability">
+                                <StationObservabilty />
+                            </div>
+                        </div>
+                        <div className="overview-bottom">
+                            <div className="auditing">
+                                <Auditing />
+                            </div>
+                            <div className="throughput">
+                                <Throughput />
+                            </div>
                         </div>
                     </div>
-                    <div className="overview-bottom">
-                        <div className="auditing">
-                            <Auditing />
-                        </div>
-                        <div className="throughput">
-                            <Throughput />
-                        </div>
-                    </div>
-                </div>
-            )}
+                )}
+            </React.Fragment>
         </StationStoreContext.Provider>
     );
 };
-
+export const StationStoreContext = createContext({});
 export default StationOverview;

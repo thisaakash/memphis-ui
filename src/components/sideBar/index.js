@@ -65,7 +65,7 @@ function SideBar() {
                 localStorage.setItem(LOCAL_STORAGE_COMPANY_LOGO, data.image);
                 dispatch({ type: 'SET_COMPANY_LOGO', payload: data.image });
             }
-        } catch (error) {}
+        } catch (error) { }
     };
     const setBotImage = (botId) => {
         SetBotUrl(require(`../../assets/images/bots/${botId}.svg`));
@@ -107,36 +107,40 @@ function SideBar() {
                     </Link>
                 </div>
                 <div className="item-wrapper">
-                    <Link to={pathControllers.factoriesList}>
-                        <div className="icon">
-                            <div className={state.route === 'factories' ? 'circle-nav-item checked' : 'circle-nav-item'}>
-                                {state.route === 'factories' ? (
-                                    <img src={factoriesIconActive} alt="factoriesIconActive" width="20" height="20"></img>
-                                ) : (
-                                    <img src={factoriesIcon} alt="factoriesIcon" width="20" height="20"></img>
-                                )}
+                    <div id="e2e-tests-factory-sidebar" >
+                        <Link to={pathControllers.factoriesList}>
+                            <div className="icon">
+                                <div className={state.route === 'factories' ? 'circle-nav-item checked' : 'circle-nav-item'}>
+                                    {state.route === 'factories' ? (
+                                        <img src={factoriesIconActive} alt="factoriesIconActive" width="20" height="20"></img>
+                                    ) : (
+                                        <img src={factoriesIcon} alt="factoriesIcon" width="20" height="20"></img>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                        <p className={state.route === 'factories' ? 'checked' : 'name'}>Factories</p>
-                    </Link>
+                            <p className={state.route === 'factories' ? 'checked' : 'name'}>Factories</p>
+                        </Link>
+                    </div>
                 </div>
 
                 <div className="item-wrapper">
-                    <Link to={pathControllers.users}>
-                        <div className="icon">
-                            <div className={state.route === 'users' ? 'circle-nav-item checked' : 'circle-nav-item'}>
-                                {state.route === 'users' ? (
-                                    <img src={usersIconActive} alt="usersIconActive" width="20" height="20"></img>
-                                ) : (
-                                    <img src={usersIcon} alt="usersIcon" width="20" height="20"></img>
-                                )}
+                    <div id="e2e-tests-users-sidebar" >
+                        <Link to={pathControllers.users}>
+                            <div className="icon">
+                                <div className={state.route === 'users' ? 'circle-nav-item checked' : 'circle-nav-item'}>
+                                    {state.route === 'users' ? (
+                                        <img src={usersIconActive} alt="usersIconActive" width="20" height="20"></img>
+                                    ) : (
+                                        <img src={usersIcon} alt="usersIcon" width="20" height="20"></img>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                        <p className={state.route === 'users' ? 'checked' : 'name'}>Users</p>
-                    </Link>
+                            <p className={state.route === 'users' ? 'checked' : 'name'}>Users</p>
+                        </Link>
+                    </div>
                 </div>
             </div>
-            <div className="bottom-icons">
+            <div id="e2e-tests-settings-btn" className="bottom-icons">
                 <Menu onClick={handleClick} className="app-menu" mode="vertical" triggerSubMenuAction="click">
                     <SubMenu
                         key="subMenu"

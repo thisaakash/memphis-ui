@@ -151,20 +151,22 @@ const Login = (props) => {
                             >
                                 <div className="field password">
                                     <p>Password</p>
-                                    <Input
-                                        placeholder="Password"
-                                        type="password"
-                                        radiusType="semi-round"
-                                        colorType="gray"
-                                        backgroundColorType="none"
-                                        borderColorType="gray"
-                                        width="19vw"
-                                        height="43px"
-                                        minWidth="200px"
-                                        onChange={handlePasswordChange}
-                                        onBlur={handlePasswordChange}
-                                        value={formFields.password}
-                                    />
+                                    <div id="e2e-tests-password">
+                                        <Input
+                                            placeholder="Password"
+                                            type="password"
+                                            radiusType="semi-round"
+                                            colorType="gray"
+                                            backgroundColorType="none"
+                                            borderColorType="gray"
+                                            width="19vw"
+                                            height="43px"
+                                            minWidth="200px"
+                                            onChange={handlePasswordChange}
+                                            onBlur={handlePasswordChange}
+                                            value={formFields.password}
+                                        />
+                                    </div>
                                 </div>
                             </Form.Item>
                             <Form.Item {...tailLayout} className="button-container">

@@ -141,7 +141,7 @@ const StationBoxOverview = (props) => {
                                 }}
                             >
                                 <DeleteOutline className="menu-item-icon" />
-                                <label className="menu-item-label">Remove</label>
+                                <label id="e2e-tests-remove-stations" className="menu-item-label">Remove</label>
                             </MenuItem>
                         </Popover>
                     </div>

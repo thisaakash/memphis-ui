@@ -25,6 +25,7 @@
     "react-test-renderer": "^17.0.2",
     "react-window": "^1.8.6",
     "sass": "^1.49.0",
+    "socket.io-client": "^4.5.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

@@ -40,7 +40,7 @@ function Profile() {
 
     useEffect(() => {
         setUserName(localStorage.getItem(LOCAL_STORAGE_USER_NAME));
-        setAvatar(localStorage.getItem(LOCAL_STORAGE_AVATAR_ID));
+        setAvatar(state?.userData?.avatar_id || Number(localStorage.getItem(LOCAL_STORAGE_AVATAR_ID)));
         setAllowAnalytics(localStorage.getItem(LOCAL_STORAGE_ALLOW_ANALYTICS) === 'false' ? false : true);
     }, []);
 
@@ -58,8 +58,9 @@ function Profile() {
     const editAvatar = async (avatarId) => {
         try {
             const data = await httpRequest('PUT', `${ApiEndpoints.EDIT_AVATAR}`, { avatar_id: avatarId });
-            setAvatar(data.avatar_id.toString());
-            localStorage.setItem(LOCAL_STORAGE_AVATAR_ID, data.avatar_id.toString());
+            setAvatar(data.avatar_id);
+            localStorage.setItem(LOCAL_STORAGE_AVATAR_ID, data.avatar_id);
+            dispatch({ type: 'SET_AVATAR_ID', payload: data.avatar_id });
         } catch (err) {
             return;
         }
@@ -102,13 +103,13 @@ function Profile() {
             <div className="profile-sections">
                 <p>Select your avatar</p>
                 <div className="avatar-section">
-                    <div className={avatar === '1' ? 'sub-icon-wrapper sub-icon-wrapper-border' : 'sub-icon-wrapper'} onClick={() => editAvatar(1)}>
+                    <div className={avatar === 1 ? 'sub-icon-wrapper sub-icon-wrapper-border' : 'sub-icon-wrapper'} onClick={() => editAvatar(1)}>
                         <img src={Bot1} width={25} height={25} alt="bot1"></img>
                     </div>
-                    <div className={avatar === '2' ? 'sub-icon-wrapper sub-icon-wrapper-border' : 'sub-icon-wrapper'} onClick={() => editAvatar(2)}>
+                    <div className={avatar === 2 ? 'sub-icon-wrapper sub-icon-wrapper-border' : 'sub-icon-wrapper'} onClick={() => editAvatar(2)}>
                         <img src={Bot2} width={25} height={25} alt="bot2"></img>
                     </div>
-                    <div className={avatar === '3' ? 'sub-icon-wrapper sub-icon-wrapper-border' : 'sub-icon-wrapper'} onClick={() => editAvatar(3)}>
+                    <div className={avatar === 3 ? 'sub-icon-wrapper sub-icon-wrapper-border' : 'sub-icon-wrapper'} onClick={() => editAvatar(3)}>
                         <img src={Bot3} width={25} height={25} alt="bot3"></img>
                     </div>
                 </div>

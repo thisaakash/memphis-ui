@@ -167,7 +167,9 @@ const CreateUserDetails = ({ createUserRef, closeModal }) => {
                                         fontSize="12px"
                                         value={generatedPassword}
                                     />
-                                    <p onClick={() => generateNewPassword()}>Generate again</p>
+                                    <p className="generate-password-button" onClick={() => generateNewPassword()}>
+                                        Generate again
+                                    </p>
                                 </div>
                             </Form.Item>
                         )}

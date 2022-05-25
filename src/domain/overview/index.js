@@ -50,7 +50,9 @@ function OverView() {
     useEffect(() => {
         dispatch({ type: 'SET_ROUTE', payload: 'overview' });
         setBotImage(state?.userData?.avatar_id || localStorage.getItem(LOCAL_STORAGE_AVATAR_ID));
-        analyticsModalFlip(localStorage.getItem(LOCAL_STORAGE_ALREADY_LOGGED_IN) === 'false' && localStorage.getItem(LOCAL_STORAGE_ALLOW_ANALYTICS) === 'true');
+        analyticsModalFlip(
+            localStorage.getItem(LOCAL_STORAGE_ALREADY_LOGGED_IN) === 'false' && localStorage.getItem(LOCAL_STORAGE_ALLOW_ANALYTICS) === 'true' && state?.analytics_modal
+        );
     }, []);
 
     const setBotImage = (botId) => {
@@ -62,9 +64,15 @@ function OverView() {
             await httpRequest('PUT', `${ApiEndpoints.EDIT_ANALYTICS}`, { send_analytics: false });
             localStorage.setItem(LOCAL_STORAGE_ALLOW_ANALYTICS, false);
             analyticsModalFlip(false);
+            dispatch({ type: 'ANALYTICS_MODAL', payload: false });
         } catch (err) {
             return;
         }
+    };
+
+    const sendAnalytics = () => {
+        analyticsModalFlip(false);
+        dispatch({ type: 'ANALYTICS_MODAL', payload: false });
     };
 
     return (
@@ -81,7 +89,7 @@ function OverView() {
                             ) : (
                                 <h1>Welcome Aboard, {localStorage.getItem(LOCAL_STORAGE_USER_NAME)}</h1>
                             )}
-                            <p className="ok-status">You’re a memphis superhero! All looks good!</p>
+                            {/* <p className="ok-status">You’re a memphis superhero! All looks good!</p> */}
                         </div>
                     </div>
                     <Button
@@ -101,8 +109,8 @@ function OverView() {
                 <div className="overview-components">
                     <div className="left-side">
                         <GenericDetails />
-                        <Throughput />
                         <FailedFactories />
+                        <Throughput />
                     </div>
                     <div className="right-side">
                         <Resources />
@@ -134,12 +142,10 @@ function OverView() {
                 minWidth="460px"
                 rBtnText="Send"
                 lBtnText="Don't send"
-                closeAction={() => analyticsModalFlip(false)}
-                lBtnClick={() => {
-                    dontSendAnalytics();
-                }}
-                clickOutside={() => analyticsModalFlip(false)}
-                rBtnClick={() => analyticsModalFlip(false)}
+                closeAction={() => sendAnalytics()}
+                lBtnClick={() => dontSendAnalytics()}
+                clickOutside={() => sendAnalytics()}
+                rBtnClick={() => sendAnalytics()}
                 open={analyticsModal}
             >
                 <label>As Memphis is in beta mode, we are collecting anonymous metadata to help improve its superpowers.</label>
@@ -150,6 +156,7 @@ function OverView() {
                     <a to={{ pathname: PRIVACY_URL }} target="_blank">
                         here
                     </a>
+                    .
                 </label>
             </Modal>
         </div>

@@ -187,14 +187,9 @@ const Login = (props) => {
 
                             {error && (
                                 <div className="error-message">
-                                    <p>An account with that sign-in information does not exist. Try again or create a new account.</p>
+                                    <p>The username and password you entered did not match our records. Please double-check and try again.</p>
                                 </div>
                             )}
-                            {/* {timerForRetry.length !== 0 && (
-                                    <div className="error-message">
-                                        <p>Your acount was blocked, please try again in {timerForRetry}</p>
-                                    </div>
-                                )} */}
                         </Form>
                     </div>
                 </div>

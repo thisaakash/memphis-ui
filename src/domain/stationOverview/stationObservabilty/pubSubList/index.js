@@ -1,9 +1,9 @@
 // Copyright 2021-2022 The Memphis Authors
-// Licensed under the Apache License, Version 2.0 (the “License”);
+// Licensed under the GNU General Public License v3.0 (the “License”);
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.gnu.org/licenses/gpl-3.0.en.html
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an “AS IS” BASIS,
@@ -37,8 +37,8 @@ const PubSubList = (props) => {
             </div>
             <div className="rows-wrapper">
                 {props.producer &&
-                    stationState?.station?.producers?.length > 0 &&
-                    stationState?.station?.producers?.map((row, index) => {
+                    stationState?.stationSocketData?.producers?.length > 0 &&
+                    stationState?.stationSocketData?.producers?.map((row, index) => {
                         return (
                             <div className="pubSub-row" key={index}>
                                 <OverflowTip text={row.name} width={'100px'}>
@@ -57,8 +57,8 @@ const PubSubList = (props) => {
                         );
                     })}
                 {!props.producer &&
-                    stationState?.station?.consumers?.length > 0 &&
-                    stationState?.station?.consumers?.map((row, index) => {
+                    stationState?.stationSocketData?.consumers?.length > 0 &&
+                    stationState?.stationSocketData?.consumers?.map((row, index) => {
                         return (
                             <div className="pubSub-row" key={index}>
                                 <OverflowTip text={row.name} width={'100px'}>
@@ -76,7 +76,8 @@ const PubSubList = (props) => {
                             </div>
                         );
                     })}
-                {((props.producer && stationState?.station?.producers?.length === 0) || (!props.producer && stationState?.station?.consumers?.length === 0)) && (
+                {((props.producer && stationState?.stationSocketData?.producers?.length === 0) ||
+                    (!props.producer && stationState?.stationSocketData?.consumers?.length === 0)) && (
                     <div className="empty-pub-sub">
                         <p>Waiting for {props.producer ? 'producers' : 'consumers'}</p>
                     </div>

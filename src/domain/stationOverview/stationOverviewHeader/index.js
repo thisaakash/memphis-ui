@@ -1,9 +1,9 @@
 // Copyright 2021-2022 The Memphis Authors
-// Licensed under the Apache License, Version 2.0 (the “License”);
+// Licensed under the GNU General Public License v3.0 (the “License”);
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.gnu.org/licenses/gpl-3.0.en.html
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an “AS IS” BASIS,
@@ -48,15 +48,15 @@ const StationOverviewHeader = (props) => {
         setLangSelected(e);
     };
     useEffect(() => {
-        switch (stationState?.station?.retention_type) {
+        switch (stationState?.stationMetaData?.retention_type) {
             case 'message_age_sec':
-                setRetentionValue(convertSecondsToDate(stationState?.station?.retention_value));
+                setRetentionValue(convertSecondsToDate(stationState?.stationMetaData?.retention_value));
                 break;
             case 'bytes':
-                setRetentionValue(`${stationState?.station?.retention_value} bytes`);
+                setRetentionValue(`${stationState?.stationMetaData?.retention_value} bytes`);
                 break;
             case 'messages':
-                setRetentionValue(`${stationState?.station?.retention_value} messages`);
+                setRetentionValue(`${stationState?.stationMetaData?.retention_value} messages`);
                 break;
             default:
                 break;
@@ -72,10 +72,8 @@ const StationOverviewHeader = (props) => {
     return (
         <div className="station-overview-header">
             <div className="title-wrapper">
-                <h1 className="station-name">Overview - {stationState?.station?.name}</h1>
-                <div id="e2e-tests-station-close-btn">
-                    <CloseIcon onClick={() => returnToStaionsList()} style={{ cursor: 'pointer' }} />
-                </div>
+                <h1 className="station-name">Overview - {stationState?.stationMetaData?.name}</h1>
+                <CloseIcon onClick={() => returnToStaionsList()} style={{ cursor: 'pointer' }} />
             </div>
             <div className="sdk-button">
                 <Button
@@ -97,24 +95,24 @@ const StationOverviewHeader = (props) => {
                         <b>Retention:</b> {retentionValue}
                     </p>
                     <p>
-                        <b>Replicas:</b> {stationState?.station?.replicas}
+                        <b>Replicas:</b> {stationState?.stationMetaData?.replicas}
                     </p>
                     <p>
-                        <b>Storage Type:</b> {stationState?.station?.storage_type}
+                        <b>Storage Type:</b> {stationState?.stationMetaData?.storage_type}
                     </p>
                 </div>
                 <div className="icons-wrapper">
-                    <div className="coming-soon-wrapper icons-coming-soon">
+                    {/* <div className="coming-soon-wrapper icons-coming-soon">
                         <img src={comingSoonBox} width={20} height={40} alt="comingSoonBox" />
                         <p>Coming soon</p>
-                    </div>
+                    </div> */}
                     <div className="details-wrapper">
                         <div className="icon">
                             <img src={awaitingIcon} width={22} height={44} alt="awaitingIcon" />
                         </div>
                         <div className="more-details">
-                            <p className="number">1000</p>
-                            <p className="title">Awaiting messages</p>
+                            <p className="number">{stationState?.stationSocketData?.total_messages}</p>
+                            <p className="title">Total messages</p>
                         </div>
                     </div>
                     <div className="details-wrapper">
@@ -122,11 +120,11 @@ const StationOverviewHeader = (props) => {
                             <img src={averageMesIcon} width={24} height={24} alt="averageMesIcon" />
                         </div>
                         <div className="more-details">
-                            <p className="number">500Mb</p>
+                            <p className="number">{stationState?.stationSocketData?.average_message_size}</p>
                             <p className="title">Av. message size</p>
                         </div>
                     </div>
-                    <div className="details-wrapper">
+                    {/* <div className="details-wrapper">
                         <div className="icon">
                             <img src={memoryIcon} width={24} height={24} alt="memoryIcon" />
                         </div>
@@ -155,7 +153,7 @@ const StationOverviewHeader = (props) => {
                             <Progress showInfo={false} status={(60 / 100) * 100 > 60 ? 'exception' : 'success'} percent={(60 / 100) * 100} size="small" />
                             <p className="title">Storage</p>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
             <Modal header="SDK" minHeight="740px" minWidth="500px" closeAction={() => modalFlip(false)} clickOutside={() => modalFlip(false)} open={open} hr={false}>

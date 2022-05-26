@@ -1,10 +1,10 @@
 def repoUrlPrefix = "memphisos"
-def imageName = "memphis-ui"
+def imageName = "memphis-ui-staging"
 def gitURL = "git@github.com:Memphis-OS/memphis-ui.git"
 def gitBranch = "staging"
 def namespace = "memphis"
 def test_suffix = "test"
-unique_Id = UUID.randomUUID().toString()
+String unique_id = org.apache.commons.lang.RandomStringUtils.random(4, true, true)
 
 node {
   try{

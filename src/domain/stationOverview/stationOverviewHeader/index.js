@@ -73,7 +73,9 @@ const StationOverviewHeader = (props) => {
         <div className="station-overview-header">
             <div className="title-wrapper">
                 <h1 className="station-name">Overview - {stationState?.stationMetaData?.name}</h1>
-                <CloseIcon onClick={() => returnToStaionsList()} style={{ cursor: 'pointer' }} />
+                <div id="e2e-tests-station-close-btn">
+                    <CloseIcon onClick={() => returnToStaionsList()} style={{ cursor: 'pointer' }} />
+                </div>
             </div>
             <div className="sdk-button">
                 <Button

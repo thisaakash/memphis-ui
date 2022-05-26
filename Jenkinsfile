@@ -4,7 +4,7 @@ def gitURL = "git@github.com:Memphis-OS/memphis-ui.git"
 def gitBranch = "staging"
 def namespace = "memphis"
 def test_suffix = "test"
-String unique_id = org.apache.commons.lang.RandomStringUtils.random(4, true, true)
+String unique_id = org.apache.commons.lang.RandomStringUtils.random(4, false, true)
 
 node {
   try{
@@ -59,7 +59,7 @@ node {
     stage('Tests - Install Memphis with helm') {
       sh "rm -rf memphis-k8s"
       sh "git clone --branch staging git@github.com:Memphis-OS/memphis-k8s.git"
-      sh "helm install memphis-tests memphis-k8s/helm/memphis --set analytics="false",teston="ui" --create-namespace --namespace memphis-$unique_id"
+      sh 'helm install memphis-tests memphis-k8s/helm/memphis --set analytics="false",teston="ui" --create-namespace --namespace memphis-$unique_id'
       sh "sleep 40"
     }
 

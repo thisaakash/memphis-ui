@@ -59,15 +59,15 @@ node {
     stage('Tests - Install Memphis with helm') {
       sh "rm -rf memphis-k8s"
       sh "git clone --branch staging git@github.com:Memphis-OS/memphis-k8s.git"
-      sh 'helm install memphis-tests memphis-k8s/helm/memphis --set analytics="false",teston="ui" --create-namespace --namespace memphis'
-      sh 'sleep 40'
+      sh "helm install memphis-tests memphis-k8s/helm/memphis --set analytics="false",teston="ui" --create-namespace --namespace memphis-$unique_id"
+      sh "sleep 40"
     }
 
     stage('Open port forwarding to Memphis service') {
-      sh 'nohup kubectl port-forward service/memphis-ui 9000:80 --namespace memphis &'
-      sh 'sleep 5'
-      sh 'nohup kubectl port-forward service/memphis-cluster 7766:7766 6666:6666 5555:5555 --namespace memphis &'
-      sh 'sleep 5'
+      sh "nohup kubectl port-forward service/memphis-ui 9000:80 --namespace memphis-$unique_id &"
+      sh "sleep 5"
+      sh "nohup kubectl port-forward service/memphis-cluster 7766:7766 6666:6666 5555:5555 --namespace memphis-$unique_id &"
+      sh "sleep 5"
     }
 
     stage('Tests - Run e2e tests over kubernetes') {
@@ -76,8 +76,8 @@ node {
     }
 
     stage('Tests - Uninstall helm') {
-      sh "helm uninstall memphis-tests -n memphis"
-      sh "kubectl delete ns memphis &"
+      sh "helm uninstall memphis-tests -n memphis-$unique_id"
+      sh "kubectl delete ns memphis-$unique_id &"
     }
 
     stage('Tests - Remove e2e-tests') {

@@ -54,7 +54,6 @@ const StationOverview = () => {
         });
 
         socket.on('station_overview_data', (data) => {
-            console.log(data);
             stationDispatch({ type: 'SET_SOCKET_DATA', payload: data });
         });
 

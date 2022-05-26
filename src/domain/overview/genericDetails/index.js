@@ -13,7 +13,7 @@
 
 import './style.scss';
 
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import stationIdleIcon from '../../../assets/images/stationIdleIcon.svg';
 import liveMessagesIcon from '../../../assets/images/liveMessagesIcon.svg';
@@ -23,7 +23,7 @@ import { Context } from '../../../hooks/store';
 
 const GenericDetails = () => {
     const [state, dispatch] = useContext(Context);
-    console.log(state?.monitor_data);
+
     return (
         <div className="generic-container">
             <div className="overview-wrapper data-box">
@@ -36,10 +36,7 @@ const GenericDetails = () => {
                 </div>
                 <div className="data-wrapper">
                     <span>Total stations</span>
-                    <p>
-                        {/* {state?.monitor_data?.stations} */}
-                        {/* <span>in action</span> */}
-                    </p>
+                    <p>{state?.monitor_data?.total_stations}</p>
                 </div>
             </div>
             <div className="overview-wrapper data-box">
@@ -52,7 +49,7 @@ const GenericDetails = () => {
                 </div>
                 <div className="data-wrapper">
                     <span>Total messages</span>
-                    {/* <p> {state?.monitor_data?.total_messages}</p> */}
+                    <p> {state?.monitor_data?.total_messages}</p>
                 </div>
             </div>
             {/* <div className="overview-wrapper data-box">

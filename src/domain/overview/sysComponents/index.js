@@ -13,19 +13,15 @@
 
 import './style.scss';
 
+import React, { useContext, useState } from 'react';
 import { Divider } from '@material-ui/core';
-import React, { useState } from 'react';
-import comingSoonBox from '../../../assets/images/comingSoonBox.svg';
 
+import comingSoonBox from '../../../assets/images/comingSoonBox.svg';
 import HealthyBadge from '../../../components/healthyBadge';
+import { Context } from '../../../hooks/store';
 
 const SysComponents = () => {
-    const [sysComponents, setSysComponents] = useState([
-        { podName: 'Database', pods: '3/3', status: 'healthy' },
-        { podName: 'UI', pods: '3/3', status: 'healthy' },
-        { podName: 'Control-plane', pods: '2/3', status: 'risky' },
-        { podName: 'Broker', pods: '1/3', status: 'unhealthy' }
-    ]);
+    const [state, dispatch] = useContext(Context);
 
     return (
         <div className="overview-wrapper sys-components-container">
@@ -39,17 +35,19 @@ const SysComponents = () => {
                 <p>Pods</p>
                 <p>Status</p>
             </div>
-            {!sysComponents && <Divider />}
+            {!state?.monitor_data?.system_components && <Divider />}
             <div className="component-list">
-                {sysComponents &&
-                    sysComponents.map((comp, i) => {
+                {state?.monitor_data?.system_components &&
+                    state?.monitor_data?.system_components?.map((comp, i) => {
                         return (
                             <div key={`${comp.podName}${i}`}>
                                 <Divider />
                                 <div className="sys-components">
-                                    <p>{comp.podName}</p>
-                                    <p>{comp.pods}</p>
-                                    <HealthyBadge status={comp.status} />
+                                    <p>{comp.pod_name}</p>
+                                    <p>
+                                        {comp.actual_pods}/{comp.desired_pods}
+                                    </p>
+                                    <HealthyBadge status={comp.actual_pods / comp.desired_pods} />
                                 </div>
                             </div>
                         );

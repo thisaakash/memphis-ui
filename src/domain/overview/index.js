@@ -16,7 +16,7 @@ import './style.scss';
 import React, { useEffect, useContext, useState, useRef } from 'react';
 
 import { useMediaQuery } from 'react-responsive';
-import FailedFactories from './failedFactories';
+import FailedStations from './failedStations';
 import GenericDetails from './genericDetails';
 import SysComponents from './sysComponents';
 import { Context } from '../../hooks/store';
@@ -74,6 +74,7 @@ function OverView() {
             reconnection: false
         });
         socket.on('main_overview_data', (data) => {
+            console.log(data);
             dispatch({ type: 'SET_MONITOR_DATA', payload: data });
         });
 
@@ -147,7 +148,7 @@ function OverView() {
                     <div className="overview-components">
                         <div className="left-side">
                             <GenericDetails />
-                            <FailedFactories />
+                            <FailedStations />
                             <Throughput />
                         </div>
                         <div className="right-side">

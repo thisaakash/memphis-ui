@@ -81,7 +81,7 @@ function OverView() {
         setTimeout(() => {
             socket.emit('register_main_overview_data');
             setisLoading(false);
-        }, 3000);
+        }, 1000);
         return () => {
             socket.emit('deregister');
             socket.close();

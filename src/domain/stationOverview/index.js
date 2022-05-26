@@ -60,7 +60,7 @@ const StationOverview = () => {
         setTimeout(() => {
             socket.emit('register_station_overview_data', stationName);
             setisLoading(false);
-        }, 3000);
+        }, 1000);
         return () => {
             socket.emit('deregister');
             socket.close();

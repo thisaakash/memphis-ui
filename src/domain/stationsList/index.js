@@ -40,7 +40,7 @@ const StationsList = () => {
     const [factoryDescription, setFactoryDescription] = useState('');
     const [isLoading, setisLoading] = useState(false);
     const createStationRef = useRef(null);
-    const [parseDate, setParseDate] = useState(new Date().toLocaleDateString());
+    const [parseDate, setParseDate] = useState(new Date().toLocaleDateString('he-IL', { timeZone: 'Asia/Jerusalem' }).replace(/\D/g, '/'));
     const botId = 1;
     const [botUrl, SetBotUrl] = useState('');
     const history = useHistory();
@@ -61,7 +61,7 @@ const StationsList = () => {
         try {
             const data = await httpRequest('GET', `${ApiEndpoints.GEL_FACTORIES}?factory_name=${factoryName}`);
             setBotImage(data.user_avatar_id || botId);
-            setParseDate(new Date(data.creation_date).toLocaleDateString());
+            setParseDate(new Date(data.creation_date).toLocaleDateString('he-IL', { timeZone: 'Asia/Jerusalem' }).replace(/\D/g, '/'));
             setFactoryDetails(data);
             setFactoryName(data.name);
             setFactoryDescription(data.description);

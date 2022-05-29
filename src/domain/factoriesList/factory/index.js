@@ -36,7 +36,7 @@ const Factory = (props) => {
     const open = Boolean(anchorEl);
     const [botUrl, SetBotUrl] = useState('');
     const botId = 1;
-    const parseDate = new Date(props.content.creation_date).toLocaleDateString();
+    const parseDate = new Date(props.content.creation_date).toLocaleDateString('he-IL', { timeZone: 'Asia/Jerusalem' }).replace(/\D/g, '/');
 
     useEffect(() => {
         setBotImage(props.content?.user_avatar_id || botId);
@@ -118,7 +118,9 @@ const Factory = (props) => {
                         }}
                     >
                         <DeleteOutline className="menu-item-icon" />
-                        <label id="e2e-tests-factoty-remove" className="menu-item-label">Remove</label>
+                        <label id="e2e-tests-factoty-remove" className="menu-item-label">
+                            Remove
+                        </label>
                     </MenuItem>
                 </Popover>
             </div>

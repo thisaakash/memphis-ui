@@ -80,26 +80,27 @@ const StationBoxOverview = (props) => {
                 <div className="info-fields">
                     <div className="field-wrapper">
                         <h3>Name: </h3>
-                        <OverflowTip text={props.station.name} width={'150px'}>
+                        <OverflowTip text={props.station.name} width={'200px'}>
                             {props.station.name}
                         </OverflowTip>
                     </div>
                     <div className="field-wrapper retention">
                         <h3>Retention: </h3>
-                        <OverflowTip text={retentionValue} width={'150px'}>
+                        <OverflowTip text={retentionValue} width={'200px'}>
                             {retentionValue}
+                        </OverflowTip>
+                    </div>
+
+                    <div className="field-wrapper storage">
+                        <h3>Storage Type: </h3>
+                        <OverflowTip text={props.station.storage_type} width={'70px'}>
+                            {props.station.storage_type}
                         </OverflowTip>
                     </div>
                     <div className="field-wrapper replicas">
                         <h3>Replicas: </h3>
-                        <OverflowTip text={props.station.replicas} width={'20px'}>
+                        <OverflowTip text={props.station.replicas} width={'50px'}>
                             {props.station.replicas}
-                        </OverflowTip>
-                    </div>
-                    <div className="field-wrapper storage">
-                        <h3>Storage Type: </h3>
-                        <OverflowTip text={props.station.storage_type} width={'50px'}>
-                            {props.station.storage_type}
                         </OverflowTip>
                     </div>
                     {/* <div className="field-wrapper">
@@ -141,7 +142,9 @@ const StationBoxOverview = (props) => {
                                 }}
                             >
                                 <DeleteOutline className="menu-item-icon" />
-                                <label id="e2e-tests-remove-stations" className="menu-item-label">Remove</label>
+                                <label id="e2e-tests-remove-stations" className="menu-item-label">
+                                    Remove
+                                </label>
                             </MenuItem>
                         </Popover>
                     </div>

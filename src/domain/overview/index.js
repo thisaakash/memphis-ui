@@ -74,14 +74,13 @@ function OverView() {
             reconnection: false
         });
         socket.on('main_overview_data', (data) => {
-            console.log(data);
             dispatch({ type: 'SET_MONITOR_DATA', payload: data });
         });
 
         setTimeout(() => {
             socket.emit('register_main_overview_data');
             setisLoading(false);
-        }, 3000);
+        }, 1000);
         return () => {
             socket.emit('deregister');
             socket.close();

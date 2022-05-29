@@ -65,7 +65,7 @@ const StationsList = () => {
             setFactoryDetails(data);
             setFactoryName(data.name);
             setFactoryDescription(data.description);
-        } catch (err) { }
+        } catch (err) {}
         setisLoading(false);
     };
 
@@ -133,7 +133,7 @@ const StationsList = () => {
                 <div className="left-side">
                     {!editName && (
                         <h1 className="main-header-h1">
-                            {!isLoading ? factoryName || 'Inser Factory name' : <CircularProgress className="circular-progress" size={18} />}
+                            {!isLoading ? factoryName || 'Insert Factory name' : <CircularProgress className="circular-progress" size={18} />}
                             <span id="e2e-tests-edit-name" className="edit-icon" onClick={() => handleEditName()}>
                                 <EditOutlined />
                             </span>

@@ -18,9 +18,10 @@
             .edit-icon {
                 cursor: pointer;
                 margin-left: 6px;
-                width: 15px;
-                height: 15px;
                 color: var(--gray);
+                svg {
+                    font-size: 16px;
+                }
             }
             .edit-input-name {
                 margin-bottom: 5px;

@@ -45,6 +45,7 @@ const CreateUserDetails = ({ createUserRef, closeModal }) => {
         }
     ];
     const [generatedPassword, setGeneratedPassword] = useState('');
+
     useEffect(() => {
         createUserRef.current = onFinish;
         generateNewPassword();
@@ -80,7 +81,7 @@ const CreateUserDetails = ({ createUserRef, closeModal }) => {
                 if (data) {
                     closeModal(data);
                 }
-            } catch (error) { }
+            } catch (error) {}
         }
     };
 
@@ -128,8 +129,8 @@ const CreateUserDetails = ({ createUserRef, closeModal }) => {
                 </Form.Item>
                 <div className="field user-type">
                     <p>Type</p>
-                    <Form.Item name="user_type" initialValue={formFields.user_type}>
-                        <div id="e2e-tests-user-type" className="field username">
+                    <div id="e2e-tests-user-type" className="field username">
+                        <Form.Item name="user_type" initialValue={formFields.user_type}>
                             <SelectComponent
                                 value={formFields.user_type}
                                 colorType="black"
@@ -142,8 +143,8 @@ const CreateUserDetails = ({ createUserRef, closeModal }) => {
                                 onChange={(e) => handleSelectUserType(e)}
                                 dropdownClassName="select-options"
                             />
-                        </div>
-                    </Form.Item>
+                        </Form.Item>
+                    </div>
                 </div>
                 {formFields.user_type === 'management' && (
                     <div className="password-section">

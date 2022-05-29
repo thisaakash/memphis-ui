@@ -21,22 +21,22 @@ import React from 'react';
 const HealthyBadge = (props) => {
     return (
         <div className="healthy-badge-container">
-            {props.status > 2 / 3 && (
+            {props.status > 0.6 && (
                 <div className="healthy">
                     <CheckCircleSharpIcon className="badge-icon" theme="outlined" />
                     <p>Healthy</p>
                 </div>
             )}
-            {props.status > 1 / 3 && props.status <= 2 / 3 && (
-                <div className="unhealthy">
-                    <Cancel className="badge-icon" theme="outlined" />
-                    <p>UnHealthy</p>
-                </div>
-            )}
-            {props.status <= 1 / 3 && (
+            {props.status > 0.3 && props.status <= 0.6 && (
                 <div className="risky">
                     <ErrorSharpIcon className="badge-icon" theme="outlined" />
                     <p>Risky</p>
+                </div>
+            )}
+            {props.status <= 0.3 && (
+                <div className="unhealthy">
+                    <Cancel className="badge-icon" theme="outlined" />
+                    <p>UnHealthy</p>
                 </div>
             )}
         </div>

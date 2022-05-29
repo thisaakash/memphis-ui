@@ -24,7 +24,7 @@ node {
     }
 
     stage('Build and push docker image to Docker Hub') {
-      sh "docker buildx build --push -t ${repoUrlPrefix}/${imageName}-${test_suffix} --platform linux/amd64,linux/arm64 ."
+      sh "docker buildx build --push -t ${repoUrlPrefix}/${imageName}-${test_suffix} ."
     }
 
     stage('Tests - Install/upgrade Memphis cli') {

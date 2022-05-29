@@ -31,8 +31,14 @@ const GenericList = (props) => {
             setRowsData(stationState?.stationSocketData?.audit_logs);
         }
     }, [stationState]);
+
     const onSelectedRow = (rowIndex) => {
         setSelectedRowIndex(rowIndex);
+    };
+
+    const parsingDate = (date) => {
+        var options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+        return new Date(date).toLocaleDateString([], options);
     };
 
     return (
@@ -58,7 +64,7 @@ const GenericList = (props) => {
                                     {row?.user_type || row?.consumer}
                                 </OverflowTip>
                                 <OverflowTip text={row?.creation_date} width={'200px'}>
-                                    {row?.creation_date}
+                                    {parsingDate(row?.creation_date)}
                                 </OverflowTip>
                             </div>
                         );

@@ -74,7 +74,6 @@ function OverView() {
             reconnection: false
         });
         socket.on('main_overview_data', (data) => {
-            console.log(data);
             dispatch({ type: 'SET_MONITOR_DATA', payload: data });
         });
 

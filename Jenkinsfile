@@ -24,7 +24,7 @@ node {
     }
 
     stage('Build and push docker image to Docker Hub') {
-      sh "docker buildx build --push -t ${repoUrlPrefix}/${imageName}-${test_suffix} --platform linux/amd64,linux/arm64 ."
+      sh "docker buildx build --push -t ${repoUrlPrefix}/${imageName}-${test_suffix} ."
     }
 
     stage('Tests - Install/upgrade Memphis cli') {
@@ -59,7 +59,7 @@ node {
     stage('Tests - Install Memphis with helm') {
       sh "rm -rf memphis-k8s"
       sh "git clone --branch staging git@github.com:Memphis-OS/memphis-k8s.git"
-      sh 'helm install memphis-tests memphis-k8s/helm/memphis --set analytics="false",teston="ui" --create-namespace --namespace memphis-$unique_id'
+      sh "helm install memphis-tests memphis-k8s/helm/memphis --set analytics='false',teston='ui' --create-namespace --namespace memphis-$unique_id"
       sh "sleep 40"
     }
 
@@ -72,7 +72,7 @@ node {
 
     stage('Tests - Run e2e tests over kubernetes') {
       sh "npm install --prefix ./memphis-e2e-tests"
-      sh "node ./memphis-e2e-tests/index.js kubernetes"
+      sh "node ./memphis-e2e-tests/index.js kubernetes memphis-$unique_id"
     }
 
     stage('Tests - Uninstall helm') {
@@ -84,7 +84,7 @@ node {
       sh "rm -rf memphis-e2e-tests"
     }
 
-    /*
+
     stage('Build and push image to Docker Hub') {
       sh "docker buildx build --push -t ${repoUrlPrefix}/${imageName} --platform linux/amd64,linux/arm64 ."
     }
@@ -92,7 +92,7 @@ node {
     stage('Push to staging'){
       sh "helm uninstall my-memphis --kubeconfig /var/lib/jenkins/.kube/memphis-staging-kubeconfig.yaml -n memphis"
       sh 'helm install my-memphis memphis-k8s/helm/memphis --set analytics="false" --kubeconfig /var/lib/jenkins/.kube/memphis-staging-kubeconfig.yaml --create-namespace --namespace memphis'
-    }*/
+    }
 
 
 

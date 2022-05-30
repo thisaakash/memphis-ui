@@ -24,7 +24,7 @@ import StationsList from './domain/stationsList';
 import PrivateRoute from './PrivateRoute';
 import Overview from './domain/overview';
 import Settings from './domain/settings';
-import pathControllers from './router';
+import pathDomains from './router';
 import Users from './domain/users';
 import Login from './domain/login';
 import { Redirect } from 'react-router-dom';
@@ -59,7 +59,7 @@ const App = withRouter(() => {
     }, []);
 
     const handleRefresh = async () => {
-        if (window.location.pathname === pathControllers.login) {
+        if (window.location.pathname === pathDomains.login) {
             return;
         } else if (localStorage.getItem(LOCAL_STORAGE_TOKEN)) {
             const handleRefreshStatus = await handleRefreshTokenRequest();
@@ -77,10 +77,10 @@ const App = withRouter(() => {
                 {' '}
                 {!authCheck && (
                     <Switch>
-                        <Route exact path={pathControllers.login} component={Login} />
+                        <Route exact path={pathDomains.login} component={Login} />
                         <PrivateRoute
                             exact
-                            path={pathControllers.overview}
+                            path={pathDomains.overview}
                             component={
                                 <AppWrapper
                                     content={
@@ -93,7 +93,7 @@ const App = withRouter(() => {
                         />
                         <PrivateRoute
                             exact
-                            path={pathControllers.users}
+                            path={pathDomains.users}
                             component={
                                 <AppWrapper
                                     content={
@@ -106,7 +106,7 @@ const App = withRouter(() => {
                         />
                         <PrivateRoute
                             exact
-                            path={pathControllers.settings}
+                            path={pathDomains.settings}
                             component={
                                 <AppWrapper
                                     content={
@@ -119,7 +119,7 @@ const App = withRouter(() => {
                         />
                         <PrivateRoute
                             exact
-                            path={pathControllers.factoriesList}
+                            path={pathDomains.factoriesList}
                             component={
                                 <AppWrapper
                                     content={
@@ -132,7 +132,7 @@ const App = withRouter(() => {
                         />
                         <PrivateRoute
                             exact
-                            path={`${pathControllers.factoriesList}/:id`}
+                            path={`${pathDomains.factoriesList}/:id`}
                             component={
                                 <AppWrapper
                                     content={
@@ -145,7 +145,7 @@ const App = withRouter(() => {
                         />
                         <PrivateRoute
                             exact
-                            path={`${pathControllers.factoriesList}/:id/:id`}
+                            path={`${pathDomains.factoriesList}/:id/:id`}
                             component={
                                 <AppWrapper
                                     content={
@@ -169,7 +169,7 @@ const App = withRouter(() => {
                             }
                         />
                         <Route>
-                            <Redirect to={pathControllers.overview} />
+                            <Redirect to={pathDomains.overview} />
                         </Route>
                     </Switch>
                 )}

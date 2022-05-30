@@ -78,9 +78,8 @@ const StationOverviewHeader = (props) => {
         } else if (bytes >= MB) {
             const parsing = isFloat(bytes / MB) ? Math.round((bytes / MB + Number.EPSILON) * 100) / 100 : bytes / MB;
             return `${parsing} MB`;
-        }
-        else {
-            return "0 Bytes"
+        } else {
+            return '0 Bytes';
         }
     };
 

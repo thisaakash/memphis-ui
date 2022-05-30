@@ -19,7 +19,7 @@ import { Link } from 'react-router-dom';
 import comingSoonBox from '../../../assets/images/comingSoonBox.svg';
 import ErrorSharpIcon from '@material-ui/icons/ErrorSharp';
 import { Context } from '../../../hooks/store';
-import pathControllers from '../../../router';
+import pathDomains from '../../../router';
 
 const FailedStations = () => {
     const [state, dispatch] = useContext(Context);
@@ -61,7 +61,7 @@ const FailedStations = () => {
                                         On idle
                                     </span>
                                 )} */}
-                                <Link style={{ cursor: 'pointer' }} to={`${pathControllers.factoriesList}/${station.factory_name}/${station.name}`}>
+                                <Link style={{ cursor: 'pointer' }} to={`${pathDomains.factoriesList}/${station.factory_name}/${station.name}`}>
                                     <span className="link-row" style={{ width: '100px' }}>
                                         Go to station
                                     </span>

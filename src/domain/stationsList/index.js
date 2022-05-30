@@ -65,7 +65,11 @@ const StationsList = () => {
             setFactoryDetails(data);
             setFactoryName(data.name);
             setFactoryDescription(data.description);
-        } catch (err) {}
+        } catch (error) {
+            if (error.status === 404) {
+                history.push(pathDomains.factoriesList);
+            }
+        }
         setisLoading(false);
     };
 

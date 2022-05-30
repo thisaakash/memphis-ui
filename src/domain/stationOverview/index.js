@@ -22,22 +22,32 @@ import { httpRequest } from '../../services/http';
 import { Context } from '../../hooks/store';
 import Throughput from './throughput';
 import Auditing from './auditing';
+import pathDomains from '../../router';
+
 import Reducer from './hooks/reducer';
 import Loader from '../../components/loader';
 import io from 'socket.io-client';
 import { SOCKET_URL } from '../../config';
 import { LOCAL_STORAGE_TOKEN } from '../../const/localStorageConsts';
+import { useHistory } from 'react-router-dom';
 
 const StationOverview = () => {
     const [stationState, stationDispatch] = useReducer(Reducer);
     const url = window.location.href;
     const stationName = url.split('factories/')[1].split('/')[1];
+    const history = useHistory();
     const [state, dispatch] = useContext(Context);
     const [isLoading, setisLoading] = useState(false);
 
     const getStaionDetails = useCallback(async () => {
-        const data = await httpRequest('GET', `${ApiEndpoints.GET_STATION}?station_name=${stationName}`);
-        stationDispatch({ type: 'SET_STATION_META_DATA', payload: data });
+        try {
+            const data = await httpRequest('GET', `${ApiEndpoints.GET_STATION}?station_name=${stationName}`);
+            stationDispatch({ type: 'SET_STATION_META_DATA', payload: data });
+        } catch (error) {
+            if (error.status === 404) {
+                history.push(`${pathDomains.factoriesList}/${url.split('factories/')[1].split('/')[0]}`);
+            }
+        }
     }, []);
 
     useEffect(() => {

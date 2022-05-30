@@ -27,7 +27,7 @@ import { httpRequest } from '../../../services/http';
 import { ApiEndpoints } from '../../../const/apiEndpoints';
 import Modal from '../../../components/modal';
 import { Context } from '../../../hooks/store';
-import pathControllers from '../../../router';
+import pathDomains from '../../../router';
 
 const Factory = (props) => {
     const [state, dispatch] = useContext(Context);
@@ -67,7 +67,7 @@ const Factory = (props) => {
     return (
         <div className="factory">
             <div className="factory-card-container" key={props.content.id}>
-                <Link style={{ cursor: 'pointer' }} to={`${pathControllers.factoriesList}/${props.content.name}`}>
+                <Link style={{ cursor: 'pointer' }} to={`${pathDomains.factoriesList}/${props.content.name}`}>
                     <div className="factory-card-title">
                         <h2>
                             <OverflowTip text={props.content.name} width={'220px'} color="white" cursor="pointer">
@@ -100,7 +100,7 @@ const Factory = (props) => {
                     </div>
                 </div>
                 <Popover id="long-menu" classes={{ paper: 'Menu' }} anchorEl={anchorEl} onClose={handleCloseMenu} open={open}>
-                    <Link to={`${pathControllers.factoriesList}/${props.content.name}`}>
+                    <Link to={`${pathDomains.factoriesList}/${props.content.name}`}>
                         <MenuItem
                             onClick={() => {
                                 handleCloseMenu();

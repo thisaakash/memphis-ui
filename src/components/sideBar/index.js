@@ -31,7 +31,7 @@ import usersIcon from '../../assets/images/usersIcon.svg';
 import Logo from '../../assets/images/logo.svg';
 import BetaLogo from '../../assets/images/betaLogo.svg';
 import { Context } from '../../hooks/store';
-import pathControllers from '../../router';
+import pathDomains from '../../router';
 import AuthService from '../../services/auth';
 import { LOCAL_STORAGE_AVATAR_ID, LOCAL_STORAGE_COMPANY_LOGO, LOCAL_STORAGE_USER_NAME } from '../../const/localStorageConsts';
 import { httpRequest } from '../../services/http';
@@ -65,7 +65,7 @@ function SideBar() {
                 localStorage.setItem(LOCAL_STORAGE_COMPANY_LOGO, data.image);
                 dispatch({ type: 'SET_COMPANY_LOGO', payload: data.image });
             }
-        } catch (error) { }
+        } catch (error) {}
     };
     const setBotImage = (botId) => {
         SetBotUrl(require(`../../assets/images/bots/${botId}.svg`));
@@ -74,7 +74,7 @@ function SideBar() {
     const handleClick = async (e) => {
         switch (e.key) {
             case '1':
-                history.push(pathControllers.settings);
+                history.push(pathDomains.settings);
                 break;
             case '2':
                 break;
@@ -89,11 +89,11 @@ function SideBar() {
     return (
         <div className="sidebar-container">
             <div className="upper-icons">
-                <Link to={pathControllers.overview}>
+                <Link to={pathDomains.overview}>
                     <img src={BetaLogo} width="55" height="40" className="logoimg" alt="logo" />
                 </Link>
                 <div className="item-wrapper">
-                    <Link to={pathControllers.overview}>
+                    <Link to={pathDomains.overview}>
                         <div className="icon">
                             <div className={state.route === 'overview' ? 'circle-nav-item checked' : 'circle-nav-item'}>
                                 {state.route === 'overview' ? (
@@ -107,8 +107,8 @@ function SideBar() {
                     </Link>
                 </div>
                 <div className="item-wrapper">
-                    <div id="e2e-tests-factory-sidebar" >
-                        <Link to={pathControllers.factoriesList}>
+                    <div id="e2e-tests-factory-sidebar">
+                        <Link to={pathDomains.factoriesList}>
                             <div className="icon">
                                 <div className={state.route === 'factories' ? 'circle-nav-item checked' : 'circle-nav-item'}>
                                     {state.route === 'factories' ? (
@@ -124,8 +124,8 @@ function SideBar() {
                 </div>
 
                 <div className="item-wrapper">
-                    <div id="e2e-tests-users-sidebar" >
-                        <Link to={pathControllers.users}>
+                    <div id="e2e-tests-users-sidebar">
+                        <Link to={pathDomains.users}>
                             <div className="icon">
                                 <div className={state.route === 'users' ? 'circle-nav-item checked' : 'circle-nav-item'}>
                                     {state.route === 'users' ? (

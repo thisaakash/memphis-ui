@@ -21,13 +21,13 @@ const TooltipComponent = (props) => {
         tooltip: {
             color: props.color === 'white' ? '#2B2E3F' : '#f7f7f7',
             backgroundColor: props.color === 'white' ? '#f7f7f7' : '#2B2E3F',
-            fontSize: '14px',
-            fontWeight: 800,
+            fontSize: '12px',
+            fontWeight: 400,
             margin: '5px',
-            fontFamily: 'Inter',
             // textAlign: "center",
             boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px',
-            whiteSpace: 'pre-line'
+            whiteSpace: 'pre-line',
+            minWidth: '60px'
         },
         arrow: {
             color: props.color === 'white' ? '#f7f7f7' : '#2B2E3F'

@@ -34,6 +34,7 @@ import { Context } from '../../../hooks/store';
 import Modal from '../../../components/modal';
 import pathDomains from '../../../router';
 import { StationStoreContext } from '..';
+import TooltipComponent from '../../../components/tooltip/tooltip';
 
 const StationOverviewHeader = (props) => {
     const [state, dispatch] = useContext(Context);
@@ -150,15 +151,22 @@ const StationOverviewHeader = (props) => {
                             <p className="title">Total messages</p>
                         </div>
                     </div>
-                    <div className="details-wrapper">
-                        <div className="icon">
-                            <img src={averageMesIcon} width={24} height={24} alt="averageMesIcon" />
+                    <TooltipComponent
+                        text={`Not include extra bytes added by memphis. \n  Memphis adds 116 bytes to each message`}
+                        color="white"
+                        width={'220px'}
+                        cursor="pointer"
+                    >
+                        <div className="details-wrapper average">
+                            <div className="icon">
+                                <img src={averageMesIcon} width={24} height={24} alt="averageMesIcon" />
+                            </div>
+                            <div className="more-details">
+                                <p className="number">{convertBytes(stationState?.stationSocketData?.average_message_size)}</p>
+                                <p className="title">Av. message size</p>
+                            </div>
                         </div>
-                        <div className="more-details">
-                            <p className="number">{convertBytes(stationState?.stationSocketData?.average_message_size)}</p>
-                            <p className="title">Av. message size</p>
-                        </div>
-                    </div>
+                    </TooltipComponent>
                     {/* <div className="details-wrapper">
                         <div className="icon">
                             <img src={memoryIcon} width={24} height={24} alt="memoryIcon" />

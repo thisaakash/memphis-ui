@@ -102,10 +102,16 @@ node {
     
   } catch (e) {
       currentBuild.result = "FAILED"
+      cleanKubernetesResources()
       cleanWs()
       notifyFailed()
       throw e
   }
+}
+
+def cleanKubernetesResources() {
+    sh "helm uninstall memphis-tests -n memphis-$unique_id"
+    sh "kubectl delete ns memphis-$unique_id &"
 }
 
 def notifySuccessful() {

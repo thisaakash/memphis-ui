@@ -47,7 +47,7 @@ const FailedStations = () => {
                     {state?.monitor_data?.stations?.map((station, index) => {
                         return (
                             <div className="factory-row" key={index}>
-                                <span style={{ width: '200px' }}>{station.station_name}</span>
+                                <span style={{ width: '200px' }}>{station.name}</span>
                                 <span style={{ width: '200px' }}>{station.factory_name}</span>
                                 {/* {station.status === 1 && (
                                     <span style={{ width: '100px' }}>
@@ -61,7 +61,7 @@ const FailedStations = () => {
                                         On idle
                                     </span>
                                 )} */}
-                                <Link style={{ cursor: 'pointer' }} to={`${pathControllers.factoriesList}/${station.factory_name}/${station.station_name}`}>
+                                <Link style={{ cursor: 'pointer' }} to={`${pathControllers.factoriesList}/${station.factory_name}/${station.name}`}>
                                     <span className="link-row" style={{ width: '100px' }}>
                                         Go to station
                                     </span>

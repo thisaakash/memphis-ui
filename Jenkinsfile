@@ -14,7 +14,7 @@ node {
 
     stage('Login to Docker Hub') {
 	    withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_HUB_CREDS_USR', passwordVariable: 'DOCKER_HUB_CREDS_PSW')]) {
-		  sh "docker login -u $DOCKER_HUB_CREDS_USR -p $DOCKER_HUB_CREDS_PSW"
+		  sh 'docker login -u $DOCKER_HUB_CREDS_USR -p $DOCKER_HUB_CREDS_PSW'
 	    }
     }
 
@@ -101,7 +101,6 @@ node {
     
   } catch (e) {
       currentBuild.result = "FAILED"
-      sh "helm uninstall memphis-tests -n memphis-$unique_id"
       sh "kubectl delete ns memphis-$unique_id &"
       cleanWs()
       notifyFailed()

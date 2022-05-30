@@ -159,7 +159,7 @@ function OverView() {
             )}
             <Modal
                 header="Your station details"
-                minHeight="590px"
+                minHeight="610px"
                 minWidth="500px"
                 rBtnText="Add"
                 lBtnText="Cancel"

@@ -18,22 +18,22 @@ import ErrorSharpIcon from '@material-ui/icons/ErrorSharp';
 import Cancel from '@material-ui/icons/Cancel';
 import React from 'react';
 
-const HealthyBadge = (props) => {
+const HealthyBadge = ({ status }) => {
     return (
         <div className="healthy-badge-container">
-            {props.status > 0.6 && (
+            {status > 0.6 && (
                 <div className="healthy">
                     <CheckCircleSharpIcon className="badge-icon" theme="outlined" />
                     <p>Healthy</p>
                 </div>
             )}
-            {props.status > 0.3 && props.status <= 0.6 && (
+            {status > 0.3 && status <= 0.6 && (
                 <div className="risky">
                     <ErrorSharpIcon className="badge-icon" theme="outlined" />
                     <p>Risky</p>
                 </div>
             )}
-            {props.status <= 0.3 && (
+            {status <= 0.3 && (
                 <div className="unhealthy">
                     <Cancel className="badge-icon" theme="outlined" />
                     <p>UnHealthy</p>

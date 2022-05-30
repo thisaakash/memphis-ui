@@ -14,16 +14,19 @@
 import './style.scss';
 
 import React, { useEffect, useContext, useState, useRef } from 'react';
+import io from 'socket.io-client';
 
 import CreateFactoryDetails from './createFactoryDetails';
 import emptyList from '../../assets/images/emptyList.svg';
 import { ApiEndpoints } from '../../const/apiEndpoints';
 import { httpRequest } from '../../services/http';
 import Button from '../../components/button';
+import Loader from '../../components/loader';
 import { Context } from '../../hooks/store';
 import Modal from '../../components/modal';
 import Factory from './factory';
-import Loader from '../../components/loader';
+import { LOCAL_STORAGE_TOKEN } from '../../const/localStorageConsts';
+import { SOCKET_URL } from '../../config';
 
 function FactoriesList() {
     const [state, dispatch] = useContext(Context);
@@ -34,19 +37,27 @@ function FactoriesList() {
 
     useEffect(() => {
         dispatch({ type: 'SET_ROUTE', payload: 'factories' });
-        getAllFactories();
-    }, []);
-
-    const getAllFactories = async () => {
         setisLoading(true);
-        try {
-            const data = await httpRequest('GET', ApiEndpoints.GEL_ALL_FACTORIES);
-            if (data) {
-                setFactoriesList(data);
-            }
-        } catch (error) {}
-        setisLoading(false);
-    };
+        const socket = io.connect(SOCKET_URL, {
+            path: '/api/socket.io',
+            query: {
+                authorization: localStorage.getItem(LOCAL_STORAGE_TOKEN)
+            },
+            reconnection: false
+        });
+        socket.on('factories_overview_data', (data) => {
+            setFactoriesList(data);
+        });
+
+        setTimeout(() => {
+            socket.emit('register_factories_overview_data');
+            setisLoading(false);
+        }, 1000);
+        return () => {
+            socket.emit('deregister');
+            socket.close();
+        };
+    }, []);
 
     const removeFactory = (id) => {
         setFactoriesList(factoriesList.filter((item) => item.id !== id));

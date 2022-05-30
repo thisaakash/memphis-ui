@@ -13,11 +13,12 @@
 
 import './style.scss';
 
-import React, { useEffect, useContext, useState, useRef } from 'react';
+import React, { useEffect, useContext, useState, useRef, useCallback } from 'react';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import EditOutlined from '@material-ui/icons/EditOutlined';
 import { useHistory } from 'react-router-dom';
+import io from 'socket.io-client';
 
 import CreateStationDetails from '../../components/createStationDetails';
 import { ApiEndpoints } from '../../const/apiEndpoints';
@@ -29,8 +30,16 @@ import { Context } from '../../hooks/store';
 import Modal from '../../components/modal';
 import pathDomains from '../../router';
 import Loader from '../../components/loader';
+import { SOCKET_URL } from '../../config';
+import { LOCAL_STORAGE_TOKEN } from '../../const/localStorageConsts';
 
 const StationsList = () => {
+    const url = window.location.href;
+    const urlfactoryName = url.split('factories/')[1].split('/')[0];
+    const history = useHistory();
+    const botId = 1;
+    let socket;
+
     const [state, dispatch] = useContext(Context);
     const [editName, seteditName] = useState(false);
     const [editDescription, seteditDescription] = useState(false);
@@ -41,49 +50,67 @@ const StationsList = () => {
     const [isLoading, setisLoading] = useState(false);
     const createStationRef = useRef(null);
     const [parseDate, setParseDate] = useState(new Date().toLocaleDateString('he-IL', { timeZone: 'Asia/Jerusalem' }).replace(/\D/g, '/'));
-    const botId = 1;
     const [botUrl, SetBotUrl] = useState('');
-    const history = useHistory();
-
-    useEffect(() => {
-        dispatch({ type: 'SET_ROUTE', payload: 'factories' });
-        getFactoryDetails();
-    }, []);
 
     const setBotImage = (botId) => {
         SetBotUrl(require(`../../assets/images/bots/${botId}.svg`));
     };
 
-    const getFactoryDetails = async () => {
-        const url = window.location.href;
-        const factoryName = url.split('factories/')[1].split('/')[0];
+    const handleRegisterToFactory = useCallback((factoryName) => {
+        socket.emit('register_factory_overview_data', factoryName);
+    }, []);
+
+    useEffect(() => {
+        dispatch({ type: 'SET_ROUTE', payload: 'factories' });
         setisLoading(true);
-        try {
-            const data = await httpRequest('GET', `${ApiEndpoints.GEL_FACTORIES}?factory_name=${factoryName}`);
+
+        socket = io.connect(SOCKET_URL, {
+            path: '/api/socket.io',
+            query: {
+                authorization: localStorage.getItem(LOCAL_STORAGE_TOKEN)
+            },
+            reconnection: false
+        });
+
+        socket.on('factory_overview_data', (data) => {
+            console.log(data);
             setBotImage(data.user_avatar_id || botId);
             setParseDate(new Date(data.creation_date).toLocaleDateString('he-IL', { timeZone: 'Asia/Jerusalem' }).replace(/\D/g, '/'));
             setFactoryDetails(data);
             setFactoryName(data.name);
             setFactoryDescription(data.description);
-        } catch (error) {
-            if (error.status === 404) {
-                history.push(pathDomains.factoriesList);
-            }
-        }
-        setisLoading(false);
-    };
+            setisLoading(false);
+        });
 
-    const handleEditName = () => {
+        socket.on('error', (error) => {
+            history.push(pathDomains.factoriesList);
+            debugger;
+        });
+
+        setTimeout(() => {
+            handleRegisterToFactory(urlfactoryName);
+        }, 1000);
+
+        return () => {
+            socket.emit('deregister');
+            socket.close();
+        };
+    }, []);
+
+    const handleEditName = useCallback(() => {
+        socket.emit('deregister');
         seteditName(true);
-    };
+    }, []);
 
     const handleEditDescription = () => {
+        socket.emit('deregister');
         seteditDescription(true);
     };
 
     const handleEditNameBlur = async (e) => {
         if (!e.target.value) {
             seteditName(false);
+            handleRegisterToFactory(factoryName);
         } else {
             try {
                 await httpRequest('PUT', ApiEndpoints.EDIT_FACTORY, {
@@ -91,6 +118,7 @@ const StationsList = () => {
                     factory_new_name: e.target.value,
                     factory_new_description: factoryDetails.description
                 });
+                handleRegisterToFactory(e.target.value);
                 setFactoryDetails({ ...factoryDetails, name: e.target.value });
                 seteditName(false);
                 history.push(`${pathDomains.factoriesList}/${e.target.value}`);
@@ -106,6 +134,7 @@ const StationsList = () => {
 
     const handleEditDescriptionBlur = async (e) => {
         if (!e.target.value) {
+            handleRegisterToFactory(factoryName);
             seteditDescription(false);
         } else {
             try {
@@ -234,7 +263,7 @@ const StationsList = () => {
             </div>
             <Modal
                 header="Your station details"
-                minHeight="590px"
+                minHeight="550px"
                 minWidth="500px"
                 rBtnText="Add"
                 lBtnText="Cancel"

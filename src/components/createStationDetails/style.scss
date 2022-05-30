@@ -1,14 +1,14 @@
 .create-station-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: calc(100% - 120px);
+    position: absolute;
     .field-title {
         font-weight: 400;
         font-size: 12px;
         margin: 0;
-    }
-    .factory-name {
-        margin-top: 20px;
-    }
-    .retention {
-        height: 125px;
+        display: flex;
     }
     .time-value {
         display: flex;
@@ -48,10 +48,6 @@
     }
     .replicas-value p {
         margin-bottom: 10px;
-    }
-    .storage,
-    .replicas {
-        margin-top: 20px;
     }
 
     //input-number

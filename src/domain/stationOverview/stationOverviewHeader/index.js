@@ -70,7 +70,7 @@ const StationOverviewHeader = (props) => {
     const convertBytes = (bytes) => {
         const KB = 1024;
         const MB = 1024 * 1024;
-        if (bytes < KB) {
+        if (bytes < KB && bytes > 0) {
             return `${bytes} Bytes`;
         } else if (bytes >= KB && bytes < MB) {
             const parsing = isFloat(bytes / KB) ? Math.round((bytes / KB + Number.EPSILON) * 100) / 100 : bytes / KB;
@@ -78,6 +78,9 @@ const StationOverviewHeader = (props) => {
         } else if (bytes >= MB) {
             const parsing = isFloat(bytes / MB) ? Math.round((bytes / MB + Number.EPSILON) * 100) / 100 : bytes / MB;
             return `${parsing} MB`;
+        }
+        else {
+            return "0 Bytes"
         }
     };
 
@@ -153,7 +156,7 @@ const StationOverviewHeader = (props) => {
                             <img src={averageMesIcon} width={24} height={24} alt="averageMesIcon" />
                         </div>
                         <div className="more-details">
-                            <p className="number">{convertBytes(1030)}</p>
+                            <p className="number">{convertBytes(stationState?.stationSocketData?.average_message_size)}</p>
                             <p className="title">Av. message size</p>
                         </div>
                     </div>

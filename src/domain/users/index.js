@@ -125,6 +125,7 @@ function Users() {
                 <div className="users-list-header">
                     <p className="user-name-title">Username</p>
                     <p className="type-title">Type</p>
+                    <p className="creation-date-title">Creation date</p>
                 </div>
                 <div className="users-list">
                     {isLoading && (

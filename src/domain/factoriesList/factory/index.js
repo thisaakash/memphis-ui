@@ -28,6 +28,7 @@ import { ApiEndpoints } from '../../../const/apiEndpoints';
 import Modal from '../../../components/modal';
 import { Context } from '../../../hooks/store';
 import pathDomains from '../../../router';
+import { parsingDate } from '../../../services/dateConvertor';
 
 const Factory = (props) => {
     const [state, dispatch] = useContext(Context);
@@ -36,7 +37,7 @@ const Factory = (props) => {
     const open = Boolean(anchorEl);
     const [botUrl, SetBotUrl] = useState('');
     const botId = 1;
-    const parseDate = new Date(props.content.creation_date).toLocaleDateString('he-IL', { timeZone: 'Asia/Jerusalem' }).replace(/\D/g, '/');
+    const parsing = new Date(props.content.creation_date).toLocaleDateString('he-IL', { timeZone: 'Asia/Jerusalem' }).replace(/\D/g, '/');
 
     useEffect(() => {
         setBotImage(props.content?.user_avatar_id || botId);
@@ -96,7 +97,7 @@ const Factory = (props) => {
                     </div>
                     <div className="user-details">
                         <p>{props.content.created_by_user}</p>
-                        <span>{parseDate}</span>
+                        <span>{parsingDate(props.content.creation_date)}</span>
                     </div>
                 </div>
                 <Popover id="long-menu" classes={{ paper: 'Menu' }} anchorEl={anchorEl} onClose={handleCloseMenu} open={open}>

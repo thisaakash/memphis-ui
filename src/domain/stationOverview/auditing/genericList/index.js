@@ -18,6 +18,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import OverflowTip from '../../../../components/tooltip/overflowtip';
 import Reducer from '../../hooks/reducer';
 import { StationStoreContext } from '../..';
+import { parsingDate } from '../../../../services/dateConvertor';
 
 const GenericList = (props) => {
     const [stationState, stationDispatch] = useContext(StationStoreContext);
@@ -34,11 +35,6 @@ const GenericList = (props) => {
 
     const onSelectedRow = (rowIndex) => {
         setSelectedRowIndex(rowIndex);
-    };
-
-    const parsingDate = (date) => {
-        var options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
-        return new Date(date).toLocaleDateString([], options);
     };
 
     return (

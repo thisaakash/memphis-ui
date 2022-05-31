@@ -68,3 +68,8 @@ export const convertSecondsToDate = (seconds) => {
     }
     return result;
 };
+
+export const parsingDate = (date) => {
+    var options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+    return new Date(date).toLocaleDateString([], options);
+};

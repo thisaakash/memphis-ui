@@ -20,10 +20,10 @@ import comingSoonBox from '../../../assets/images/comingSoonBox.svg';
 import ErrorSharpIcon from '@material-ui/icons/ErrorSharp';
 import { Context } from '../../../hooks/store';
 import pathDomains from '../../../router';
+import { parsingDate } from '../../../services/dateConvertor';
 
 const FailedStations = () => {
     const [state, dispatch] = useContext(Context);
-
     return (
         <div className="overview-wrapper failed-factories-container">
             {/* <div className="coming-soon-wrapper">
@@ -40,6 +40,7 @@ const FailedStations = () => {
                 <div className="coulmns-table">
                     <span style={{ width: '200px' }}>Name</span>
                     <span style={{ width: '200px' }}>Factory name</span>
+                    <span style={{ width: '200px' }}>Creation date</span>
                     {/* <span style={{ width: '100px' }}>Status</span> */}
                     <span style={{ width: '100px' }}></span>
                 </div>
@@ -49,6 +50,7 @@ const FailedStations = () => {
                             <div className="factory-row" key={index}>
                                 <span style={{ width: '200px' }}>{station.name}</span>
                                 <span style={{ width: '200px' }}>{station.factory_name}</span>
+                                <span style={{ width: '200px' }}>{parsingDate(station.creation_date)}</span>
                                 {/* {station.status === 1 && (
                                     <span style={{ width: '100px' }}>
                                         <div className="dot green"></div>

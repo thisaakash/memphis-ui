@@ -220,7 +220,7 @@ const CreateStationDetails = (props) => {
             </Form.Item>
             <div className="retention">
                 <p className="field-title">
-                    Retention <Helper text="The default value is seven days. You can choose a custom retention value by time, message size, and message amount" />
+                    Retention <Helper text="By which criteria messages will be expel from the station" />
                 </p>
                 <Form.Item name="retention_type" initialValue={formFields.retention_type}>
                     <RadioButton options={retanionOptions} radioValue={formFields.retention_type} onChange={(e) => updateFormState('retention_type', e.target.value)} />
@@ -299,7 +299,7 @@ const CreateStationDetails = (props) => {
             </div>
             <div className="storage">
                 <p className="field-title">
-                    Storage Type <Helper text="Choose whether to store your messages in a file or memory" />
+                    Storage Type <Helper text="Type of message persistence" />
                 </p>
                 <Form.Item name="storage_type" initialValue={formFields.storage_type}>
                     <RadioButton options={storageOptions} radioValue={formFields.storage_type} onChange={(e) => updateFormState('storage_type', e.target.value)} />
@@ -307,7 +307,7 @@ const CreateStationDetails = (props) => {
             </div>
             <div className="replicas">
                 <p className="field-title">
-                    Replicas <Helper text="Choose how many replicas to create behind your station" />
+                    Replicas <Helper text="Amount of mirrors per message" />
                 </p>
                 <div className="replicas-value">
                     <Form.Item name="replicas" initialValue={formFields.replicas}>

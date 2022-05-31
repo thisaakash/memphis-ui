@@ -31,7 +31,7 @@ const SysComponents = () => {
             </div> */}
             <p className="overview-components-header">System components</p>
             <div className="sys-components sys-components-header">
-                <p>Pod name</p>
+                <p>Component</p>
                 <p>Pods</p>
                 <p>Status</p>
             </div>

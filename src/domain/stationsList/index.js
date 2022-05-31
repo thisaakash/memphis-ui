@@ -85,7 +85,6 @@ const StationsList = () => {
 
         socket.on('error', (error) => {
             history.push(pathDomains.factoriesList);
-            debugger;
         });
 
         setTimeout(() => {

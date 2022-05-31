@@ -124,7 +124,6 @@ node {
 
  } catch (e) {
       currentBuild.result = "FAILED"
-      sh "helm uninstall memphis-tests -n memphis-$unique_id"
       sh "kubectl delete ns memphis-$unique_id &"
       cleanWs()
       notifyFailed()

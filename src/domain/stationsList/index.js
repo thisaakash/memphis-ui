@@ -32,6 +32,7 @@ import pathDomains from '../../router';
 import Loader from '../../components/loader';
 import { SOCKET_URL } from '../../config';
 import { LOCAL_STORAGE_TOKEN } from '../../const/localStorageConsts';
+import { parsingDate } from '../../services/dateConvertor';
 
 const StationsList = () => {
     const url = window.location.href;
@@ -49,7 +50,7 @@ const StationsList = () => {
     const [factoryDescription, setFactoryDescription] = useState('');
     const [isLoading, setisLoading] = useState(false);
     const createStationRef = useRef(null);
-    const [parseDate, setParseDate] = useState(new Date().toLocaleDateString('he-IL', { timeZone: 'Asia/Jerusalem' }).replace(/\D/g, '/'));
+    const [parseDate, setParseDate] = useState('');
     const [botUrl, SetBotUrl] = useState('');
 
     const setBotImage = (botId) => {
@@ -75,7 +76,7 @@ const StationsList = () => {
         socket.on('factory_overview_data', (data) => {
             console.log(data);
             setBotImage(data.user_avatar_id || botId);
-            setParseDate(new Date(data.creation_date).toLocaleDateString('he-IL', { timeZone: 'Asia/Jerusalem' }).replace(/\D/g, '/'));
+            setParseDate(parsingDate(data.creation_date));
             setFactoryDetails(data);
             setFactoryName(data.name);
             setFactoryDescription(data.description);
@@ -84,7 +85,6 @@ const StationsList = () => {
 
         socket.on('error', (error) => {
             history.push(pathDomains.factoriesList);
-            debugger;
         });
 
         setTimeout(() => {

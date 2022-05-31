@@ -18,6 +18,7 @@ import UserType from './userType';
 import { httpRequest } from '../../../services/http';
 import { ApiEndpoints } from '../../../const/apiEndpoints';
 import Modal from '../../../components/modal';
+import { parsingDate } from '../../../services/dateConvertor';
 
 function UserItem(props) {
     const defaultBotId = 1;
@@ -50,6 +51,9 @@ function UserItem(props) {
             </div>
             <div className="user-type">
                 <UserType userType={props.content?.user_type} />
+            </div>
+            <div className="user-creation-date">
+                <p>{parsingDate(props.content?.creation_date)} </p>
             </div>
             {props.content?.user_type !== 'root' && (
                 <div className="user-actions">

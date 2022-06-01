@@ -10,7 +10,7 @@
         margin-top: 15px;
         color: #979797;
         display: grid;
-        grid-template-columns: 40% 20% 40%;
+        grid-template-columns: 34% 33% 33%;
         padding-left: 10px;
         padding-bottom: 10px;
         height: 30px;
@@ -20,8 +20,8 @@
         height: calc(100% - 70px);
         .sys-components {
             display: grid;
-            grid-template-columns: 40% 20% 40%;
-            padding-top: 10px;
+            grid-template-columns: 34% 33% 33%;
+            padding-top: 5px;
             padding-bottom: 10px;
             padding-left: 10px;
         }

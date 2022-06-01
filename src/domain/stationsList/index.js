@@ -177,12 +177,12 @@ const StationsList = () => {
                         </ClickAwayListener>
                     )}
                     {!editDescription && (
-                        <h1 className="description">
+                        <div className="description">
                             {!isLoading ? <p>{factoryDescription || 'Insert your description...'}</p> : <CircularProgress className="circular-progress" size={12} />}
                             <span id="e2e-tests-edit-description" className="edit-icon" onClick={() => handleEditDescription()}>
                                 <EditOutlined />
                             </span>
-                        </h1>
+                        </div>
                     )}
                     {editDescription && (
                         <ClickAwayListener onClickAway={handleEditDescriptionBlur}>

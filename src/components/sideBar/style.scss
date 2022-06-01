@@ -24,7 +24,7 @@
 
     .bottom-icons {
         position: absolute;
-        bottom: 1vh;
+        bottom: 0;
         width: 100%;
         .sub-icon-wrapper {
             width: 35px;
@@ -57,6 +57,12 @@
                 display: flex;
                 place-content: center;
             }
+        }
+        .system-version p{
+            margin-bottom: 5px;
+            font-size: 12px;
+            font-weight: 600;
+            opacity: 0.6;
         }
     }
 

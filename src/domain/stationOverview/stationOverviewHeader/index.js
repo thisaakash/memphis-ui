@@ -199,7 +199,7 @@ const StationOverviewHeader = (props) => {
                     </div> */}
                 </div>
             </div>
-            <Modal header="SDK" minHeight="740px" minWidth="500px" closeAction={() => modalFlip(false)} clickOutside={() => modalFlip(false)} open={open} hr={false}>
+            <Modal header="SDK" minHeight="650px" minWidth="500px" closeAction={() => modalFlip(false)} clickOutside={() => modalFlip(false)} open={open} hr={false}>
                 <div className="sdk-details-container">
                     <div className="select-lan">
                         <p>Language</p>

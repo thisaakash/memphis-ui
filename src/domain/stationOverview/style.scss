@@ -2,12 +2,13 @@
     width: calc(100% - 70px);
     position: absolute;
     padding: 2vw;
-    height: 100%;
+    height: calc(100%);
     min-width: 1000px;
     overflow: auto;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    gap: 15px;
     .overview-top {
         display: flex;
         width: calc(100%);

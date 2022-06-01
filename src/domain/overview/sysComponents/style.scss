@@ -21,9 +21,10 @@
         .sys-components {
             display: grid;
             grid-template-columns: 34% 33% 33%;
-            padding-top: 5px;
-            padding-bottom: 10px;
+            padding-top: 7px;
+            padding-bottom: 7px;
             padding-left: 10px;
+            align-items: center;
         }
     }
 }

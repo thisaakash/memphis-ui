@@ -101,10 +101,10 @@ const StationsList = () => {
         seteditName(true);
     }, []);
 
-    const handleEditDescription = () => {
+    const handleEditDescription = useCallback(() => {
         socket.emit('deregister');
         seteditDescription(true);
-    };
+    }, []);
 
     const handleEditNameBlur = async (e) => {
         if (!e.target.value) {
@@ -114,8 +114,7 @@ const StationsList = () => {
             try {
                 await httpRequest('PUT', ApiEndpoints.EDIT_FACTORY, {
                     factory_name: factoryDetails.name,
-                    factory_new_name: e.target.value,
-                    factory_new_description: factoryDetails.description
+                    factory_new_name: e.target.value
                 });
                 handleRegisterToFactory(e.target.value);
                 setFactoryDetails({ ...factoryDetails, name: e.target.value });
@@ -139,7 +138,6 @@ const StationsList = () => {
             try {
                 await httpRequest('PUT', ApiEndpoints.EDIT_FACTORY, {
                     factory_name: factoryDetails.name,
-                    factory_new_name: factoryDetails.name,
                     factory_new_description: e.target.value
                 });
                 setFactoryDetails({ ...factoryDetails, description: e.target.value });

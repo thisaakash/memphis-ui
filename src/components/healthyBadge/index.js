@@ -36,7 +36,7 @@ const HealthyBadge = ({ status }) => {
             {status <= 0.3 && (
                 <div className="unhealthy">
                     <Cancel className="badge-icon" theme="outlined" />
-                    <p>UnHealthy</p>
+                    <p>Unhealthy</p>
                 </div>
             )}
         </div>

@@ -74,7 +74,6 @@ const StationsList = () => {
         });
 
         socket.on('factory_overview_data', (data) => {
-            console.log(data);
             setBotImage(data.user_avatar_id || botId);
             setParseDate(parsingDate(data.creation_date));
             setFactoryDetails(data);

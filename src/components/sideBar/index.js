@@ -13,7 +13,7 @@
 
 import './style.scss';
 
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { useHistory } from 'react-router-dom';
 import { Link } from 'react-router-dom';
@@ -49,16 +49,9 @@ function SideBar() {
     const [state, dispatch] = useContext(Context);
     const history = useHistory();
     const [botUrl, SetBotUrl] = useState(require('../../assets/images/bots/1.svg'));
+    const [systemVersion, setSystemVersion] = useState('');
 
-    useEffect(() => {
-        getCompanyLogo();
-    }, []);
-
-    useEffect(() => {
-        setBotImage(state?.userData?.avatar_id || localStorage.getItem(LOCAL_STORAGE_AVATAR_ID));
-    }, [state]);
-
-    const getCompanyLogo = async () => {
+    const getCompanyLogo = useCallback(async () => {
         try {
             const data = await httpRequest('GET', ApiEndpoints.GET_COMPANY_LOGO);
             if (data) {
@@ -66,7 +59,26 @@ function SideBar() {
                 dispatch({ type: 'SET_COMPANY_LOGO', payload: data.image });
             }
         } catch (error) {}
-    };
+    }, []);
+
+    const getSystemVersion = useCallback(async () => {
+        try {
+            const data = await httpRequest('GET', ApiEndpoints.GET_CLUSTER_INFO);
+            if (data) {
+                setSystemVersion(data.version);
+            }
+        } catch (error) {}
+    }, []);
+
+    useEffect(() => {
+        getCompanyLogo().catch(console.error);
+        getSystemVersion().catch(console.error);
+    }, []);
+
+    useEffect(() => {
+        setBotImage(state?.userData?.avatar_id || localStorage.getItem(LOCAL_STORAGE_AVATAR_ID));
+    }, [state]);
+
     const setBotImage = (botId) => {
         SetBotUrl(require(`../../assets/images/bots/${botId}.svg`));
     };
@@ -163,7 +175,7 @@ function SideBar() {
                             <Menu.Item key={1} className="customclass">
                                 <div className="item-wrapp">
                                     <img src={accountIcon} width="15" height="15" alt="accountIcon" />
-                                    <p>Settings</p>
+                                    <p>Preferences</p>
                                 </div>
                             </Menu.Item>
                             <Menu.Item key={2}>
@@ -183,6 +195,9 @@ function SideBar() {
                         </Menu.ItemGroup>
                     </SubMenu>
                 </Menu>
+                <div className="system-version">
+                    <p>V{systemVersion}</p>
+                </div>
             </div>
         </div>
     );

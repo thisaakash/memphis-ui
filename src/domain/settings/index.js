@@ -37,9 +37,9 @@ function Users() {
     };
 
     return (
-        <div className="settings-container">
-            <h1 className="main-header-h1">Settings</h1>
-            <div className="settings-panel-tabs">
+        <div className="preferences-container">
+            <h1 className="main-header-h1">Preferences</h1>
+            <div className="preferences-panel-tabs">
                 <div>
                     <CustomTabs value={value} onChange={handleChangeMenuItem} tabs={tabs}></CustomTabs>
                     <Divider />

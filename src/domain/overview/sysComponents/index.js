@@ -43,7 +43,7 @@ const SysComponents = () => {
                             <div key={`${comp.podName}${i}`}>
                                 <Divider />
                                 <div className="sys-components">
-                                    <p>{comp.pod_name}</p>
+                                    <p>{comp.component}</p>
                                     <p>
                                         {comp.actual_pods}/{comp.desired_pods}
                                     </p>

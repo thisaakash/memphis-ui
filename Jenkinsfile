@@ -7,10 +7,11 @@ def test_suffix = "test"
 String unique_id = org.apache.commons.lang.RandomStringUtils.random(4, false, true)
 
 node {
+  git credentialsId: 'main-github', url: gitURL, branch: gitBranch
+  def versionTag = readFile "./version.conf"
+	
+	
   try{
-    stage('SCM checkout') {
-        git credentialsId: 'main-github', url: gitURL, branch: gitBranch
-    }
 
     stage('Login to Docker Hub') {
 	    withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_HUB_CREDS_USR', passwordVariable: 'DOCKER_HUB_CREDS_PSW')]) {
@@ -85,7 +86,7 @@ node {
     }
 
     stage('Build and push image to Docker Hub') {
-      sh "docker buildx build --push -t ${repoUrlPrefix}/${imageName} --platform linux/amd64,linux/arm64 ."
+       sh "docker buildx build --push --tag ${repoUrlPrefix}/${imageName}:${versionTag} --tag ${repoUrlPrefix}/${imageName} --platform linux/amd64,linux/arm64 ."
     }
 	  
 	  
@@ -102,6 +103,7 @@ node {
   } catch (e) {
       currentBuild.result = "FAILED"
       sh "kubectl delete ns memphis-$unique_id &"
+      sh "docker-compose -f ./memphis-infra/staging/docker/docker-compose-dev-memphis-control-plane.yml -p memphis down &"
       cleanWs()
       notifyFailed()
       throw e

@@ -22,4 +22,4 @@ export const SHOWABLE_ERROR_STATUS_CODE = 666;
 export const AUTHENTICATION_ERROR_STATUS_CODE = 401;
 export const DOC_URL = 'https://app.gitbook.com/o/-MSyW3CRw3knM-KGk6G6/s/t7NJvDh5VSGZnmEsyR9h/memphis/overview';
 export const PRIVACY_URL = 'https://app.gitbook.com/o/-MSyW3CRw3knM-KGk6G6/s/t7NJvDh5VSGZnmEsyR9h/memphis/privacy';
-export const SOCKET_URL = environment === 'production' ? `${SSL_PREFIX}${SERVER_URL_PRODUCTION}` : 'localhost:5555';
+export const SOCKET_URL = environment === 'production' ? `${SSL_PREFIX}${SERVER_URL_PRODUCTION}` : 'localhost:5555/api';

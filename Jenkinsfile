@@ -2,7 +2,7 @@ def repoUrlPrefix = "memphisos"
 def imageName = "memphis-ui"
 def gitURL = "git@github.com:Memphis-OS/memphis-ui.git"
 def gitBranch = "beta"
-def versionTag = "beta"
+def branchTag = "beta"
 String unique_id = org.apache.commons.lang.RandomStringUtils.random(4, false, true)
 def namespace = "memphis"
 def test_suffix = "test"
@@ -11,6 +11,9 @@ def test_suffix = "test"
 
 
 node {
+  git credentialsId: 'main-github', url: gitURL, branch: gitBranch
+  def versionTag = readFile "./version.conf"
+	
   try{
     stage('SCM checkout') {
         git credentialsId: 'main-github', url: gitURL, branch: gitBranch
@@ -28,7 +31,7 @@ node {
     }
 
     stage('Build and push docker image to Docker Hub') {
-	    sh "docker buildx build --push -t ${repoUrlPrefix}/${imageName}-${versionTag}-${test_suffix} ."
+	    sh "docker buildx build --push -t ${repoUrlPrefix}/${imageName}-${branchTag}-${test_suffix} ."
     }
 
     stage('Tests - Install/upgrade Memphis cli') {
@@ -96,7 +99,7 @@ node {
     ////////////////////////////////////////
 
     stage('Build and push image to Docker Hub') {
-      sh "docker buildx build --push -t ${repoUrlPrefix}/${imageName}:beta --platform linux/amd64,linux/arm64 ."
+      sh "docker buildx build --push --tag ${repoUrlPrefix}/${imageName}:${versionTag} --tag ${repoUrlPrefix}/${imageName}:beta --platform linux/amd64,linux/arm64 ."
     }
 
     ////////////////////////////////////////

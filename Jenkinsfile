@@ -31,7 +31,7 @@ node {
     }
 
     stage('Build and push docker image to Docker Hub') {
-	    sh "docker buildx build --push -t ${repoUrlPrefix}/${imageName}-${branchTag}-${test_suffix} ."
+      sh "docker buildx build --push -t ${repoUrlPrefix}/${imageName}-${branchTag}-${test_suffix} ."
     }
 
     stage('Tests - Install/upgrade Memphis cli') {
@@ -59,6 +59,7 @@ node {
 
     stage('Tests - Remove Docker compose') {
       sh "docker-compose -f ./memphis-infra/beta/docker/docker-compose-dev-memphis-ui.yml -p memphis down"
+      sh "docker volume prune -f"
     }
 
     ////////////////////////////////////////

@@ -6,6 +6,9 @@
 .pnp.js
 .eslintcache
 
+# icloud
+* 2*
+
 # testing
 /coverage
 

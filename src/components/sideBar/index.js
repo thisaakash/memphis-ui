@@ -1,9 +1,9 @@
 // Copyright 2021-2022 The Memphis Authors
-// Licensed under the Apache License, Version 2.0 (the “License”);
+// Licensed under the GNU General Public License v3.0 (the “License”);
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.gnu.org/licenses/gpl-3.0.en.html
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an “AS IS” BASIS,
@@ -13,7 +13,7 @@
 
 import './style.scss';
 
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { useHistory } from 'react-router-dom';
 import { Link } from 'react-router-dom';
@@ -31,7 +31,7 @@ import usersIcon from '../../assets/images/usersIcon.svg';
 import Logo from '../../assets/images/logo.svg';
 import BetaLogo from '../../assets/images/betaLogo.svg';
 import { Context } from '../../hooks/store';
-import pathControllers from '../../router';
+import pathDomains from '../../router';
 import AuthService from '../../services/auth';
 import { LOCAL_STORAGE_AVATAR_ID, LOCAL_STORAGE_COMPANY_LOGO, LOCAL_STORAGE_USER_NAME } from '../../const/localStorageConsts';
 import { httpRequest } from '../../services/http';
@@ -49,16 +49,9 @@ function SideBar() {
     const [state, dispatch] = useContext(Context);
     const history = useHistory();
     const [botUrl, SetBotUrl] = useState(require('../../assets/images/bots/1.svg'));
+    const [systemVersion, setSystemVersion] = useState('');
 
-    useEffect(() => {
-        getCompanyLogo();
-    }, []);
-
-    useEffect(() => {
-        setBotImage(state?.userData?.avatar_id || localStorage.getItem(LOCAL_STORAGE_AVATAR_ID));
-    }, [state]);
-
-    const getCompanyLogo = async () => {
+    const getCompanyLogo = useCallback(async () => {
         try {
             const data = await httpRequest('GET', ApiEndpoints.GET_COMPANY_LOGO);
             if (data) {
@@ -66,7 +59,26 @@ function SideBar() {
                 dispatch({ type: 'SET_COMPANY_LOGO', payload: data.image });
             }
         } catch (error) {}
-    };
+    }, []);
+
+    const getSystemVersion = useCallback(async () => {
+        try {
+            const data = await httpRequest('GET', ApiEndpoints.GET_CLUSTER_INFO);
+            if (data) {
+                setSystemVersion(data.version);
+            }
+        } catch (error) {}
+    }, []);
+
+    useEffect(() => {
+        getCompanyLogo().catch(console.error);
+        getSystemVersion().catch(console.error);
+    }, []);
+
+    useEffect(() => {
+        setBotImage(state?.userData?.avatar_id || localStorage.getItem(LOCAL_STORAGE_AVATAR_ID));
+    }, [state]);
+
     const setBotImage = (botId) => {
         SetBotUrl(require(`../../assets/images/bots/${botId}.svg`));
     };
@@ -74,7 +86,7 @@ function SideBar() {
     const handleClick = async (e) => {
         switch (e.key) {
             case '1':
-                history.push(pathControllers.settings);
+                history.push(pathDomains.settings);
                 break;
             case '2':
                 break;
@@ -89,11 +101,11 @@ function SideBar() {
     return (
         <div className="sidebar-container">
             <div className="upper-icons">
-                <Link to={pathControllers.overview}>
+                <Link to={pathDomains.overview}>
                     <img src={BetaLogo} width="55" height="40" className="logoimg" alt="logo" />
                 </Link>
                 <div className="item-wrapper">
-                    <Link to={pathControllers.overview}>
+                    <Link to={pathDomains.overview}>
                         <div className="icon">
                             <div className={state.route === 'overview' ? 'circle-nav-item checked' : 'circle-nav-item'}>
                                 {state.route === 'overview' ? (
@@ -107,36 +119,40 @@ function SideBar() {
                     </Link>
                 </div>
                 <div className="item-wrapper">
-                    <Link to={pathControllers.factoriesList}>
-                        <div className="icon">
-                            <div className={state.route === 'factories' ? 'circle-nav-item checked' : 'circle-nav-item'}>
-                                {state.route === 'factories' ? (
-                                    <img src={factoriesIconActive} alt="factoriesIconActive" width="20" height="20"></img>
-                                ) : (
-                                    <img src={factoriesIcon} alt="factoriesIcon" width="20" height="20"></img>
-                                )}
+                    <div id="e2e-tests-factory-sidebar">
+                        <Link to={pathDomains.factoriesList}>
+                            <div className="icon">
+                                <div className={state.route === 'factories' ? 'circle-nav-item checked' : 'circle-nav-item'}>
+                                    {state.route === 'factories' ? (
+                                        <img src={factoriesIconActive} alt="factoriesIconActive" width="20" height="20"></img>
+                                    ) : (
+                                        <img src={factoriesIcon} alt="factoriesIcon" width="20" height="20"></img>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                        <p className={state.route === 'factories' ? 'checked' : 'name'}>Factories</p>
-                    </Link>
+                            <p className={state.route === 'factories' ? 'checked' : 'name'}>Factories</p>
+                        </Link>
+                    </div>
                 </div>
 
                 <div className="item-wrapper">
-                    <Link to={pathControllers.users}>
-                        <div className="icon">
-                            <div className={state.route === 'users' ? 'circle-nav-item checked' : 'circle-nav-item'}>
-                                {state.route === 'users' ? (
-                                    <img src={usersIconActive} alt="usersIconActive" width="20" height="20"></img>
-                                ) : (
-                                    <img src={usersIcon} alt="usersIcon" width="20" height="20"></img>
-                                )}
+                    <div id="e2e-tests-users-sidebar">
+                        <Link to={pathDomains.users}>
+                            <div className="icon">
+                                <div className={state.route === 'users' ? 'circle-nav-item checked' : 'circle-nav-item'}>
+                                    {state.route === 'users' ? (
+                                        <img src={usersIconActive} alt="usersIconActive" width="20" height="20"></img>
+                                    ) : (
+                                        <img src={usersIcon} alt="usersIcon" width="20" height="20"></img>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                        <p className={state.route === 'users' ? 'checked' : 'name'}>Users</p>
-                    </Link>
+                            <p className={state.route === 'users' ? 'checked' : 'name'}>Users</p>
+                        </Link>
+                    </div>
                 </div>
             </div>
-            <div className="bottom-icons">
+            <div id="e2e-tests-settings-btn" className="bottom-icons">
                 <Menu onClick={handleClick} className="app-menu" mode="vertical" triggerSubMenuAction="click">
                     <SubMenu
                         key="subMenu"
@@ -159,7 +175,7 @@ function SideBar() {
                             <Menu.Item key={1} className="customclass">
                                 <div className="item-wrapp">
                                     <img src={accountIcon} width="15" height="15" alt="accountIcon" />
-                                    <p>Settings</p>
+                                    <p>Preferences</p>
                                 </div>
                             </Menu.Item>
                             <Menu.Item key={2}>
@@ -179,6 +195,9 @@ function SideBar() {
                         </Menu.ItemGroup>
                     </SubMenu>
                 </Menu>
+                <div className="system-version">
+                    <p>v{systemVersion}</p>
+                </div>
             </div>
         </div>
     );

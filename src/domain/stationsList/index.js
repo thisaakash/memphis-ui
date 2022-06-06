@@ -1,9 +1,9 @@
 // Copyright 2021-2022 The Memphis Authors
-// Licensed under the Apache License, Version 2.0 (the “License”);
+// Licensed under the GNU General Public License v3.0 (the “License”);
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.gnu.org/licenses/gpl-3.0.en.html
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an “AS IS” BASIS,
@@ -13,11 +13,12 @@
 
 import './style.scss';
 
-import React, { useEffect, useContext, useState, useRef } from 'react';
+import React, { useEffect, useContext, useState, useRef, useCallback } from 'react';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import EditOutlined from '@material-ui/icons/EditOutlined';
 import { useHistory } from 'react-router-dom';
+import io from 'socket.io-client';
 
 import CreateStationDetails from '../../components/createStationDetails';
 import { ApiEndpoints } from '../../const/apiEndpoints';
@@ -29,8 +30,17 @@ import { Context } from '../../hooks/store';
 import Modal from '../../components/modal';
 import pathDomains from '../../router';
 import Loader from '../../components/loader';
+import { SOCKET_URL } from '../../config';
+import { LOCAL_STORAGE_TOKEN } from '../../const/localStorageConsts';
+import { parsingDate } from '../../services/dateConvertor';
 
 const StationsList = () => {
+    const url = window.location.href;
+    const urlfactoryName = url.split('factories/')[1].split('/')[0];
+    const history = useHistory();
+    const botId = 1;
+    let socket;
+
     const [state, dispatch] = useContext(Context);
     const [editName, seteditName] = useState(false);
     const [editDescription, seteditDescription] = useState(false);
@@ -40,53 +50,74 @@ const StationsList = () => {
     const [factoryDescription, setFactoryDescription] = useState('');
     const [isLoading, setisLoading] = useState(false);
     const createStationRef = useRef(null);
-    const [parseDate, setParseDate] = useState(new Date().toLocaleDateString());
-    const botId = 1;
+    const [parseDate, setParseDate] = useState('');
     const [botUrl, SetBotUrl] = useState('');
-    const history = useHistory();
-
-    useEffect(() => {
-        dispatch({ type: 'SET_ROUTE', payload: 'factories' });
-        getFactoryDetails();
-    }, []);
 
     const setBotImage = (botId) => {
         SetBotUrl(require(`../../assets/images/bots/${botId}.svg`));
     };
 
-    const getFactoryDetails = async () => {
-        const url = window.location.href;
-        const factoryName = url.split('factories/')[1].split('/')[0];
+    const handleRegisterToFactory = useCallback((factoryName) => {
+        socket.emit('register_factory_overview_data', factoryName);
+    }, []);
+
+    useEffect(() => {
+        dispatch({ type: 'SET_ROUTE', payload: 'factories' });
         setisLoading(true);
-        try {
-            const data = await httpRequest('GET', `${ApiEndpoints.GEL_FACTORIES}?factory_name=${factoryName}`);
+
+        socket = io.connect(SOCKET_URL, {
+            path: '/api/socket.io',
+            query: {
+                authorization: localStorage.getItem(LOCAL_STORAGE_TOKEN)
+            },
+            reconnection: false
+        });
+
+        socket.on('factory_overview_data', (data) => {
             setBotImage(data.user_avatar_id || botId);
-            setParseDate(new Date(data.creation_date).toLocaleDateString());
+            setParseDate(parsingDate(data.creation_date));
             setFactoryDetails(data);
             setFactoryName(data.name);
             setFactoryDescription(data.description);
-        } catch (err) {}
-        setisLoading(false);
-    };
+            setisLoading(false);
+        });
 
-    const handleEditName = () => {
+        socket.on('error', (error) => {
+            history.push(pathDomains.factoriesList);
+        });
+
+        setTimeout(() => {
+            handleRegisterToFactory(urlfactoryName);
+        }, 1000);
+
+        return () => {
+            socket.emit('deregister');
+            socket.close();
+        };
+    }, []);
+
+    const handleEditName = useCallback(() => {
+        socket.emit('deregister');
         seteditName(true);
-    };
+    }, []);
 
-    const handleEditDescription = () => {
+    const handleEditDescription = useCallback(() => {
+        socket.emit('deregister');
         seteditDescription(true);
-    };
+    }, []);
 
     const handleEditNameBlur = async (e) => {
-        if (!e.target.value) {
+        if (!e.target.value || e.target.value === factoryDetails.name || e.target.value === '') {
+            setFactoryName(factoryDetails.name);
+            handleRegisterToFactory(factoryDetails.name);
             seteditName(false);
         } else {
             try {
                 await httpRequest('PUT', ApiEndpoints.EDIT_FACTORY, {
                     factory_name: factoryDetails.name,
-                    factory_new_name: e.target.value,
-                    factory_new_description: factoryDetails.description
+                    factory_new_name: e.target.value
                 });
+                handleRegisterToFactory(e.target.value);
                 setFactoryDetails({ ...factoryDetails, name: e.target.value });
                 seteditName(false);
                 history.push(`${pathDomains.factoriesList}/${e.target.value}`);
@@ -101,13 +132,13 @@ const StationsList = () => {
     };
 
     const handleEditDescriptionBlur = async (e) => {
-        if (!e.target.value) {
+        if (e.target.value === factoryDetails.description) {
+            handleRegisterToFactory(factoryName);
             seteditDescription(false);
         } else {
             try {
                 await httpRequest('PUT', ApiEndpoints.EDIT_FACTORY, {
                     factory_name: factoryDetails.name,
-                    factory_new_name: factoryDetails.name,
                     factory_new_description: e.target.value
                 });
                 setFactoryDetails({ ...factoryDetails, description: e.target.value });
@@ -133,8 +164,10 @@ const StationsList = () => {
                 <div className="left-side">
                     {!editName && (
                         <h1 className="main-header-h1">
-                            {!isLoading ? factoryName || 'Inser Factory name' : <CircularProgress className="circular-progress" size={18} />}
-                            <EditOutlined className="edit-icon" onClick={() => handleEditName()} />
+                            {!isLoading ? factoryName || 'Insert Factory name' : <CircularProgress className="circular-progress" size={18} />}
+                            <span id="e2e-tests-edit-name" className="edit-icon" onClick={() => handleEditName()}>
+                                <EditOutlined />
+                            </span>
                         </h1>
                     )}
                     {editName && (
@@ -147,12 +180,14 @@ const StationsList = () => {
                     {!editDescription && (
                         <div className="description">
                             {!isLoading ? <p>{factoryDescription || 'Insert your description...'}</p> : <CircularProgress className="circular-progress" size={12} />}
-                            <EditOutlined className="edit-icon" onClick={() => handleEditDescription()} />
+                            <span id="e2e-tests-edit-description" className="edit-icon" onClick={() => handleEditDescription()}>
+                                <EditOutlined />
+                            </span>
                         </div>
                     )}
                     {editDescription && (
                         <ClickAwayListener onClickAway={handleEditDescriptionBlur}>
-                            <div>
+                            <div id="e2e-tests-insert-description">
                                 <textarea onBlur={handleEditDescriptionBlur} onChange={handleEditDescriptionChange} value={factoryDescription} />
                             </div>
                         </ClickAwayListener>
@@ -226,7 +261,7 @@ const StationsList = () => {
             </div>
             <Modal
                 header="Your station details"
-                minHeight="590px"
+                minHeight="550px"
                 minWidth="500px"
                 rBtnText="Add"
                 lBtnText="Cancel"

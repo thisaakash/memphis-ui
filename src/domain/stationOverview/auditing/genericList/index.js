@@ -1,9 +1,9 @@
 // Copyright 2021-2022 The Memphis Authors
-// Licensed under the Apache License, Version 2.0 (the “License”);
+// Licensed under the GNU General Public License v3.0 (the “License”);
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.gnu.org/licenses/gpl-3.0.en.html
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an “AS IS” BASIS,
@@ -13,14 +13,28 @@
 
 import './style.scss';
 
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import OverflowTip from '../../../../components/tooltip/overflowtip';
+import Reducer from '../../hooks/reducer';
+import { StationStoreContext } from '../..';
+import { parsingDate } from '../../../../services/dateConvertor';
 
 const GenericList = (props) => {
-    const { columns, rows } = props;
+    const [stationState, stationDispatch] = useContext(StationStoreContext);
 
+    const { columns, tab } = props;
+    const [rowsData, setRowsData] = useState([]);
     const [selectedRowIndex, setSelectedRowIndex] = useState(0);
+
+    useEffect(() => {
+        // if (tab === 1) {
+        //     setRowsData(stationState?.stationSocketData?.audit_logs);
+        // }
+        if (tab === 0) {
+            setRowsData(stationState?.stationSocketData?.audit_logs);
+        }
+    }, [stationState]);
 
     const onSelectedRow = (rowIndex) => {
         setSelectedRowIndex(rowIndex);
@@ -39,26 +53,24 @@ const GenericList = (props) => {
                     })}
                 </div>
                 <div className="rows-wrapper">
-                    {rows?.map((row, index) => {
+                    {rowsData?.map((row, index) => {
                         return (
                             <div className={selectedRowIndex === index ? 'pubSub-row selected' : 'pubSub-row'} key={index} onClick={() => onSelectedRow(index)}>
-                                <OverflowTip text={row.logData || row.producer} width={'250px'}>
-                                    {row.logData || row.producer}
+                                <OverflowTip text={row?.message || row?.produced_by} width={'300px'}>
+                                    {row?.message || row?.produced_by}
                                 </OverflowTip>
-                                <OverflowTip text={row.source || row.consumer} width={'250px'}>
-                                    {row.source || row.consumer}
+                                <OverflowTip text={row?.user_type || row?.consumer} width={'200px'}>
+                                    {row?.user_type || row?.consumer}
                                 </OverflowTip>
-                                <OverflowTip text={row.date} width={'200px'}>
-                                    {row.date}
+                                <OverflowTip text={row?.creation_date} width={'200px'}>
+                                    {parsingDate(row?.creation_date)}
                                 </OverflowTip>
                             </div>
                         );
                     })}
                 </div>
             </div>
-            <div className="row-data">
-                <p>{rows[selectedRowIndex].logData || rows[selectedRowIndex].data}</p>
-            </div>
+            <div className="row-data">{rowsData && <p>{rowsData[selectedRowIndex]?.message}</p>}</div>
         </div>
     );
 };

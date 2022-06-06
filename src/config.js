@@ -1,9 +1,9 @@
 // Copyright 2021-2022 The Memphis Authors
-// Licensed under the Apache License, Version 2.0 (the “License”);
+// Licensed under the GNU General Public License v3.0 (the “License”);
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.gnu.org/licenses/gpl-3.0.en.html
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an “AS IS” BASIS,
@@ -22,3 +22,4 @@ export const SHOWABLE_ERROR_STATUS_CODE = 666;
 export const AUTHENTICATION_ERROR_STATUS_CODE = 401;
 export const DOC_URL = 'https://app.gitbook.com/o/-MSyW3CRw3knM-KGk6G6/s/t7NJvDh5VSGZnmEsyR9h/memphis/overview';
 export const PRIVACY_URL = 'https://app.gitbook.com/o/-MSyW3CRw3knM-KGk6G6/s/t7NJvDh5VSGZnmEsyR9h/memphis/privacy';
+export const SOCKET_URL = environment === 'production' ? `${SSL_PREFIX}${SERVER_URL_PRODUCTION}` : 'localhost:5555/api';

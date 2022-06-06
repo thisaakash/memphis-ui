@@ -1,9 +1,9 @@
 // Copyright 2021-2022 The Memphis Authors
-// Licensed under the Apache License, Version 2.0 (the “License”);
+// Licensed under the GNU General Public License v3.0 (the “License”);
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.gnu.org/licenses/gpl-3.0.en.html
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an “AS IS” BASIS,
@@ -27,7 +27,8 @@ import { httpRequest } from '../../../services/http';
 import { ApiEndpoints } from '../../../const/apiEndpoints';
 import Modal from '../../../components/modal';
 import { Context } from '../../../hooks/store';
-import pathControllers from '../../../router';
+import pathDomains from '../../../router';
+import { parsingDate } from '../../../services/dateConvertor';
 
 const Factory = (props) => {
     const [state, dispatch] = useContext(Context);
@@ -36,7 +37,6 @@ const Factory = (props) => {
     const open = Boolean(anchorEl);
     const [botUrl, SetBotUrl] = useState('');
     const botId = 1;
-    const parseDate = new Date(props.content.creation_date).toLocaleDateString();
 
     useEffect(() => {
         setBotImage(props.content?.user_avatar_id || botId);
@@ -67,14 +67,14 @@ const Factory = (props) => {
     return (
         <div className="factory">
             <div className="factory-card-container" key={props.content.id}>
-                <Link style={{ cursor: 'pointer' }} to={`${pathControllers.factoriesList}/${props.content.name}`}>
+                <Link style={{ cursor: 'pointer' }} to={`${pathDomains.factoriesList}/${props.content.name}`}>
                     <div className="factory-card-title">
                         <h2>
                             <OverflowTip text={props.content.name} width={'220px'} color="white" cursor="pointer">
                                 {props.content.name}
                             </OverflowTip>
                         </h2>
-                        <div>
+                        <div id="e2e-tests-factoty-open">
                             <MoreVertIcon
                                 aria-controls="long-button"
                                 aria-haspopup="true"
@@ -96,11 +96,11 @@ const Factory = (props) => {
                     </div>
                     <div className="user-details">
                         <p>{props.content.created_by_user}</p>
-                        <span>{parseDate}</span>
+                        <span>{parsingDate(props.content.creation_date)}</span>
                     </div>
                 </div>
                 <Popover id="long-menu" classes={{ paper: 'Menu' }} anchorEl={anchorEl} onClose={handleCloseMenu} open={open}>
-                    <Link to={`${pathControllers.factoriesList}/${props.content.name}`}>
+                    <Link to={`${pathDomains.factoriesList}/${props.content.name}`}>
                         <MenuItem
                             onClick={() => {
                                 handleCloseMenu();
@@ -118,7 +118,9 @@ const Factory = (props) => {
                         }}
                     >
                         <DeleteOutline className="menu-item-icon" />
-                        <label className="menu-item-label">Remove</label>
+                        <label id="e2e-tests-factoty-remove" className="menu-item-label">
+                            Remove
+                        </label>
                     </MenuItem>
                 </Popover>
             </div>

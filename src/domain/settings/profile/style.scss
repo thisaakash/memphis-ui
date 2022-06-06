@@ -1,6 +1,9 @@
 .profile-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-around;
     .profile-sections{
-        margin-top: 60px;
         .avatar-section{
             display: flex;
             .sub-icon-wrapper{
@@ -29,7 +32,6 @@
         }
     }
     .company-logo{
-        margin-top: 20px;
         height: 170px;
     }
     .analytics{

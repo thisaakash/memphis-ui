@@ -1,9 +1,9 @@
 // Copyright 2021-2022 The Memphis Authors
-// Licensed under the Apache License, Version 2.0 (the “License”);
+// Licensed under the GNU General Public License v3.0 (the “License”);
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.gnu.org/licenses/gpl-3.0.en.html
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an “AS IS” BASIS,
@@ -151,20 +151,22 @@ const Login = (props) => {
                             >
                                 <div className="field password">
                                     <p>Password</p>
-                                    <Input
-                                        placeholder="Password"
-                                        type="password"
-                                        radiusType="semi-round"
-                                        colorType="gray"
-                                        backgroundColorType="none"
-                                        borderColorType="gray"
-                                        width="19vw"
-                                        height="43px"
-                                        minWidth="200px"
-                                        onChange={handlePasswordChange}
-                                        onBlur={handlePasswordChange}
-                                        value={formFields.password}
-                                    />
+                                    <div id="e2e-tests-password">
+                                        <Input
+                                            placeholder="Password"
+                                            type="password"
+                                            radiusType="semi-round"
+                                            colorType="gray"
+                                            backgroundColorType="none"
+                                            borderColorType="gray"
+                                            width="19vw"
+                                            height="43px"
+                                            minWidth="200px"
+                                            onChange={handlePasswordChange}
+                                            onBlur={handlePasswordChange}
+                                            value={formFields.password}
+                                        />
+                                    </div>
                                 </div>
                             </Form.Item>
                             <Form.Item {...tailLayout} className="button-container">
@@ -185,14 +187,9 @@ const Login = (props) => {
 
                             {error && (
                                 <div className="error-message">
-                                    <p>An account with that sign-in information does not exist. Try again or create a new account.</p>
+                                    <p>The username and password you entered did not match our records. Please double-check and try again.</p>
                                 </div>
                             )}
-                            {/* {timerForRetry.length !== 0 && (
-                                    <div className="error-message">
-                                        <p>Your acount was blocked, please try again in {timerForRetry}</p>
-                                    </div>
-                                )} */}
                         </Form>
                     </div>
                 </div>

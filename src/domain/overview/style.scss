@@ -30,6 +30,10 @@
                     justify-content: center;
                     align-items: center;
                 }
+                .dynamic-sentences{
+                    display: flex;
+                    align-items: center;
+                }
             }
             .dynamic-sentences {
                 h1 {
@@ -56,13 +60,13 @@
             width: 100%;
             height: calc(100% - 110px);
             .left-side {
-                width: 75%;
+                width: 65%;
                 display: flex;
                 flex-direction: column;
                 row-gap: 30px;
             }
             .right-side {
-                width: 25%;
+                width: 32%;
                 display: flex;
                 flex-direction: column;
                 row-gap: 30px;
@@ -78,6 +82,7 @@
                 font-size: 16px;
                 font-weight: 600;
                 height: 25px;
+                margin-bottom: 0;
             }
             .coming-soon-wrapper{
                 position: absolute;

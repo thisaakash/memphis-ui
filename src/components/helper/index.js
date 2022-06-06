@@ -11,12 +11,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const pathDomains = {
-    login: '/login',
-    overview: '/overview',
-    factoriesList: '/factories',
-    users: '/users',
-    settings: '/settings'
+import './style.scss';
+
+import React, { Fragment } from 'react';
+import HelpIcon from '@material-ui/icons/Help';
+
+import TooltipComponent from '../tooltip/tooltip';
+const Helper = ({ text }) => {
+    return (
+        <Fragment>
+            <TooltipComponent text={text}>
+                <HelpIcon className="helper-icon"></HelpIcon>
+            </TooltipComponent>
+        </Fragment>
+    );
 };
 
-export default pathDomains;
+export default Helper;

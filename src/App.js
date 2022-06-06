@@ -21,6 +21,7 @@ import StationOverview from './domain/stationOverview';
 import FactoriesList from './domain/factoriesList';
 import AppWrapper from './components/appWrapper';
 import StationsList from './domain/stationsList';
+import SysLogs from './domain/sysLogs';
 import PrivateRoute from './PrivateRoute';
 import Overview from './domain/overview';
 import Settings from './domain/settings';
@@ -151,6 +152,19 @@ const App = withRouter(() => {
                                     content={
                                         <div>
                                             <StationOverview />
+                                        </div>
+                                    }
+                                ></AppWrapper>
+                            }
+                        />
+                        <PrivateRoute
+                            exact
+                            path={`${pathDomains.sysLogs}`}
+                            component={
+                                <AppWrapper
+                                    content={
+                                        <div>
+                                            <SysLogs />
                                         </div>
                                     }
                                 ></AppWrapper>

@@ -56,6 +56,7 @@ node {
 
     stage('Tests - Remove Docker compose') {
       sh "docker-compose -f ./memphis-infra/${branchTag}/docker/docker-compose-dev-memphis-ui.yml -p memphis down"
+      sh "docker volume prune -f"
     }
 
     ////////////////////////////////////////

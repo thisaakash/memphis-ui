@@ -147,7 +147,7 @@ const StationOverviewHeader = (props) => {
                             <img src={awaitingIcon} width={22} height={44} alt="awaitingIcon" />
                         </div>
                         <div className="more-details">
-                            <p className="number">{stationState?.stationSocketData?.total_messages}</p>
+                            <p className="number">{stationState?.stationSocketData?.total_messages || 0}</p>
                             <p className="title">Total messages</p>
                         </div>
                     </div>

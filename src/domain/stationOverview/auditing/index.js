@@ -58,7 +58,8 @@ const messagesColumns = [
 
 const Auditing = () => {
     const [tabValue, setTabValue] = useState(0);
-    const tabs = ['Messages', 'Audit'];
+    // const tabs = ['Messages', 'Audit'];
+    const tabs = ['Audit'];
 
     const handleChangeMenuItem = (_, newValue) => {
         setTabValue(newValue);
@@ -73,8 +74,9 @@ const Auditing = () => {
             <CustomTabs value={tabValue} onChange={handleChangeMenuItem} tabs={tabs}></CustomTabs>
             <Divider />
             <div className="auditing-body">
-                {tabValue === 0 && <GenericList tab={tabValue} columns={messagesColumns} />}
-                {tabValue === 1 && <GenericList tab={tabValue} columns={auditColumns} />}
+                {/* {tabValue === 0 && <GenericList tab={tabValue} columns={messagesColumns} />}
+                {tabValue === 1 && <GenericList tab={tabValue} columns={auditColumns} />} */}
+                {tabValue === 0 && <GenericList tab={tabValue} columns={auditColumns} />}
             </div>
         </div>
     );

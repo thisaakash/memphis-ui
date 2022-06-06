@@ -107,9 +107,10 @@ const StationsList = () => {
     }, []);
 
     const handleEditNameBlur = async (e) => {
-        if (!e.target.value) {
+        if (!e.target.value || e.target.value === factoryDetails.name || e.target.value === '') {
+            setFactoryName(factoryDetails.name);
+            handleRegisterToFactory(factoryDetails.name);
             seteditName(false);
-            handleRegisterToFactory(factoryName);
         } else {
             try {
                 await httpRequest('PUT', ApiEndpoints.EDIT_FACTORY, {
@@ -131,7 +132,7 @@ const StationsList = () => {
     };
 
     const handleEditDescriptionBlur = async (e) => {
-        if (!e.target.value) {
+        if (e.target.value === factoryDetails.description) {
             handleRegisterToFactory(factoryName);
             seteditDescription(false);
         } else {

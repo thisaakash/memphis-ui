@@ -28,7 +28,10 @@ const GenericList = (props) => {
     const [selectedRowIndex, setSelectedRowIndex] = useState(0);
 
     useEffect(() => {
-        if (tab === 1) {
+        // if (tab === 1) {
+        //     setRowsData(stationState?.stationSocketData?.audit_logs);
+        // }
+        if (tab === 0) {
             setRowsData(stationState?.stationSocketData?.audit_logs);
         }
     }, [stationState]);
@@ -67,9 +70,7 @@ const GenericList = (props) => {
                     })}
                 </div>
             </div>
-            <div className="row-data">
-                <p>{rowsData[selectedRowIndex]?.message}</p>
-            </div>
+            <div className="row-data">{rowsData && <p>{rowsData[selectedRowIndex]?.message}</p>}</div>
         </div>
     );
 };

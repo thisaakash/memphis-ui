@@ -1,9 +1,9 @@
 // Copyright 2021-2022 The Memphis Authors
-// Licensed under the Apache License, Version 2.0 (the “License”);
+// Licensed under the GNU General Public License v3.0 (the “License”);
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.gnu.org/licenses/gpl-3.0.en.html
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an “AS IS” BASIS,
@@ -15,21 +15,29 @@ import './style.scss';
 
 import React, { useEffect, useContext, useState, useRef } from 'react';
 
-import FailedFactories from './failedFactories';
+import { useMediaQuery } from 'react-responsive';
+import FailedStations from './failedStations';
 import GenericDetails from './genericDetails';
 import SysComponents from './sysComponents';
+import { Context } from '../../hooks/store';
 import Throughput from './throughput';
 import Resources from './resources';
-import { useMediaQuery } from 'react-responsive';
-import { Context } from '../../hooks/store';
+import io from 'socket.io-client';
 
 import Button from '../../components/button';
 import CreateStationDetails from '../../components/createStationDetails';
 import Modal from '../../components/modal';
-import { LOCAL_STORAGE_ALLOW_ANALYTICS, LOCAL_STORAGE_ALREADY_LOGGED_IN, LOCAL_STORAGE_AVATAR_ID, LOCAL_STORAGE_USER_NAME } from '../../const/localStorageConsts';
-import { PRIVACY_URL } from '../../config';
+import {
+    LOCAL_STORAGE_ALLOW_ANALYTICS,
+    LOCAL_STORAGE_ALREADY_LOGGED_IN,
+    LOCAL_STORAGE_AVATAR_ID,
+    LOCAL_STORAGE_TOKEN,
+    LOCAL_STORAGE_USER_NAME
+} from '../../const/localStorageConsts';
+import { PRIVACY_URL, SOCKET_URL } from '../../config';
 import { ApiEndpoints } from '../../const/apiEndpoints';
 import { httpRequest } from '../../services/http';
+import Loader from '../../components/loader';
 
 const Desktop = ({ children }) => {
     const isDesktop = useMediaQuery({ minWidth: 850 });
@@ -46,11 +54,37 @@ function OverView() {
     const [analyticsModal, analyticsModalFlip] = useState(true);
     const createStationRef = useRef(null);
     const [botUrl, SetBotUrl] = useState(require('../../assets/images/bots/1.svg'));
+    const [isLoading, setisLoading] = useState(false);
 
     useEffect(() => {
         dispatch({ type: 'SET_ROUTE', payload: 'overview' });
         setBotImage(state?.userData?.avatar_id || localStorage.getItem(LOCAL_STORAGE_AVATAR_ID));
-        analyticsModalFlip(localStorage.getItem(LOCAL_STORAGE_ALREADY_LOGGED_IN) === 'false' && localStorage.getItem(LOCAL_STORAGE_ALLOW_ANALYTICS) === 'true');
+        analyticsModalFlip(
+            localStorage.getItem(LOCAL_STORAGE_ALREADY_LOGGED_IN) === 'false' && localStorage.getItem(LOCAL_STORAGE_ALLOW_ANALYTICS) === 'true' && state?.analytics_modal
+        );
+    }, []);
+
+    useEffect(() => {
+        setisLoading(true);
+        const socket = io.connect(SOCKET_URL, {
+            path: '/api/socket.io',
+            query: {
+                authorization: localStorage.getItem(LOCAL_STORAGE_TOKEN)
+            },
+            reconnection: false
+        });
+        socket.on('main_overview_data', (data) => {
+            dispatch({ type: 'SET_MONITOR_DATA', payload: data });
+        });
+
+        setTimeout(() => {
+            socket.emit('register_main_overview_data');
+            setisLoading(false);
+        }, 1000);
+        return () => {
+            socket.emit('deregister');
+            socket.close();
+        };
     }, []);
 
     const setBotImage = (botId) => {
@@ -62,57 +96,70 @@ function OverView() {
             await httpRequest('PUT', `${ApiEndpoints.EDIT_ANALYTICS}`, { send_analytics: false });
             localStorage.setItem(LOCAL_STORAGE_ALLOW_ANALYTICS, false);
             analyticsModalFlip(false);
+            dispatch({ type: 'ANALYTICS_MODAL', payload: false });
         } catch (err) {
             return;
         }
     };
 
+    const sendAnalytics = () => {
+        analyticsModalFlip(false);
+        dispatch({ type: 'ANALYTICS_MODAL', payload: false });
+    };
+
     return (
         <div className="overview-container">
-            <div className="overview-wrapper">
-                <div className="header">
-                    <div className="header-welcome">
-                        <div className="bot-wrapper">
-                            <img src={botUrl} width={40} height={40} alt="bot"></img>
-                        </div>
-                        <div className="dynamic-sentences">
-                            {localStorage.getItem(LOCAL_STORAGE_ALREADY_LOGGED_IN) === 'true' ? (
-                                <h1>Welcome Back, {localStorage.getItem(LOCAL_STORAGE_USER_NAME)}</h1>
-                            ) : (
-                                <h1>Welcome Aboard, {localStorage.getItem(LOCAL_STORAGE_USER_NAME)}</h1>
-                            )}
-                            <p className="ok-status">You’re a memphis superhero! All looks good!</p>
-                        </div>
-                    </div>
-                    <Button
-                        className="modal-btn"
-                        width="160px"
-                        height="36px"
-                        placeholder={'Create new station'}
-                        colorType="white"
-                        radiusType="circle"
-                        backgroundColorType="purple"
-                        fontSize="14px"
-                        fontWeight="600"
-                        aria-haspopup="true"
-                        onClick={() => modalFlip(true)}
-                    />
+            {isLoading && (
+                <div className="loader-uploading">
+                    <Loader />
                 </div>
-                <div className="overview-components">
-                    <div className="left-side">
-                        <GenericDetails />
-                        <Throughput />
-                        <FailedFactories />
+            )}
+            {!isLoading && (
+                <div className="overview-wrapper">
+                    <div className="header">
+                        <div className="header-welcome">
+                            <div className="bot-wrapper">
+                                <img src={botUrl} width={40} height={40} alt="bot"></img>
+                            </div>
+                            <div className="dynamic-sentences">
+                                {localStorage.getItem(LOCAL_STORAGE_ALREADY_LOGGED_IN) === 'true' ? (
+                                    <h1>Welcome Back, {localStorage.getItem(LOCAL_STORAGE_USER_NAME)}</h1>
+                                ) : (
+                                    <h1>Welcome Aboard, {localStorage.getItem(LOCAL_STORAGE_USER_NAME)}</h1>
+                                )}
+                                {/* <p className="ok-status">You’re a memphis superhero! All looks good!</p> */}
+                            </div>
+                        </div>
+                        <Button
+                            className="modal-btn"
+                            width="160px"
+                            height="36px"
+                            placeholder={'Create new station'}
+                            colorType="white"
+                            radiusType="circle"
+                            backgroundColorType="purple"
+                            fontSize="14px"
+                            fontWeight="600"
+                            aria-haspopup="true"
+                            onClick={() => modalFlip(true)}
+                        />
                     </div>
-                    <div className="right-side">
-                        <Resources />
-                        <SysComponents />
+                    <div className="overview-components">
+                        <div className="left-side">
+                            <GenericDetails />
+                            <FailedStations />
+                            <Throughput />
+                        </div>
+                        <div className="right-side">
+                            <Resources />
+                            <SysComponents />
+                        </div>
                     </div>
                 </div>
-            </div>
+            )}
             <Modal
                 header="Your station details"
-                minHeight="590px"
+                minHeight="610px"
                 minWidth="500px"
                 rBtnText="Add"
                 lBtnText="Cancel"
@@ -134,12 +181,10 @@ function OverView() {
                 minWidth="460px"
                 rBtnText="Send"
                 lBtnText="Don't send"
-                closeAction={() => analyticsModalFlip(false)}
-                lBtnClick={() => {
-                    dontSendAnalytics();
-                }}
-                clickOutside={() => analyticsModalFlip(false)}
-                rBtnClick={() => analyticsModalFlip(false)}
+                closeAction={() => sendAnalytics()}
+                lBtnClick={() => dontSendAnalytics()}
+                clickOutside={() => sendAnalytics()}
+                rBtnClick={() => sendAnalytics()}
                 open={analyticsModal}
             >
                 <label>As Memphis is in beta mode, we are collecting anonymous metadata to help improve its superpowers.</label>
@@ -150,6 +195,7 @@ function OverView() {
                     <a to={{ pathname: PRIVACY_URL }} target="_blank">
                         here
                     </a>
+                    .
                 </label>
             </Modal>
         </div>

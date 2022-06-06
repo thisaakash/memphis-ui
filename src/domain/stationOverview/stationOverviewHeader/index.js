@@ -1,9 +1,9 @@
 // Copyright 2021-2022 The Memphis Authors
-// Licensed under the Apache License, Version 2.0 (the “License”);
+// Licensed under the GNU General Public License v3.0 (the “License”);
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.gnu.org/licenses/gpl-3.0.en.html
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an “AS IS” BASIS,
@@ -34,6 +34,7 @@ import { Context } from '../../../hooks/store';
 import Modal from '../../../components/modal';
 import pathDomains from '../../../router';
 import { StationStoreContext } from '..';
+import TooltipComponent from '../../../components/tooltip/tooltip';
 
 const StationOverviewHeader = (props) => {
     const [state, dispatch] = useContext(Context);
@@ -48,20 +49,40 @@ const StationOverviewHeader = (props) => {
         setLangSelected(e);
     };
     useEffect(() => {
-        switch (stationState?.station?.retention_type) {
+        switch (stationState?.stationMetaData?.retention_type) {
             case 'message_age_sec':
-                setRetentionValue(convertSecondsToDate(stationState?.station?.retention_value));
+                setRetentionValue(convertSecondsToDate(stationState?.stationMetaData?.retention_value));
                 break;
             case 'bytes':
-                setRetentionValue(`${stationState?.station?.retention_value} bytes`);
+                setRetentionValue(`${stationState?.stationMetaData?.retention_value} bytes`);
                 break;
             case 'messages':
-                setRetentionValue(`${stationState?.station?.retention_value} messages`);
+                setRetentionValue(`${stationState?.stationMetaData?.retention_value} messages`);
                 break;
             default:
                 break;
         }
     }, []);
+
+    function isFloat(n) {
+        return Number(n) === n && n % 1 !== 0;
+    }
+
+    const convertBytes = (bytes) => {
+        const KB = 1024;
+        const MB = 1024 * 1024;
+        if (bytes < KB && bytes > 0) {
+            return `${bytes} Bytes`;
+        } else if (bytes >= KB && bytes < MB) {
+            const parsing = isFloat(bytes / KB) ? Math.round((bytes / KB + Number.EPSILON) * 100) / 100 : bytes / KB;
+            return `${parsing} KB`;
+        } else if (bytes >= MB) {
+            const parsing = isFloat(bytes / MB) ? Math.round((bytes / MB + Number.EPSILON) * 100) / 100 : bytes / MB;
+            return `${parsing} MB`;
+        } else {
+            return '0 Bytes';
+        }
+    };
 
     const returnToStaionsList = () => {
         const url = window.location.href;
@@ -72,18 +93,33 @@ const StationOverviewHeader = (props) => {
     return (
         <div className="station-overview-header">
             <div className="title-wrapper">
-                <h1 className="station-name">Overview - {stationState?.station?.name}</h1>
-                <CloseIcon onClick={() => returnToStaionsList()} style={{ cursor: 'pointer' }} />
+                <h1 className="station-name">Overview - {stationState?.stationMetaData?.name}</h1>
+                <div id="e2e-tests-station-close-btn">
+                    <Button
+                        width="80px"
+                        height="32px"
+                        placeholder="Back"
+                        colorType="white"
+                        radiusType="circle"
+                        backgroundColorType="purple"
+                        fontSize="13px"
+                        fontWeight="600"
+                        border="purple"
+                        onClick={() => returnToStaionsList()}
+                    />
+
+                    {/* <CloseIcon onClick={() => returnToStaionsList()} style={{ cursor: 'pointer' }} /> */}
+                </div>
             </div>
             <div className="sdk-button">
                 <Button
-                    width="73px"
-                    height="21px"
-                    placeholder="SDK"
-                    colorType="purple"
+                    width="105px"
+                    height="22px"
+                    placeholder="Code example"
+                    colorType="white"
                     radiusType="circle"
-                    backgroundColorType="none"
-                    fontSize="12px"
+                    backgroundColorType="purple"
+                    fontSize="13px"
                     fontWeight="600"
                     border="purple"
                     onClick={() => modalFlip(true)}
@@ -95,36 +131,43 @@ const StationOverviewHeader = (props) => {
                         <b>Retention:</b> {retentionValue}
                     </p>
                     <p>
-                        <b>Replicas:</b> {stationState?.station?.replicas}
+                        <b>Replicas:</b> {stationState?.stationMetaData?.replicas}
                     </p>
                     <p>
-                        <b>Storage Type:</b> {stationState?.station?.storage_type}
+                        <b>Storage Type:</b> {stationState?.stationMetaData?.storage_type}
                     </p>
                 </div>
                 <div className="icons-wrapper">
-                    <div className="coming-soon-wrapper icons-coming-soon">
+                    {/* <div className="coming-soon-wrapper icons-coming-soon">
                         <img src={comingSoonBox} width={20} height={40} alt="comingSoonBox" />
                         <p>Coming soon</p>
-                    </div>
+                    </div> */}
                     <div className="details-wrapper">
                         <div className="icon">
                             <img src={awaitingIcon} width={22} height={44} alt="awaitingIcon" />
                         </div>
                         <div className="more-details">
-                            <p className="number">1000</p>
-                            <p className="title">Awaiting messages</p>
+                            <p className="number">{stationState?.stationSocketData?.total_messages || 0}</p>
+                            <p className="title">Total messages</p>
                         </div>
                     </div>
-                    <div className="details-wrapper">
-                        <div className="icon">
-                            <img src={averageMesIcon} width={24} height={24} alt="averageMesIcon" />
+                    <TooltipComponent
+                        text={`Not include extra bytes added by memphis. \n  Memphis adds 116 bytes to each message`}
+                        color="white"
+                        width={'220px'}
+                        cursor="pointer"
+                    >
+                        <div className="details-wrapper average">
+                            <div className="icon">
+                                <img src={averageMesIcon} width={24} height={24} alt="averageMesIcon" />
+                            </div>
+                            <div className="more-details">
+                                <p className="number">{convertBytes(stationState?.stationSocketData?.average_message_size)}</p>
+                                <p className="title">Av. message size</p>
+                            </div>
                         </div>
-                        <div className="more-details">
-                            <p className="number">500Mb</p>
-                            <p className="title">Av. message size</p>
-                        </div>
-                    </div>
-                    <div className="details-wrapper">
+                    </TooltipComponent>
+                    {/* <div className="details-wrapper">
                         <div className="icon">
                             <img src={memoryIcon} width={24} height={24} alt="memoryIcon" />
                         </div>
@@ -153,10 +196,10 @@ const StationOverviewHeader = (props) => {
                             <Progress showInfo={false} status={(60 / 100) * 100 > 60 ? 'exception' : 'success'} percent={(60 / 100) * 100} size="small" />
                             <p className="title">Storage</p>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
-            <Modal header="SDK" minHeight="740px" minWidth="500px" closeAction={() => modalFlip(false)} clickOutside={() => modalFlip(false)} open={open} hr={false}>
+            <Modal header="SDK" minHeight="650px" minWidth="500px" closeAction={() => modalFlip(false)} clickOutside={() => modalFlip(false)} open={open} hr={false}>
                 <div className="sdk-details-container">
                     <div className="select-lan">
                         <p>Language</p>

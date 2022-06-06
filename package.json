@@ -1,6 +1,6 @@
 {
-  "name": "ui-os",
-  "version": "0.1.0",
+  "name": "memphis-ui",
+  "version": "0.2.0",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.12.3",
@@ -25,10 +25,11 @@
     "react-test-renderer": "^17.0.2",
     "react-window": "^1.8.6",
     "sass": "^1.49.0",
+    "socket.io-client": "^1.4.0",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "PORT=9000 react-scripts start",
     "build": "GENERATE_SOURCEMAP=false react-scripts build",
     "test": "jest",
     "eject": "react-scripts eject"
@@ -78,6 +79,19 @@
     ],
     "setupFiles": [
       "jest-canvas-mock"
+    ]
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ],
+      "@babel/preset-react"
     ]
   }
 }

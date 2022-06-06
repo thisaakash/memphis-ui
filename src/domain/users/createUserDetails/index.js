@@ -1,9 +1,9 @@
 // Copyright 2021-2022 The Memphis Authors
-// Licensed under the Apache License, Version 2.0 (the “License”);
+// Licensed under the GNU General Public License v3.0 (the “License”);
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.gnu.org/licenses/gpl-3.0.en.html
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an “AS IS” BASIS,
@@ -45,6 +45,7 @@ const CreateUserDetails = ({ createUserRef, closeModal }) => {
         }
     ];
     const [generatedPassword, setGeneratedPassword] = useState('');
+
     useEffect(() => {
         createUserRef.current = onFinish;
         generateNewPassword();
@@ -106,7 +107,7 @@ const CreateUserDetails = ({ createUserRef, closeModal }) => {
                         }
                     ]}
                 >
-                    <div className="field username">
+                    <div id="e2e-tests-user-name" className="field username">
                         <p>
                             <span className="required-field-mark">* </span>Username
                         </p>
@@ -128,20 +129,22 @@ const CreateUserDetails = ({ createUserRef, closeModal }) => {
                 </Form.Item>
                 <div className="field user-type">
                     <p>Type</p>
-                    <Form.Item name="user_type" initialValue={formFields.user_type}>
-                        <SelectComponent
-                            value={formFields.user_type}
-                            colorType="black"
-                            backgroundColorType="none"
-                            borderColorType="gray"
-                            radiusType="semi-round"
-                            width="508px"
-                            height="40px"
-                            options={userTypeOptions}
-                            onChange={(e) => handleSelectUserType(e)}
-                            dropdownClassName="select-options"
-                        />
-                    </Form.Item>
+                    <div id="e2e-tests-user-type" className="field username">
+                        <Form.Item name="user_type" initialValue={formFields.user_type}>
+                            <SelectComponent
+                                value={formFields.user_type}
+                                colorType="black"
+                                backgroundColorType="none"
+                                borderColorType="gray"
+                                radiusType="semi-round"
+                                width="508px"
+                                height="40px"
+                                options={userTypeOptions}
+                                onChange={(e) => handleSelectUserType(e)}
+                                dropdownClassName="select-options"
+                            />
+                        </Form.Item>
+                    </div>
                 </div>
                 {formFields.user_type === 'management' && (
                     <div className="password-section">
@@ -165,7 +168,9 @@ const CreateUserDetails = ({ createUserRef, closeModal }) => {
                                         fontSize="12px"
                                         value={generatedPassword}
                                     />
-                                    <p onClick={() => generateNewPassword()}>Generate again</p>
+                                    <p className="generate-password-button" onClick={() => generateNewPassword()}>
+                                        Generate again
+                                    </p>
                                 </div>
                             </Form.Item>
                         )}

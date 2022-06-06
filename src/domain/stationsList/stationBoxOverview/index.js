@@ -1,9 +1,9 @@
 // Copyright 2021-2022 The Memphis Authors
-// Licensed under the Apache License, Version 2.0 (the “License”);
+// Licensed under the GNU General Public License v3.0 (the “License”);
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.gnu.org/licenses/gpl-3.0.en.html
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an “AS IS” BASIS,
@@ -80,26 +80,27 @@ const StationBoxOverview = (props) => {
                 <div className="info-fields">
                     <div className="field-wrapper">
                         <h3>Name: </h3>
-                        <OverflowTip text={props.station.name} width={'150px'}>
+                        <OverflowTip text={props.station.name} width={'200px'}>
                             {props.station.name}
                         </OverflowTip>
                     </div>
                     <div className="field-wrapper retention">
                         <h3>Retention: </h3>
-                        <OverflowTip text={retentionValue} width={'150px'}>
+                        <OverflowTip text={retentionValue} width={'200px'}>
                             {retentionValue}
+                        </OverflowTip>
+                    </div>
+
+                    <div className="field-wrapper storage">
+                        <h3>Storage Type: </h3>
+                        <OverflowTip text={props.station.storage_type} width={'70px'}>
+                            {props.station.storage_type}
                         </OverflowTip>
                     </div>
                     <div className="field-wrapper replicas">
                         <h3>Replicas: </h3>
-                        <OverflowTip text={props.station.replicas} width={'20px'}>
+                        <OverflowTip text={props.station.replicas} width={'50px'}>
                             {props.station.replicas}
-                        </OverflowTip>
-                    </div>
-                    <div className="field-wrapper storage">
-                        <h3>Storage Type: </h3>
-                        <OverflowTip text={props.station.storage_type} width={'50px'}>
-                            {props.station.storage_type}
                         </OverflowTip>
                     </div>
                     {/* <div className="field-wrapper">
@@ -141,7 +142,9 @@ const StationBoxOverview = (props) => {
                                 }}
                             >
                                 <DeleteOutline className="menu-item-icon" />
-                                <label className="menu-item-label">Remove</label>
+                                <label id="e2e-tests-remove-stations" className="menu-item-label">
+                                    Remove
+                                </label>
                             </MenuItem>
                         </Popover>
                     </div>

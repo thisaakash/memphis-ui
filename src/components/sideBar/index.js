@@ -196,7 +196,7 @@ function SideBar() {
                     </SubMenu>
                 </Menu>
                 <div className="system-version">
-                    <p>V{systemVersion}</p>
+                    <p>v{systemVersion}</p>
                 </div>
             </div>
         </div>

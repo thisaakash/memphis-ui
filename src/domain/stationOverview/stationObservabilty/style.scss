@@ -5,6 +5,7 @@
     .thunnel-from-sub,
     .thunnel-to-pub {
         width: 10.5vw;
+        min-width: 80px;
     }
     .thunnel-to-pub{
         display: flex;

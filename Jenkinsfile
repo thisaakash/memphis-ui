@@ -1,6 +1,6 @@
 def repoUrlPrefix = "memphisos"
 def imageName = "memphis-ui"
-def gitURL = "git@github.com:Memphis-OS/memphis-ui.git"
+def gitURL = "git@github.com:Memphisdev/memphis-ui.git"
 def gitBranch = "beta"
 def branchTag = "beta"
 String unique_id = org.apache.commons.lang.RandomStringUtils.random(4, false, true)
@@ -46,13 +46,13 @@ node {
 
     stage('Tests - Docker compose install') {
       sh "rm -rf memphis-infra"
-      sh "git clone git@github.com:Memphis-OS/memphis-infra.git"
+      sh "git clone git@github.com:Memphisdev/memphis-infra.git"
       sh "docker-compose -f ./memphis-infra/beta/docker/docker-compose-dev-memphis-ui.yml -p memphis up -d"
     }
 
     stage('Tests - Run e2e tests over Docker') {
       sh "rm -rf memphis-e2e-tests"
-      sh "git clone git@github.com:Memphis-OS/memphis-e2e-tests.git"
+      sh "git clone git@github.com:Memphisdev/memphis-e2e-tests.git"
       sh "npm install --prefix ./memphis-e2e-tests"
       sh "node ./memphis-e2e-tests/index.js docker"
     }
@@ -109,7 +109,7 @@ node {
 
     stage('Tests - Docker compose install') {
       sh "rm -rf memphis-docker"
-      sh "git clone git@github.com:Memphis-OS/memphis-docker.git"
+      sh "git clone git@github.com:Memphisdev/memphis-docker.git"
       sh "docker-compose -f ./memphis-docker/docker-compose-beta.yml -p memphis up -d"
     }
 

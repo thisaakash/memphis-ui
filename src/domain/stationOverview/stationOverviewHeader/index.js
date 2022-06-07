@@ -151,12 +151,7 @@ const StationOverviewHeader = (props) => {
                             <p className="title">Total messages</p>
                         </div>
                     </div>
-                    <TooltipComponent
-                        text={`Not include extra bytes added by memphis. \n  Memphis adds 116 bytes to each message`}
-                        color="white"
-                        width={'220px'}
-                        cursor="pointer"
-                    >
+                    <TooltipComponent text="Include extra bytes added by memphis." color="white" width={'220px'} cursor="pointer">
                         <div className="details-wrapper average">
                             <div className="icon">
                                 <img src={averageMesIcon} width={24} height={24} alt="averageMesIcon" />

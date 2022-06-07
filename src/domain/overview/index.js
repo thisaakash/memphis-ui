@@ -74,6 +74,7 @@ function OverView() {
             reconnection: false
         });
         socket.on('main_overview_data', (data) => {
+            data.stations.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
             dispatch({ type: 'SET_MONITOR_DATA', payload: data });
         });
 

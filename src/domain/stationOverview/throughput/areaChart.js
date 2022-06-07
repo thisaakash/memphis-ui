@@ -431,7 +431,7 @@ export default function ApexChart() {
                 </div> */}
 
             <div id="chart-timeline">
-                <ReactApexChart options={options} series={series} type="area" height={'100%'} />
+                <ReactApexChart options={options} series={series} type="area" height={'95%'} />
             </div>
         </div>
     );

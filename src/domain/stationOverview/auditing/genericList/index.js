@@ -21,24 +21,16 @@ import { StationStoreContext } from '../..';
 import { parsingDate } from '../../../../services/dateConvertor';
 
 const GenericList = (props) => {
-    const [stationState, stationDispatch] = useContext(StationStoreContext);
+    const [stationState] = useContext(StationStoreContext);
 
     const { columns, tab } = props;
     const [rowsData, setRowsData] = useState([]);
-    const [selectedRowIndex, setSelectedRowIndex] = useState(0);
 
     useEffect(() => {
-        // if (tab === 1) {
-        //     setRowsData(stationState?.stationSocketData?.audit_logs);
-        // }
         if (tab === 0) {
             setRowsData(stationState?.stationSocketData?.audit_logs);
         }
     }, [stationState]);
-
-    const onSelectedRow = (rowIndex) => {
-        setSelectedRowIndex(rowIndex);
-    };
 
     return (
         <div className="generic-list-wrapper">
@@ -55,14 +47,14 @@ const GenericList = (props) => {
                 <div className="rows-wrapper">
                     {rowsData?.map((row, index) => {
                         return (
-                            <div className={selectedRowIndex === index ? 'pubSub-row selected' : 'pubSub-row'} key={index} onClick={() => onSelectedRow(index)}>
+                            <div className="pubSub-row" key={index}>
                                 <OverflowTip text={row?.message || row?.produced_by} width={'300px'}>
                                     {row?.message || row?.produced_by}
                                 </OverflowTip>
                                 <OverflowTip text={row?.user_type || row?.consumer} width={'200px'}>
                                     {row?.user_type || row?.consumer}
                                 </OverflowTip>
-                                <OverflowTip text={row?.creation_date} width={'200px'}>
+                                <OverflowTip text={parsingDate(row?.creation_date)} width={'200px'}>
                                     {parsingDate(row?.creation_date)}
                                 </OverflowTip>
                             </div>
@@ -70,7 +62,6 @@ const GenericList = (props) => {
                     })}
                 </div>
             </div>
-            <div className="row-data">{rowsData && <p>{rowsData[selectedRowIndex]?.message}</p>}</div>
         </div>
     );
 };

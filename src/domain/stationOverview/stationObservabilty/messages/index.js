@@ -43,7 +43,9 @@ const Messages = () => {
         <div className="messages-container">
             <div className="header">
                 <p className="title">Station</p>
+                <p className="messages-hint">*last 50 messages</p>
             </div>
+
             <div className="list-wrapper">
                 <div className="list">
                     <div className="coulmns-table">
@@ -56,7 +58,7 @@ const Messages = () => {
                         })}
                     </div>
                     <div className="rows-wrapper">
-                        {stationState?.stationSocketData.messages?.map((row, index) => {
+                        {stationState?.stationSocketData?.messages?.map((row, index) => {
                             return (
                                 <div className={selectedRowIndex === index ? 'pubSub-row selected' : 'pubSub-row'} key={index} onClick={() => onSelectedRow(index)}>
                                     <OverflowTip text={row?.produced_by} width={'100px'}>
@@ -68,6 +70,11 @@ const Messages = () => {
                                 </div>
                             );
                         })}
+                        {!stationState?.stationSocketData?.messages && (
+                            <div className="empty-messages">
+                                <p>Waiting for messages</p>
+                            </div>
+                        )}
                     </div>
                 </div>
                 <div className="row-data">{stationState?.stationSocketData.messages && <p>{stationState?.stationSocketData.messages[selectedRowIndex]?.message}</p>}</div>

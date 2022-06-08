@@ -1,6 +1,6 @@
 def repoUrlPrefix = "memphisos"
 def imageName = "memphis-ui"
-def gitURL = "git@github.com:Memphis-OS/memphis-ui.git"
+def gitURL = "git@github.com:Memphisdev/memphis-ui.git"
 def gitBranch = "master"
 def branchTag = "master"
 String unique_id = org.apache.commons.lang.RandomStringUtils.random(4, false, true)
@@ -24,6 +24,7 @@ node {
 
     stage('Create memphis namespace in Kubernetes'){
       sh "kubectl create namespace memphis-$unique_id --dry-run=client -o yaml | kubectl apply -f -"
+      sh "kubectl create namespace memphis --dry-run=client -o yaml | kubectl apply -f -"
       //sh "sleep 40"
     }
 
@@ -43,13 +44,13 @@ node {
 
     stage('Tests - Docker compose install') {
       sh "rm -rf memphis-infra"
-      sh "git clone git@github.com:Memphis-OS/memphis-infra.git"
+      sh "git clone git@github.com:Memphisdev/memphis-infra.git"
       sh "docker-compose -f ./memphis-infra/${branchTag}/docker/docker-compose-dev-memphis-ui.yml -p memphis up -d"
     }
 
     stage('Tests - Run e2e tests over Docker') {
       sh "rm -rf memphis-e2e-tests"
-      sh "git clone git@github.com:Memphis-OS/memphis-e2e-tests.git"
+      sh "git clone git@github.com:Memphisdev/memphis-e2e-tests.git"
       sh "npm install --prefix ./memphis-e2e-tests"
       sh "node ./memphis-e2e-tests/index.js docker"
     }
@@ -111,7 +112,7 @@ node {
 
     stage('Tests - Docker compose install') {
       sh "rm -rf memphis-docker"
-      sh "git clone git@github.com:Memphis-OS/memphis-docker.git"
+      sh "git clone git@github.com:Memphisdev/memphis-docker.git"
       sh "docker-compose -f ./memphis-docker/docker-compose-dev.yml -p memphis up -d"
     }
 
@@ -131,27 +132,27 @@ node {
 
     stage('Tests - Install memphis with helm') {
       sh "rm -rf memphis-k8s"
-      sh "git clone git@github.com:Memphis-OS/memphis-k8s.git"
-      sh "helm install memphis-tests memphis-k8s/memphis --set analytics='false' --create-namespace --namespace memphis-$unique_id"
+      sh "git clone git@github.com:Memphisdev/memphis-k8s.git"
+      sh "helm install memphis-tests memphis-k8s/memphis --set analytics='false' --create-namespace --namespace memphis"
       sh 'sleep 40'
     }
 
     stage('Open port forwarding to memphis service') {
-      sh "nohup kubectl port-forward service/memphis-ui 9000:80 --namespace memphis-$unique_id &"
+      sh "nohup kubectl port-forward service/memphis-ui 9000:80 --namespace memphis &"
       sh "sleep 5"
-      sh "nohup kubectl port-forward service/memphis-cluster 7766:7766 6666:6666 5555:5555 --namespace memphis-$unique_id &"
+      sh "nohup kubectl port-forward service/memphis-cluster 7766:7766 6666:6666 5555:5555 --namespace memphis &"
       sh "sleep 5"
     }
 
 
     stage('Tests - Run e2e tests over kubernetes') {
       //sh "npm install --prefix ./memphis-e2e-tests"
-      sh "node ./memphis-e2e-tests/index.js kubernetes memphis-$unique_id"
+      sh "node ./memphis-e2e-tests/index.js kubernetes memphis"
     }
 
     stage('Tests - Uninstall helm') {
-      sh "helm uninstall memphis-tests -n memphis-$unique_id"
-      sh "kubectl delete ns memphis-$unique_id &"
+      sh "helm uninstall memphis-tests -n memphis"
+      sh "kubectl delete ns memphis &"
       sh "lsof -i :5555,9000 | grep kubectl | awk '{print \"kill -9 \"\$2}' | sh"
     }
 

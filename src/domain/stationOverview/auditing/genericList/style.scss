@@ -13,7 +13,7 @@
             justify-content: space-between;
             color: #979797;
             padding-left: 22px;
-            span{
+            span {
                 font-weight: 400;
                 font-size: 12px;
                 margin-right: 10px;
@@ -33,20 +33,18 @@
                 align-items: center;
                 font-weight: 400;
                 font-size: 12px;
-                padding-left: 22px; 
+                padding-left: 22px;
                 div {
                     margin-right: 10px;
                 }
             }
-            
         }
     }
-    .row-data{
+    .row-data {
         width: 18vw;
         overflow-wrap: anywhere;
         overflow: auto;
         margin: 1vh;
         margin-top: 45px;
     }
-    
 }

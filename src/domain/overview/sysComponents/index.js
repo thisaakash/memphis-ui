@@ -16,7 +16,6 @@ import './style.scss';
 import React, { useContext, useState } from 'react';
 import { Divider } from '@material-ui/core';
 
-import comingSoonBox from '../../../assets/images/comingSoonBox.svg';
 import HealthyBadge from '../../../components/healthyBadge';
 import { Context } from '../../../hooks/store';
 import { Link } from 'react-router-dom';
@@ -26,10 +25,6 @@ const SysComponents = () => {
     const [state, dispatch] = useContext(Context);
     return (
         <div className="overview-wrapper sys-components-container">
-            {/* <div className="coming-soon-wrapper">
-                <img src={comingSoonBox} width={40} height={70} />
-                <p>Coming soon</p>
-            </div> */}
             <span className="overview-components-header">
                 System Components
                 <span className="actions-side">

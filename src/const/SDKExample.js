@@ -16,7 +16,7 @@ export const CODE_EXAMPLE = `const memphis = require("memphis-dev");
 (async function () {
     try {
         await memphis.connect({
-            host: "memphis-cluster",
+            host: "<memphis-cluster>",
             username: "<user of type application>",
             connectionToken: "<connectio_token>"
         });
@@ -51,7 +51,6 @@ export const CODE_EXAMPLE = `const memphis = require("memphis-dev");
         }
         await Promise.all(promises);
         console.log("All messages sent");
-        memphis.close();
     } catch (ex) {
         console.log(ex);
         memphis.close();
@@ -102,7 +101,6 @@ export const DOCKER_CODE_EXAMPLE = `const memphis = require("memphis-dev");
 ​
         await Promise.all(promises);
         console.log("All messages sent");
-        memphis.close();
     } catch (ex) {
         console.log(ex);
         memphis.close();

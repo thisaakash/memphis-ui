@@ -16,7 +16,6 @@ import './style.scss';
 import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import comingSoonBox from '../../../assets/images/comingSoonBox.svg';
 import ErrorSharpIcon from '@material-ui/icons/ErrorSharp';
 import { Context } from '../../../hooks/store';
 import pathDomains from '../../../router';
@@ -26,10 +25,6 @@ const FailedStations = () => {
     const [state, dispatch] = useContext(Context);
     return (
         <div className="overview-wrapper failed-factories-container">
-            {/* <div className="coming-soon-wrapper">
-                <img src={comingSoonBox} width={40} height={70} />
-                <p>Coming soon</p>
-            </div> */}
             <p className="overview-components-header">Stations</p>
             {/* <p className="overview-components-header">Un-Healthy stations</p> */}
             {/* <div className="factories-err-message">

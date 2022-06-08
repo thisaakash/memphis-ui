@@ -16,7 +16,6 @@ import './style.scss';
 import React, { useContext, useState } from 'react';
 import { Divider } from '@material-ui/core';
 
-import comingSoonBox from '../../../assets/images/comingSoonBox.svg';
 import HealthyBadge from '../../../components/healthyBadge';
 import { Context } from '../../../hooks/store';
 
@@ -25,10 +24,6 @@ const SysComponents = () => {
 
     return (
         <div className="overview-wrapper sys-components-container">
-            {/* <div className="coming-soon-wrapper">
-                <img src={comingSoonBox} width={40} height={70} />
-                <p>Coming soon</p>
-            </div> */}
             <p className="overview-components-header">System components</p>
             <div className="sys-components sys-components-header">
                 <p>Component</p>

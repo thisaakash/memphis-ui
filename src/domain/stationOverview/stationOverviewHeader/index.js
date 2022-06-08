@@ -22,7 +22,6 @@ import { Progress } from 'antd';
 import { CODE_EXAMPLE, DOCKER_CODE_EXAMPLE } from '../../../const/SDKExample';
 import { convertSecondsToDate } from '../../../services/dateConvertor';
 import averageMesIcon from '../../../assets/images/averageMesIcon.svg';
-import comingSoonBox from '../../../assets/images/comingSoonBox.svg';
 import awaitingIcon from '../../../assets/images/awaitingIcon.svg';
 import storageIcon from '../../../assets/images/storageIcon.svg';
 import memoryIcon from '../../../assets/images/memoryIcon.svg';
@@ -138,10 +137,6 @@ const StationOverviewHeader = (props) => {
                     </p>
                 </div>
                 <div className="icons-wrapper">
-                    {/* <div className="coming-soon-wrapper icons-coming-soon">
-                        <img src={comingSoonBox} width={20} height={40} alt="comingSoonBox" />
-                        <p>Coming soon</p>
-                    </div> */}
                     <div className="details-wrapper">
                         <div className="icon">
                             <img src={awaitingIcon} width={22} height={44} alt="awaitingIcon" />

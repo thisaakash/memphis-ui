@@ -41,7 +41,7 @@ const StationObservabilty = () => {
             autoplay: true,
             animationData: animationData
         });
-    }, []);
+    }, [stationState?.stationSocketData?.producers?.length > 0, stationState?.stationSocketData?.consumers?.length > 0]);
 
     return (
         <div className="station-observabilty-container">

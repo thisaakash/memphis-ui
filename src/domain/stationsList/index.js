@@ -13,7 +13,7 @@
 
 import './style.scss';
 
-import React, { useEffect, useContext, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useContext, useState, useRef, useCallback, Fragment } from 'react';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import EditOutlined from '@material-ui/icons/EditOutlined';
@@ -160,123 +160,124 @@ const StationsList = () => {
 
     return (
         <div className="factory-details-container">
-            <div className="factory-details-header">
-                <div className="left-side">
-                    {!editName && (
-                        <h1 className="main-header-h1">
-                            {!isLoading ? factoryName || 'Insert Factory name' : <CircularProgress className="circular-progress" size={18} />}
-                            <span id="e2e-tests-edit-name" className="edit-icon" onClick={() => handleEditName()}>
-                                <EditOutlined />
-                            </span>
-                        </h1>
-                    )}
-                    {editName && (
-                        <ClickAwayListener onClickAway={handleEditNameBlur}>
-                            <div className="edit-input-name">
-                                <input onBlur={handleEditNameBlur} onChange={handleEditNameChange} value={factoryName} />
-                            </div>
-                        </ClickAwayListener>
-                    )}
-                    {!editDescription && (
-                        <div className="description">
-                            {!isLoading ? <p>{factoryDescription || 'Insert your description...'}</p> : <CircularProgress className="circular-progress" size={12} />}
-                            <span id="e2e-tests-edit-description" className="edit-icon" onClick={() => handleEditDescription()}>
-                                <EditOutlined />
-                            </span>
-                        </div>
-                    )}
-                    {editDescription && (
-                        <ClickAwayListener onClickAway={handleEditDescriptionBlur}>
-                            <div id="e2e-tests-insert-description">
-                                <textarea onBlur={handleEditDescriptionBlur} onChange={handleEditDescriptionChange} value={factoryDescription} />
-                            </div>
-                        </ClickAwayListener>
-                    )}
-                    {!isLoading ? (
-                        <div className="factory-owner">
-                            <div className="user-avatar">
-                                <img src={botUrl} width={25} height={25} alt="bot"></img>
-                            </div>
-                            <div className="user-details">
-                                <p>{factoryDetails?.created_by_user}</p>
-                                <span>{parseDate}</span>
-                            </div>
-                        </div>
-                    ) : (
-                        <CircularProgress className="circular-progress" size={18} />
-                    )}
+            {isLoading && (
+                <div className="loader-uploading">
+                    <Loader />
+                </div>
+            )}
+            {!isLoading && (
+                <Fragment>
+                    <div className="factory-details-header">
+                        <div className="left-side">
+                            {!editName && (
+                                <h1 className="main-header-h1">
+                                    {factoryName || 'Insert Factory name'}
+                                    <span id="e2e-tests-edit-name" className="edit-icon" onClick={() => handleEditName()}>
+                                        <EditOutlined />
+                                    </span>
+                                </h1>
+                            )}
+                            {editName && (
+                                <ClickAwayListener onClickAway={handleEditNameBlur}>
+                                    <div className="edit-input-name">
+                                        <input onBlur={handleEditNameBlur} onChange={handleEditNameChange} value={factoryName} />
+                                    </div>
+                                </ClickAwayListener>
+                            )}
+                            {!editDescription && (
+                                <div className="description">
+                                    {<p>{factoryDescription || 'Insert your description...'}</p>}
+                                    <span id="e2e-tests-edit-description" className="edit-icon" onClick={() => handleEditDescription()}>
+                                        <EditOutlined />
+                                    </span>
+                                </div>
+                            )}
+                            {editDescription && (
+                                <ClickAwayListener onClickAway={handleEditDescriptionBlur}>
+                                    <div id="e2e-tests-insert-description">
+                                        <textarea onBlur={handleEditDescriptionBlur} onChange={handleEditDescriptionChange} value={factoryDescription} />
+                                    </div>
+                                </ClickAwayListener>
+                            )}
 
-                    <div className="factories-length">
-                        <h1>Stations ({factoryDetails?.stations?.length || 0})</h1>
+                            <div className="factory-owner">
+                                <div className="user-avatar">
+                                    <img src={botUrl} width={25} height={25} alt="bot"></img>
+                                </div>
+                                <div className="user-details">
+                                    <p>{factoryDetails?.created_by_user}</p>
+                                    <span>{parseDate}</span>
+                                </div>
+                            </div>
+
+                            <div className="factories-length">
+                                <h1>Stations ({factoryDetails?.stations?.length || 0})</h1>
+                            </div>
+                        </div>
+                        <div className="right-side">
+                            <Button
+                                className="modal-btn"
+                                width="150px"
+                                height="36px"
+                                placeholder="Create a station"
+                                colorType="white"
+                                radiusType="circle"
+                                backgroundColorType="purple"
+                                fontSize="14px"
+                                fontWeight="bold"
+                                aria-controls="usecse-menu"
+                                aria-haspopup="true"
+                                onClick={() => modalFlip(true)}
+                            />
+                        </div>
                     </div>
-                </div>
-                <div className="right-side">
-                    <Button
-                        className="modal-btn"
-                        width="150px"
-                        height="36px"
-                        placeholder="Create a station"
-                        colorType="white"
-                        radiusType="circle"
-                        backgroundColorType="purple"
-                        fontSize="14px"
-                        fontWeight="bold"
-                        aria-controls="usecse-menu"
-                        aria-haspopup="true"
-                        onClick={() => modalFlip(true)}
-                    />
-                </div>
-            </div>
-            <div className="stations-content">
-                {isLoading && (
-                    <div className="loader-uploading">
-                        <Loader />
+                    <div className="stations-content">
+                        {factoryDetails?.stations?.length > 0 &&
+                            factoryDetails?.stations?.map((station, key) => (
+                                <StationBoxOverview key={station.id} station={station} removeStation={() => removeStation(station.name)} />
+                            ))}
+                        {!isLoading && factoryDetails?.stations.length === 0 && (
+                            <div className="no-station-to-display">
+                                <img src={emptyList} width="100" height="100" alt="emptyList" />
+                                <p>There are no stations yet</p>
+                                <p className="sub-title">Get started by creating a station</p>
+                                <Button
+                                    className="modal-btn"
+                                    width="240px"
+                                    height="50px"
+                                    placeholder="Create your first station"
+                                    colorType="white"
+                                    radiusType="circle"
+                                    backgroundColorType="purple"
+                                    fontSize="12px"
+                                    fontWeight="600"
+                                    aria-controls="usecse-menu"
+                                    aria-haspopup="true"
+                                    onClick={() => modalFlip(true)}
+                                />
+                            </div>
+                        )}
                     </div>
-                )}
-                {factoryDetails?.stations?.length > 0 &&
-                    factoryDetails?.stations?.map((station, key) => (
-                        <StationBoxOverview key={station.id} station={station} removeStation={() => removeStation(station.name)} />
-                    ))}
-                {!isLoading && factoryDetails?.stations.length === 0 && (
-                    <div className="no-station-to-display">
-                        <img src={emptyList} width="100" height="100" alt="emptyList" />
-                        <p>There are no stations yet</p>
-                        <p className="sub-title">Get started by creating a station</p>
-                        <Button
-                            className="modal-btn"
-                            width="240px"
-                            height="50px"
-                            placeholder="Create your first station"
-                            colorType="white"
-                            radiusType="circle"
-                            backgroundColorType="purple"
-                            fontSize="12px"
-                            fontWeight="600"
-                            aria-controls="usecse-menu"
-                            aria-haspopup="true"
-                            onClick={() => modalFlip(true)}
-                        />
-                    </div>
-                )}
-            </div>
-            <Modal
-                header="Your station details"
-                minHeight="550px"
-                minWidth="500px"
-                rBtnText="Add"
-                lBtnText="Cancel"
-                closeAction={() => modalFlip(false)}
-                lBtnClick={() => {
-                    modalFlip(false);
-                }}
-                clickOutside={() => modalFlip(false)}
-                rBtnClick={() => {
-                    createStationRef.current();
-                }}
-                open={modalIsOpen}
-            >
-                <CreateStationDetails createStationRef={createStationRef} factoryName={factoryName} />
-            </Modal>
+                    <Modal
+                        header="Your station details"
+                        minHeight="550px"
+                        minWidth="500px"
+                        rBtnText="Add"
+                        lBtnText="Cancel"
+                        closeAction={() => modalFlip(false)}
+                        lBtnClick={() => {
+                            modalFlip(false);
+                        }}
+                        clickOutside={() => modalFlip(false)}
+                        rBtnClick={() => {
+                            createStationRef.current();
+                        }}
+                        open={modalIsOpen}
+                    >
+                        <CreateStationDetails createStationRef={createStationRef} factoryName={factoryName} />
+                    </Modal>
+                </Fragment>
+            )}
         </div>
     );
 };

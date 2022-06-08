@@ -64,12 +64,14 @@ const StationOverview = () => {
         });
 
         socket.on('station_overview_data', (data) => {
+            data.audit_logs?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
+            data.messages?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
             stationDispatch({ type: 'SET_SOCKET_DATA', payload: data });
+            setisLoading(false);
         });
 
         setTimeout(() => {
             socket.emit('register_station_overview_data', stationName);
-            setisLoading(false);
         }, 1000);
         return () => {
             socket.emit('deregister');

@@ -39,7 +39,7 @@ const FailedStations = () => {
             <div className="err-factories-list">
                 <div className="coulmns-table">
                     <span style={{ width: '200px' }}>Name</span>
-                    <span style={{ width: '200px' }}>Factory name</span>
+                    <span style={{ width: '200px' }}>Factory</span>
                     <span style={{ width: '200px' }}>Creation date</span>
                     {/* <span style={{ width: '100px' }}>Status</span> */}
                     <span style={{ width: '100px' }}></span>

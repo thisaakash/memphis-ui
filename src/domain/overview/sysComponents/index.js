@@ -19,17 +19,31 @@ import { Divider } from '@material-ui/core';
 import comingSoonBox from '../../../assets/images/comingSoonBox.svg';
 import HealthyBadge from '../../../components/healthyBadge';
 import { Context } from '../../../hooks/store';
+import { Link } from 'react-router-dom';
+import pathDomains from '../../../router';
 
 const SysComponents = () => {
     const [state, dispatch] = useContext(Context);
-
     return (
         <div className="overview-wrapper sys-components-container">
             {/* <div className="coming-soon-wrapper">
                 <img src={comingSoonBox} width={40} height={70} />
                 <p>Coming soon</p>
             </div> */}
-            <p className="overview-components-header">System components</p>
+            <span className="overview-components-header">
+                System Components
+                <span className="actions-side">
+                    <div className="hover-section">
+                        <div className="action overview">
+                            <Link style={{ cursor: 'pointer' }} to={`${pathDomains.sysLogs}`}>
+                                <span className="link-row" style={{ width: '100px' }}>
+                                    Logs
+                                </span>
+                            </Link>
+                        </div>
+                    </div>
+                </span>
+            </span>
             <div className="sys-components sys-components-header">
                 <p>Component</p>
                 <p>Pods</p>

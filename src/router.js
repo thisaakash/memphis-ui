@@ -16,7 +16,8 @@ const pathDomains = {
     overview: '/overview',
     factoriesList: '/factories',
     users: '/users',
-    settings: '/settings'
+    settings: '/settings',
+    sysLogs: '/sysLogs'
 };
 
 export default pathDomains;

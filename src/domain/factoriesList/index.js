@@ -47,11 +47,11 @@ function FactoriesList() {
         });
         socket.on('factories_overview_data', (data) => {
             setFactoriesList(data);
+            setisLoading(false);
         });
 
         setTimeout(() => {
             socket.emit('register_factories_overview_data');
-            setisLoading(false);
         }, 1000);
         return () => {
             socket.emit('deregister');

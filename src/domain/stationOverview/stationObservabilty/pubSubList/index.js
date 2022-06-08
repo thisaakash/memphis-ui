@@ -13,7 +13,7 @@
 
 import './style.scss';
 
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 
 import OverflowTip from '../../../../components/tooltip/overflowtip';
 import comingSoonBox from '../../../../assets/images/comingSoonBox.svg';
@@ -31,7 +31,7 @@ const PubSubList = (props) => {
             </div>
             <div className="coulmns-table">
                 <span style={{ width: '100px' }}>Name</span>
-                <span style={{ width: '100px' }}>Type</span>
+                {!props.producer && <span style={{ width: '100px' }}>Cg</span>}
                 <span style={{ width: '100px' }}>User</span>
                 <span style={{ width: '15px' }}></span>
             </div>
@@ -43,9 +43,6 @@ const PubSubList = (props) => {
                             <div className="pubSub-row" key={index}>
                                 <OverflowTip text={row.name} width={'100px'}>
                                     {row.name}
-                                </OverflowTip>
-                                <OverflowTip text={row.type} width={'100px'}>
-                                    {row.type}
                                 </OverflowTip>
                                 <OverflowTip text={row.created_by_user} width={'100px'}>
                                     {row.created_by_user}
@@ -65,7 +62,7 @@ const PubSubList = (props) => {
                                     {row.name}
                                 </OverflowTip>
                                 <OverflowTip text={row.type} width={'100px'}>
-                                    {row.type}
+                                    {row.consumers_group}
                                 </OverflowTip>
                                 <OverflowTip text={row.created_by_user} width={'100px'}>
                                     {row.created_by_user}

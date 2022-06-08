@@ -27,22 +27,22 @@ const logColumns = [
     {
         key: '1',
         title: 'Source',
-        width: '300px'
+        width: '100px'
     },
     {
         key: '2',
         title: 'Type',
-        width: '300px'
+        width: '50px'
     },
     {
         key: '3',
         title: 'Creation date',
-        width: '300px'
+        width: '200px'
     },
     {
         key: '4',
         title: 'Log',
-        width: '300px'
+        width: '490px'
     }
 ];
 
@@ -60,10 +60,8 @@ const SysLogs = () => {
     //     }
     // });
     useEffect(() => {
-        dispatch({ type: 'SET_ROUTE', payload: 'sysLogs' });
-    },[])
-
-    
+        dispatch({ type: 'SET_ROUTE', payload: 'overview' });
+    }, []);
 
     return (
         <React.Fragment>
@@ -73,11 +71,12 @@ const SysLogs = () => {
                 </div>
             )} */}
             {/* {!isLoading && ( */}
-                <div>
-                    <div className="logs-container">
-                        <GenericList columns={logColumns} />
-                    </div>
+            <div>
+                <div className="logs-container">
+                    <h1 className="main-header-h1">System Logs</h1>
+                    <GenericList columns={logColumns} />
                 </div>
+            </div>
             {/* )} */}
         </React.Fragment>
     );

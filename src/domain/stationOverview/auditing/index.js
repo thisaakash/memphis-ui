@@ -23,42 +23,24 @@ import comingSoonBox from '../../../assets/images/comingSoonBox.svg';
 const auditColumns = [
     {
         key: '1',
-        title: 'Log message',
+        title: 'Message',
         width: '300px'
     },
     {
         key: '2',
-        title: 'User type',
+        title: 'User',
         width: '200px'
     },
     {
         key: '3',
-        title: 'Date (30 days)',
-        width: '200px'
-    }
-];
-
-const messagesColumns = [
-    {
-        key: '1',
-        title: 'Produced by',
-        width: '300px'
-    },
-    {
-        key: '2',
-        title: 'Size',
-        width: '200px'
-    },
-    {
-        key: '3',
-        title: 'Date (30 days)',
+        title: 'Date',
         width: '200px'
     }
 ];
 
 const Auditing = () => {
     const [tabValue, setTabValue] = useState(0);
-    const tabs = ['Messages', 'Audit'];
+    const tabs = ['Audit'];
 
     const handleChangeMenuItem = (_, newValue) => {
         setTabValue(newValue);
@@ -66,16 +48,10 @@ const Auditing = () => {
 
     return (
         <div className="auditing-container">
-            {/* <div className="coming-soon-wrapper">
-                <img src={comingSoonBox} width={40} height={70} />
-                <p>Coming soon</p>
-            </div> */}
+            {tabValue === 0 && <p className="audit-hint">*last 30 days</p>}
             <CustomTabs value={tabValue} onChange={handleChangeMenuItem} tabs={tabs}></CustomTabs>
             <Divider />
-            <div className="auditing-body">
-                {tabValue === 0 && <GenericList tab={tabValue} columns={messagesColumns} />}
-                {tabValue === 1 && <GenericList tab={tabValue} columns={auditColumns} />}
-            </div>
+            <div className="auditing-body">{tabValue === 0 && <GenericList tab={tabValue} columns={auditColumns} />}</div>
         </div>
     );
 };

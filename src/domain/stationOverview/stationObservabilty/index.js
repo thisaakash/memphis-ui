@@ -17,7 +17,7 @@ import React, { useContext, useEffect, useRef } from 'react';
 import lottie from 'lottie-web';
 
 import animationData from '../../../assets/lotties/thunnel-many.json';
-import FunctionsBox from './functionsBox';
+import Messages from './messages';
 import PubSubList from './pubSubList';
 import { StationStoreContext } from '..';
 
@@ -45,21 +45,15 @@ const StationObservabilty = () => {
 
     return (
         <div className="station-observabilty-container">
-            <div className="pub-list">
-                <PubSubList producer={true} />
-            </div>
+            <PubSubList producer={true} />
             <div className="thunnel-from-sub">
                 {stationState?.stationSocketData?.producers?.length > 0 && <div style={{ height: '10vw', width: '10vw' }} ref={fromProducer}></div>}
             </div>
-            <div className="functions-box-overview">
-                <FunctionsBox />
-            </div>
+            <Messages />
             <div className="thunnel-to-pub">
                 {stationState?.stationSocketData?.consumers?.length > 0 && <div style={{ height: '10vw', width: '10vw' }} ref={toConsumer}></div>}
             </div>
-            <div className="sub-list">
-                <PubSubList producer={false} />
-            </div>
+            <PubSubList producer={false} />
         </div>
     );
 };

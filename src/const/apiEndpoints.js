@@ -45,5 +45,8 @@ export const ApiEndpoints = {
     GET_ALL_CONSUMERS_BY_STATION: '/consumers/getAllConsumersByStation',
 
     //Monitor
-    GET_CLUSTER_INFO: '/monitoring/getClusterInfo'
+    GET_CLUSTER_INFO: '/monitoring/getClusterInfo',
+
+    //Logs
+    GET_SYS_LOGS: '/logs/getSysLogs'
 };

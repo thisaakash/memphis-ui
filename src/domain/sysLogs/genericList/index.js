@@ -63,7 +63,7 @@ const GenericList = ({ columns }) => {
     useEffect(() => {
         setIsLoading(true);
         if (logFilter.toLowerCase() !== 'all') {
-            const results = logsData.filter((logsData) => logsData?.type?.toLowerCase().includes(logFilter.toLowerCase()));
+            const results = copyOfLogsData.filter((logsData) => logsData?.type?.toLowerCase().includes(logFilter.toLowerCase()));
             setLogsData(results);
             setDataLength(results.length);
         } else {

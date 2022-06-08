@@ -22,9 +22,6 @@ import { StationStoreContext } from '../..';
 
 const PubSubList = (props) => {
     const [stationState, stationDispatch] = useContext(StationStoreContext);
-    useEffect(() => {
-        console.log(stationState?.stationSocketData?.consumers);
-    }, [stationState?.stationSocketData?.consumers]);
 
     return (
         <div className="pubSub-list-container">

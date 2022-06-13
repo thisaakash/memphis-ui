@@ -102,8 +102,8 @@ node {
 	  
     stage('Push to staging'){
       sh "aws eks --region eu-central-1 update-kubeconfig --name staging-cluster"
-      sh "helm uninstall my-memphis --kubeconfig /var/lib/jenkins/.kube/memphis-staging-kubeconfig.yaml -n memphis"
-      sh 'helm install my-memphis memphis-infra/staging/kubernetes/helm/memphis --set analytics="false" --kubeconfig /var/lib/jenkins/.kube/memphis-staging-kubeconfig.yaml --create-namespace --namespace memphis'
+      sh "helm uninstall my-memphis --kubeconfig ~/.kube/config -n memphis"
+      sh 'helm install my-memphis memphis-infra/staging/kubernetes/helm/memphis --set analytics="false" --kubeconfig ~/.kube/config --create-namespace --namespace memphis'
       sh "rm -rf memphis-infra"
     }
 

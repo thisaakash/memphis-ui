@@ -13,7 +13,7 @@
 
 import './style.scss';
 
-import React, { Fragment, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import io from 'socket.io-client';
 
 import OverflowTip from '../../../components/tooltip/overflowtip';
@@ -27,103 +27,126 @@ import LogBadge from '../../../components/logBadge';
 import SelectComponent from '../../../components/select';
 import { httpRequest } from '../../../services/http';
 import { ApiEndpoints } from '../../../const/apiEndpoints';
+import { Filter } from '@material-ui/icons';
 
 const GenericList = ({ columns }) => {
+    const types = ['all', 'info', 'warn', 'error'];
+
     const [selectedRowIndex, setSelectedRowIndex] = useState(0);
     const [logsData, setLogsData] = useState([]);
     const [searchInput, setSearchInput] = useState('');
-    const [copyOfLogsData, setCopyOfLogsData] = useState([]);
     const [dataLength, setDataLength] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [gotData, setGotData] = useState(false);
-    const types = ['all', 'info', 'warn', 'error'];
     const [logFilter, setLogFilter] = useState('all');
-
-    const handleSearch = (e) => {
-        setSearchInput(e.target.value);
-    };
-
-    useEffect(() => {
-        setIsLoading(true);
-        if (searchInput.length > 1) {
-            const results = logsData.filter((logsData) => logsData?.log?.toLowerCase().includes(searchInput));
-            setLogsData(results);
-            setDataLength(results.length);
-        } else {
-            setLogsData(copyOfLogsData);
-            setDataLength(copyOfLogsData?.length);
-        }
-        setIsLoading(false);
-    }, [searchInput.length > 1]);
-
-    const updateLogFilter = (value) => {
-        setLogFilter(value);
-    };
+    const stateRef = useRef([]);
+    stateRef.current[0] = logFilter;
+    stateRef.current[1] = logsData;
+    stateRef.current[2] = searchInput;
 
     useEffect(() => {
-        setIsLoading(true);
-        if (logFilter.toLowerCase() !== 'all') {
-            const results = copyOfLogsData.filter((logsData) => logsData?.type?.toLowerCase().includes(logFilter.toLowerCase()));
-            setLogsData(results);
-            setDataLength(results.length);
-        } else {
-            setLogsData(copyOfLogsData);
-            setDataLength(copyOfLogsData?.length);
+        if (!gotData) {
+            getSystemLogs(24);
         }
-        setIsLoading(false);
-    }, [logFilter]);
+    }, []);
 
     const getSystemLogs = async (hours) => {
         setIsLoading(true);
         try {
             const data = await httpRequest('GET', ApiEndpoints.GET_SYS_LOGS, {}, {}, { hours: hours });
             if (data) {
-                data.logs?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
-                setLogsData(data.logs);
-                setCopyOfLogsData(data.logs);
-                setDataLength(data.logs.length);
+                let SortData = data.logs?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date)).map((log) => ({ ...log, show: true }));
+                setLogsData(SortData);
+                setDataLength(SortData.length);
                 setGotData(true);
             }
         } catch (error) {}
         setIsLoading(false);
     };
 
-    useEffect(() => {
-        if (!gotData) {
-            getSystemLogs(24);
-        }
-        const socket = io.connect(SOCKET_URL, {
-            path: '/api/socket.io',
-            query: {
-                authorization: localStorage.getItem(LOCAL_STORAGE_TOKEN)
-            },
-            reconnection: false
-        });
-        setTimeout(() => {
-            socket.emit('register_system_logs_data');
-        }, 2000);
+    const handleFilter = useCallback(
+        (data, comingLogs) => {
+            setIsLoading(true);
+            let result;
+            if (stateRef.current[0] === 'all') {
+                if (stateRef.current[2].length > 1) {
+                    result = data?.map((log) => (log?.log.toLowerCase().includes(stateRef.current[2]) ? { ...log, show: true } : { ...log, show: false }));
+                } else {
+                    let newData = data?.map((log) => ({ ...log, show: true }));
+                    result = newData;
+                }
+            } else if (stateRef.current[2].length > 1) {
+                result = data?.map((log) =>
+                    log.type.toLowerCase() === stateRef.current[0] && log?.log.toLowerCase().includes(stateRef.current[2])
+                        ? { ...log, show: true }
+                        : { ...log, show: false }
+                );
+            } else {
+                result = data?.map((log) => (log.type.toLowerCase() === stateRef.current[0] ? { ...log, show: true } : { ...log, show: false }));
+            }
+            if (comingLogs) {
+                const newList = result.concat(stateRef.current[1]);
+                setLogsData(newList);
+                setDataLength(newList?.length);
+            } else {
+                setLogsData(result);
+                setDataLength(result?.length);
+            }
+            setSearchInput(stateRef.current[2]);
+            setIsLoading(false);
+        },
+        [stateRef.current[2]]
+    );
 
+    useEffect(() => {
+        let socket;
         if (gotData) {
+            socket = io.connect(SOCKET_URL, {
+                path: '/api/socket.io',
+                query: {
+                    authorization: localStorage.getItem(LOCAL_STORAGE_TOKEN)
+                },
+                reconnection: true
+            });
+
+            setTimeout(() => {
+                socket.emit('register_system_logs_data');
+            }, 2000);
+
             socket.on('system_logs_data', (data) => {
                 if (data) {
-                    data?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
-                    let newLength = dataLength;
-                    newLength += data?.length;
-                    setLogsData([...data, ...logsData]);
-                    setCopyOfLogsData([...data, ...logsData]);
-                    setDataLength(newLength);
+                    let sortData = data?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
+                    handleFilter(sortData, true);
                 }
             });
         }
 
         return () => {
-            socket.emit('deregister');
-            socket.close();
+            if (socket?.connected) {
+                socket.emit('deregister');
+                socket.close();
+            }
         };
     }, [gotData]);
 
+    useEffect(() => {
+        handleFilter(logsData, false);
+    }, [logFilter]);
+
+    const handleSearch = (e) => {
+        setSearchInput(e.target.value);
+    };
+
+    const onPressEnter = (e) => {
+        e.preventDefault();
+        handleFilter(logsData, false);
+    };
     const onSelectedRow = (rowIndex) => {
         setSelectedRowIndex(rowIndex);
+    };
+
+    const updateLogFilter = (value) => {
+        setLogFilter(value);
     };
 
     return (
@@ -134,9 +157,10 @@ const GenericList = ({ columns }) => {
                 </div>
             )}
             {!isLoading && (
-                <Fragment>
+                <div>
                     <div className="add-search-logs">
                         <SearchInput
+                            value={searchInput}
                             placeholder="Search logs"
                             colorType="navy"
                             backgroundColorType="none"
@@ -147,10 +171,9 @@ const GenericList = ({ columns }) => {
                             boxShadowsType="gray"
                             iconComponent={<SearchOutlined />}
                             onChange={handleSearch}
-                            value={searchInput}
+                            onPressEnter={onPressEnter}
                         />
                     </div>
-
                     <div className="logs-number">Showing {dataLength} live logs in the last 24 hours</div>
                     <div className="logs-dropdown">
                         <SelectComponent
@@ -178,32 +201,34 @@ const GenericList = ({ columns }) => {
                                 })}
                             </div>
                             <div className="rows-wrapper">
-                                {logsData.length > 0 &&
-                                    logsData?.map((row, index) => {
-                                        return (
-                                            <div
-                                                className={selectedRowIndex === index ? 'pubSub-row selected' : 'pubSub-row'}
-                                                key={index}
-                                                onClick={() => onSelectedRow(index)}
-                                            >
-                                                <OverflowTip text={row?.component} width={'100px'}>
-                                                    {row?.component}
-                                                </OverflowTip>
-                                                <LogBadge type={row?.type}></LogBadge>
-                                                <OverflowTip text={parsingDate(row?.creation_date)} width={'205px'}>
-                                                    {parsingDate(row?.creation_date)}
-                                                </OverflowTip>
-                                                <div className="log-field">{row?.log}</div>
-                                            </div>
-                                        );
-                                    })}
+                                {logsData?.length > 0 &&
+                                    logsData
+                                        ?.filter((row) => row.show === true)
+                                        .map((row, index) => {
+                                            return (
+                                                <div
+                                                    className={selectedRowIndex === index ? 'pubSub-row selected' : 'pubSub-row'}
+                                                    key={index}
+                                                    onClick={() => onSelectedRow(index)}
+                                                >
+                                                    <OverflowTip text={row?.component} width={'100px'}>
+                                                        {row?.component}
+                                                    </OverflowTip>
+                                                    <LogBadge type={row?.type}></LogBadge>
+                                                    <OverflowTip text={parsingDate(row?.creation_date)} width={'205px'}>
+                                                        {parsingDate(row?.creation_date)}
+                                                    </OverflowTip>
+                                                    <div className="log-field">{row?.log}</div>
+                                                </div>
+                                            );
+                                        })}
                             </div>
                         </div>
                         <div className="row-data">
-                            <p className="row-content">{logsData[selectedRowIndex]?.log}</p>
+                            <p className="row-content">{logsData.length > 0 && logsData[selectedRowIndex]?.show && logsData[selectedRowIndex]?.log}</p>
                         </div>
                     </div>
-                </Fragment>
+                </div>
             )}
         </div>
     );

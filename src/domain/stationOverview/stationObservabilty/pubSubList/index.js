@@ -32,7 +32,7 @@ const PubSubList = (props) => {
             <div className="coulmns-table">
                 <span style={{ width: '100px' }}>Name</span>
                 {!props.producer && <span style={{ width: '100px' }}>Cg</span>}
-                <span style={{ width: '100px' }}>User</span>
+                <span style={{ width: '80px' }}>User</span>
                 <span style={{ width: '15px' }}></span>
             </div>
             <div className="rows-wrapper">
@@ -44,7 +44,7 @@ const PubSubList = (props) => {
                                 <OverflowTip text={row.name} width={'100px'}>
                                     {row.name}
                                 </OverflowTip>
-                                <OverflowTip text={row.created_by_user} width={'100px'}>
+                                <OverflowTip text={row.created_by_user} width={'80px'}>
                                     {row.created_by_user}
                                 </OverflowTip>
                                 <span className="link-row" style={{ width: '15px' }}>
@@ -64,7 +64,7 @@ const PubSubList = (props) => {
                                 <OverflowTip text={row.type} width={'100px'}>
                                     {row.consumers_group}
                                 </OverflowTip>
-                                <OverflowTip text={row.created_by_user} width={'100px'}>
+                                <OverflowTip text={row.created_by_user} width={'80px'}>
                                     {row.created_by_user}
                                 </OverflowTip>
                                 <span className="link-row" style={{ width: '15px' }}>

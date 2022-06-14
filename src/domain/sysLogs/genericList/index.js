@@ -13,7 +13,7 @@
 
 import './style.scss';
 
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import React, { Fragment, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import io from 'socket.io-client';
 
 import OverflowTip from '../../../components/tooltip/overflowtip';
@@ -27,26 +27,28 @@ import LogBadge from '../../../components/logBadge';
 import SelectComponent from '../../../components/select';
 import { httpRequest } from '../../../services/http';
 import { ApiEndpoints } from '../../../const/apiEndpoints';
-import { Filter } from '@material-ui/icons';
 
 const GenericList = ({ columns }) => {
     const types = ['all', 'info', 'warn', 'error'];
 
-    const [selectedRowIndex, setSelectedRowIndex] = useState(0);
-    const [logsData, setLogsData] = useState([]);
-    const [searchInput, setSearchInput] = useState('');
-    const [dataLength, setDataLength] = useState(0);
+    const [logsState, setLogState] = useState({
+        gotData: false,
+        logsData: [],
+        dataLength: 0,
+        logFilter: 'all',
+        searchInput: ''
+    });
     const [isLoading, setIsLoading] = useState(false);
-    const [gotData, setGotData] = useState(false);
+    const [selectedRowIndex, setSelectedRowIndex] = useState(0);
     const [logFilter, setLogFilter] = useState('all');
+    const [searchInput, setSearchInput] = useState('');
+
     const stateRef = useRef([]);
-    stateRef.current[0] = logFilter;
-    stateRef.current[1] = logsData;
-    stateRef.current[2] = searchInput;
+    stateRef.current = [logsState.logsData, logFilter, searchInput];
 
     useEffect(() => {
-        if (!gotData) {
-            getSystemLogs(24);
+        if (!logsState.gotData) {
+            getSystemLogs(2);
         }
     }, []);
 
@@ -56,57 +58,75 @@ const GenericList = ({ columns }) => {
             const data = await httpRequest('GET', ApiEndpoints.GET_SYS_LOGS, {}, {}, { hours: hours });
             if (data) {
                 let SortData = data.logs?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date)).map((log) => ({ ...log, show: true }));
-                setLogsData(SortData);
-                setDataLength(SortData.length);
-                setGotData(true);
+                setLogState({ ...logsState, logsData: SortData, dataLength: SortData.length, gotData: true });
+                setIsLoading(false);
             }
-        } catch (error) {}
-        setIsLoading(false);
+        } catch (error) {
+            setLogState({ ...logsState, isLoading: false });
+        }
     };
 
-    const handleFilter = useCallback(
-        (data, comingLogs) => {
+    const handleFilter = (data, comingLogs) => {
+        if (data?.length > 0) {
+            let counter = 0;
             setIsLoading(true);
             let result;
-            if (stateRef.current[0] === 'all') {
+            if (stateRef.current[1] === 'all') {
                 if (stateRef.current[2].length > 1) {
-                    result = data?.map((log) => (log?.log.toLowerCase().includes(stateRef.current[2]) ? { ...log, show: true } : { ...log, show: false }));
+                    result = data?.map((log) => {
+                        if (log?.log.toLowerCase().includes(stateRef.current[2])) {
+                            counter++;
+                            return { ...log, show: true };
+                        } else {
+                            return { ...log, show: false };
+                        }
+                    });
                 } else {
-                    let newData = data?.map((log) => ({ ...log, show: true }));
+                    let newData = data?.map((log) => {
+                        counter++;
+                        return { ...log, show: true };
+                    });
                     result = newData;
                 }
             } else if (stateRef.current[2].length > 1) {
-                result = data?.map((log) =>
-                    log.type.toLowerCase() === stateRef.current[0] && log?.log.toLowerCase().includes(stateRef.current[2])
-                        ? { ...log, show: true }
-                        : { ...log, show: false }
-                );
+                result = data?.map((log) => {
+                    if (log.type.toLowerCase() === stateRef.current[1] && log?.log.toLowerCase().includes(stateRef.current[2])) {
+                        counter++;
+                        return { ...log, show: true };
+                    } else {
+                        return { ...log, show: false };
+                    }
+                });
             } else {
-                result = data?.map((log) => (log.type.toLowerCase() === stateRef.current[0] ? { ...log, show: true } : { ...log, show: false }));
+                result = data?.map((log) => {
+                    if (log.type.toLowerCase() === stateRef.current[1]) {
+                        counter++;
+                        return { ...log, show: true };
+                    } else {
+                        return { ...log, show: false };
+                    }
+                });
             }
             if (comingLogs) {
-                const newList = result.concat(stateRef.current[1]);
-                setLogsData(newList);
-                setDataLength(newList?.length);
+                const newList = result.concat(stateRef.current[0]);
+                setLogState({ ...logsState, logsData: newList, dataLength: newList?.length });
+                setIsLoading(false);
             } else {
-                setLogsData(result);
-                setDataLength(result?.length);
+                setLogState({ ...logsState, logsData: result, dataLength: counter });
+                setIsLoading(false);
             }
-            setSearchInput(stateRef.current[2]);
-            setIsLoading(false);
-        },
-        [stateRef.current[2]]
-    );
+        }
+    };
 
     useEffect(() => {
         let socket;
-        if (gotData) {
+        if (logsState.gotData) {
             socket = io.connect(SOCKET_URL, {
                 path: '/api/socket.io',
                 query: {
                     authorization: localStorage.getItem(LOCAL_STORAGE_TOKEN)
                 },
-                reconnection: true
+                reconnection: false
             });
 
             setTimeout(() => {
@@ -115,6 +135,7 @@ const GenericList = ({ columns }) => {
 
             socket.on('system_logs_data', (data) => {
                 if (data) {
+                    console.log(data);
                     let sortData = data?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
                     handleFilter(sortData, true);
                 }
@@ -127,10 +148,10 @@ const GenericList = ({ columns }) => {
                 socket.close();
             }
         };
-    }, [gotData]);
+    }, [logsState.gotData]);
 
     useEffect(() => {
-        handleFilter(logsData, false);
+        handleFilter(logsState.logsData, false);
     }, [logFilter]);
 
     const handleSearch = (e) => {
@@ -139,7 +160,7 @@ const GenericList = ({ columns }) => {
 
     const onPressEnter = (e) => {
         e.preventDefault();
-        handleFilter(logsData, false);
+        handleFilter(logsState.logsData, false);
     };
     const onSelectedRow = (rowIndex) => {
         setSelectedRowIndex(rowIndex);
@@ -150,14 +171,14 @@ const GenericList = ({ columns }) => {
     };
 
     return (
-        <div className="logs-list-container">
+        <Fragment>
             {isLoading && (
                 <div>
                     <Loader />
                 </div>
             )}
             {!isLoading && (
-                <div>
+                <div className="logs-list-container">
                     <div className="add-search-logs">
                         <SearchInput
                             value={searchInput}
@@ -174,7 +195,7 @@ const GenericList = ({ columns }) => {
                             onPressEnter={onPressEnter}
                         />
                     </div>
-                    <div className="logs-number">Showing {dataLength} live logs in the last 24 hours</div>
+                    <div className="logs-number">Showing {logsState.dataLength} live logs in the last 2 hours</div>
                     <div className="logs-dropdown">
                         <SelectComponent
                             value={logFilter}
@@ -201,10 +222,9 @@ const GenericList = ({ columns }) => {
                                 })}
                             </div>
                             <div className="rows-wrapper">
-                                {logsData?.length > 0 &&
-                                    logsData
-                                        ?.filter((row) => row.show === true)
-                                        .map((row, index) => {
+                                {logsState.logsData?.length > 0 &&
+                                    logsState.logsData?.map((row, index) => {
+                                        if (row.show === true) {
                                             return (
                                                 <div
                                                     className={selectedRowIndex === index ? 'pubSub-row selected' : 'pubSub-row'}
@@ -215,22 +235,25 @@ const GenericList = ({ columns }) => {
                                                         {row?.component}
                                                     </OverflowTip>
                                                     <LogBadge type={row?.type}></LogBadge>
-                                                    <OverflowTip text={parsingDate(row?.creation_date)} width={'205px'}>
+                                                    <OverflowTip text={parsingDate(row?.creation_date)} width={'200px'}>
                                                         {parsingDate(row?.creation_date)}
                                                     </OverflowTip>
                                                     <div className="log-field">{row?.log}</div>
                                                 </div>
                                             );
-                                        })}
+                                        }
+                                    })}
                             </div>
                         </div>
                         <div className="row-data">
-                            <p className="row-content">{logsData.length > 0 && logsData[selectedRowIndex]?.show && logsData[selectedRowIndex]?.log}</p>
+                            <p className="row-content">
+                                {logsState.logsData?.length > 0 && logsState.logsData[selectedRowIndex]?.show && logsState.logsData[selectedRowIndex]?.log}
+                            </p>
                         </div>
                     </div>
                 </div>
             )}
-        </div>
+        </Fragment>
     );
 };
 

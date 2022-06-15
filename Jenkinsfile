@@ -76,14 +76,12 @@ node {
 
     stage('Tests - Install memphis with helm') {
       sh "helm install memphis-tests memphis-infra/beta/kubernetes/helm/memphis --set analytics='false',teston='ui' --create-namespace --namespace memphis-$unique_id"
-      sh 'sleep 40'
+      sh 'sleep 60'
     }
 
     stage('Open port forwarding to memphis service') {
       sh "nohup kubectl port-forward service/memphis-ui 9000:80 --namespace memphis-$unique_id &"
-      sh "sleep 5"
       sh "nohup kubectl port-forward service/memphis-cluster 7766:7766 6666:6666 5555:5555 --namespace memphis-$unique_id &"
-      sh "sleep 5"
     }
 
     stage('Tests - Run e2e tests over kubernetes') {

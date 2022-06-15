@@ -11,15 +11,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, { useCallback, useEffect, useContext, createContext } from 'react';
-import { useState } from 'react';
-import { useHistory } from 'react-router-dom';
-
 import './style.scss';
-import Loader from '../../components/loader';
-import { SOCKET_URL } from '../../config';
-import { LOCAL_STORAGE_TOKEN } from '../../const/localStorageConsts';
-import pathDomains from '../../router';
+
+import React, { useEffect, useContext } from 'react';
+
 import { Context } from '../../hooks/store';
 import GenericList from './genericList';
 
@@ -32,7 +27,7 @@ const logColumns = [
     {
         key: '2',
         title: 'Type',
-        width: '50px'
+        width: '60px'
     },
     {
         key: '3',
@@ -47,40 +42,18 @@ const logColumns = [
 ];
 
 const SysLogs = () => {
-    const history = useHistory();
-    const [isLoading, setisLoading] = useState(false);
     const [state, dispatch] = useContext(Context);
 
-    // const getSysLogs = useCallback(async () => {
-    //     try {
-    //     } catch (error) {
-    //         if (error.status === 404) {
-    //             history.push(`${pathDomains.overview}`);
-    //         }
-    //     }
-    // });
     useEffect(() => {
         dispatch({ type: 'SET_ROUTE', payload: 'overview' });
     }, []);
 
     return (
-        <React.Fragment>
-            {/* {isLoading && (
-                <div>
-                    <Loader />
-                </div>
-            )} */}
-            {/* {!isLoading && ( */}
-            <div>
-                <div className="logs-container">
-                    <h1 className="main-header-h1">System Logs</h1>
-                    <GenericList columns={logColumns} />
-                </div>
-            </div>
-            {/* )} */}
-        </React.Fragment>
+        <div className="logs-container">
+            <h1 className="main-header-h1">System Logs</h1>
+            <GenericList columns={logColumns} />
+        </div>
     );
 };
 
-export const LogsStoreContext = createContext({});
 export default SysLogs;

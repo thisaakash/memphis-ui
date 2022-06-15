@@ -31,6 +31,7 @@
         span{
             font-weight: 400;
             font-size: 12px;
+            margin-right: 5px;
         }
     }
     .rows-wrapper {
@@ -51,6 +52,9 @@
             .link-row img{
                 display: block;
                 cursor: pointer;
+            }
+            div{
+                margin-right: 5px;
             }
         }
         .pubSub-row:nth-child(even) {

@@ -61,7 +61,7 @@ const PubSubList = (props) => {
                                 <OverflowTip text={row.name} width={'100px'}>
                                     {row.name}
                                 </OverflowTip>
-                                <OverflowTip text={row.type} width={'100px'}>
+                                <OverflowTip text={row.consumers_group} width={'100px'}>
                                     {row.consumers_group}
                                 </OverflowTip>
                                 <OverflowTip text={row.created_by_user} width={'80px'}>

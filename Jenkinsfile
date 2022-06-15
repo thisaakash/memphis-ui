@@ -20,7 +20,11 @@ node {
     }
 
     stage('Create memphis namespace in Kubernetes'){
+      sh "kubectl config use-context minikube"
       sh "kubectl create namespace memphis-$unique_id --dry-run=client -o yaml | kubectl apply -f -"
+      sh "aws s3 cp s3://memphis-jenkins-backup-bucket/regcred.yaml ."
+      sh "kubectl apply -f regcred.yaml -n memphis-$unique_id"
+      sh "kubectl patch serviceaccount default -p '{\"imagePullSecrets\": [{\"name\": \"regcred\"}]}' -n memphis-$unique_id"
       //sh "sleep 40"
     }
 
@@ -39,13 +43,17 @@ node {
 
     stage('Tests - Docker compose install') {
       sh "rm -rf memphis-infra"
-      sh "git clone git@github.com:Memphisdev/memphis-infra.git"
+      dir ('memphis-infra'){
+        git credentialsId: 'main-github', url: 'git@github.com:memphisdev/memphis-infra.git', branch: 'master'
+      }
       sh "docker-compose -f ./memphis-infra/staging/docker/docker-compose-dev-memphis-ui.yml -p memphis up -d"
     }
 
     stage('Tests - Run e2e tests over Docker') {
       sh "rm -rf memphis-e2e-tests"
-      sh "git clone git@github.com:Memphisdev/memphis-e2e-tests.git"
+      dir ('memphis-e2e-tests'){
+        git credentialsId: 'main-github', url: 'git@github.com:memphisdev/memphis-e2e-tests.git', branch: 'master'
+      }
       sh "npm install --prefix ./memphis-e2e-tests"
       sh "node ./memphis-e2e-tests/index.js docker"
     }
@@ -62,14 +70,12 @@ node {
   
     stage('Tests - Install Memphis with helm') {
       sh "helm install memphis-tests memphis-infra/staging/kubernetes/helm/memphis --set analytics='false',teston='ui' --create-namespace --namespace memphis-$unique_id"
-      sh "sleep 40"
     }
 
     stage('Open port forwarding to Memphis service') {
+      sh(script: """until kubectl get pods --selector=app=memphis-ui -o=jsonpath="{.items[*].status.phase}" -n memphis-$unique_id  | grep -q "Running" ; do sleep 1; done""", returnStdout: true)
       sh "nohup kubectl port-forward service/memphis-ui 9000:80 --namespace memphis-$unique_id &"
-      sh "sleep 5"
       sh "nohup kubectl port-forward service/memphis-cluster 7766:7766 6666:6666 5555:5555 --namespace memphis-$unique_id &"
-      sh "sleep 5"
     }
 
     stage('Tests - Run e2e tests over kubernetes') {
@@ -87,13 +93,15 @@ node {
     }
 
     stage('Build and push image to Docker Hub') {
+       sh "docker buildx use builder"
        sh "docker buildx build --push --tag ${repoUrlPrefix}/${imageName}:${versionTag} --tag ${repoUrlPrefix}/${imageName} --platform linux/amd64,linux/arm64 ."
     }
 	  
 	  
     stage('Push to staging'){
-      sh "helm uninstall my-memphis --kubeconfig /var/lib/jenkins/.kube/memphis-staging-kubeconfig.yaml -n memphis"
-      sh 'helm install my-memphis memphis-infra/staging/kubernetes/helm/memphis --set analytics="false" --kubeconfig /var/lib/jenkins/.kube/memphis-staging-kubeconfig.yaml --create-namespace --namespace memphis'
+      sh "aws eks --region eu-central-1 update-kubeconfig --name staging-cluster"
+      sh "helm uninstall my-memphis --kubeconfig ~/.kube/config -n memphis"
+      sh 'helm install my-memphis memphis-infra/staging/kubernetes/helm/memphis --set analytics="false" --kubeconfig ~/.kube/config --create-namespace --namespace memphis'
       sh "rm -rf memphis-infra"
     }
 
@@ -103,8 +111,8 @@ node {
     
   } catch (e) {
       currentBuild.result = "FAILED"
-      sh "kubectl delete ns memphis-$unique_id &"
       sh "docker-compose -f ./memphis-infra/staging/docker/docker-compose-dev-memphis-control-plane.yml -p memphis down &"
+      sh "kubectl delete ns memphis-$unique_id &"
       cleanWs()
       notifyFailed()
       throw e

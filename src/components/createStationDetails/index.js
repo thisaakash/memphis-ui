@@ -61,7 +61,6 @@ const CreateStationDetails = (props) => {
     const { chooseFactoryField = false, createStationRef, factoryName = '' } = props;
     const [factoryNames, setFactoryNames] = useState([]);
     const [loading, setLoading] = useState([]);
-
     const [creationForm] = Form.useForm();
     const history = useHistory();
     const [formFields, setFormFields] = useState({
@@ -158,14 +157,7 @@ const CreateStationDetails = (props) => {
                     storage_type: values.storage_type,
                     replicas: values.replicas
                 };
-                if (chooseFactoryField && creationForm.getFieldValue('factories_List').length === 0) {
-                    const result = await createNewFactory(bodyRequest.factory_name);
-                    if (result) {
-                        createStation(bodyRequest);
-                    }
-                } else {
-                    createStation(bodyRequest);
-                }
+                createStation(bodyRequest);
             } catch (error) {}
         }
     };
@@ -177,14 +169,6 @@ const CreateStationDetails = (props) => {
                 history.push(`${pathDomains.factoriesList}/${bodyRequest.factory_name}/${data.name}`);
             }
         } catch (error) {}
-    };
-
-    const createNewFactory = async (factory_name) => {
-        try {
-            await httpRequest('POST', ApiEndpoints.CREATE_FACTORY, { name: factory_name });
-            return true;
-        } catch (error) {}
-        return false;
     };
 
     return (

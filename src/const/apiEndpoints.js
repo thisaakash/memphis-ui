@@ -29,7 +29,7 @@ export const ApiEndpoints = {
     //Factory
     CREATE_FACTORY: '/factories/createFactory',
     GEL_ALL_FACTORIES: '/factories/getAllFactories',
-    GEL_FACTORIES: '/factories/getFactory',
+    GEL_FACTORY: '/factories/getFactory',
     EDIT_FACTORY: '/factories/editFactory',
     REMOVE_FACTORY: '/factories/removeFactory',
 
@@ -46,6 +46,8 @@ export const ApiEndpoints = {
 
     //Monitor
     GET_CLUSTER_INFO: '/monitoring/getClusterInfo',
+    GET_MAIN_OVERVIEW_DATA: '/monitoring/getMainOverviewData',
+    GET_STATION_DATA: '/monitoring/getStationOverviewData',
 
     //Logs
     GET_SYS_LOGS: '/logs/getSysLogs'

@@ -195,60 +195,62 @@ const GenericList = ({ columns }) => {
                             onPressEnter={onPressEnter}
                         />
                     </div>
-                    <div className="logs-number">Showing {logsState.dataLength} live logs in the last 2 hours</div>
-                    <div className="logs-dropdown">
-                        <SelectComponent
-                            value={logFilter}
-                            colorType="navy"
-                            backgroundColorType="none"
-                            borderColorType="gray"
-                            radiusType="circle"
-                            width="100px"
-                            height="28px"
-                            options={types}
-                            dropdownClassName="select-options"
-                            onChange={(e) => updateLogFilter(e)}
-                        />
-                    </div>
-                    <div className="logs-list-wrapper">
-                        <div className="list">
-                            <div className="coulmns-table">
-                                {columns?.map((column, index) => {
-                                    return (
-                                        <span key={index} style={{ width: column.width }}>
-                                            {column.title}
-                                        </span>
-                                    );
-                                })}
-                            </div>
-                            <div className="rows-wrapper">
-                                {logsState.logsData?.length > 0 &&
-                                    logsState.logsData?.map((row, index) => {
-                                        if (row.show === true) {
-                                            return (
-                                                <div
-                                                    className={selectedRowIndex === index ? 'pubSub-row selected' : 'pubSub-row'}
-                                                    key={index}
-                                                    onClick={() => onSelectedRow(index)}
-                                                >
-                                                    <OverflowTip text={row?.component} width={'100px'}>
-                                                        {row?.component}
-                                                    </OverflowTip>
-                                                    <LogBadge type={row?.type}></LogBadge>
-                                                    <OverflowTip text={parsingDate(row?.creation_date)} width={'200px'}>
-                                                        {parsingDate(row?.creation_date)}
-                                                    </OverflowTip>
-                                                    <div className="log-field">{row?.log}</div>
-                                                </div>
-                                            );
-                                        }
-                                    })}
-                            </div>
+                    <div className="logs-wrapper">
+                        <div className="logs-number">Showing {logsState.dataLength} live logs in the last 2 hours</div>
+                        <div className="logs-dropdown">
+                            <SelectComponent
+                                value={logFilter}
+                                colorType="navy"
+                                backgroundColorType="none"
+                                borderColorType="gray"
+                                radiusType="circle"
+                                width="100px"
+                                height="28px"
+                                options={types}
+                                dropdownClassName="select-options"
+                                onChange={(e) => updateLogFilter(e)}
+                            />
                         </div>
-                        <div className="row-data">
-                            <p className="row-content">
-                                {logsState.logsData?.length > 0 && logsState.logsData[selectedRowIndex]?.show && logsState.logsData[selectedRowIndex]?.log}
-                            </p>
+                        <div className="logs-list-wrapper">
+                            <div className="list">
+                                <div className="coulmns-table">
+                                    {columns?.map((column, index) => {
+                                        return (
+                                            <span key={index} style={{ width: column.width }}>
+                                                {column.title}
+                                            </span>
+                                        );
+                                    })}
+                                </div>
+                                <div className="rows-wrapper">
+                                    {logsState.logsData?.length > 0 &&
+                                        logsState.logsData?.map((row, index) => {
+                                            if (row.show === true) {
+                                                return (
+                                                    <div
+                                                        className={selectedRowIndex === index ? 'log-row selected' : 'log-row'}
+                                                        key={index}
+                                                        onClick={() => onSelectedRow(index)}
+                                                    >
+                                                        <OverflowTip text={row?.component} width={'100px'}>
+                                                            {row?.component}
+                                                        </OverflowTip>
+                                                        <LogBadge type={row?.type}></LogBadge>
+                                                        <OverflowTip text={parsingDate(row?.creation_date)} width={'200px'}>
+                                                            {parsingDate(row?.creation_date)}
+                                                        </OverflowTip>
+                                                        <div className="log-field">{row?.log}</div>
+                                                    </div>
+                                                );
+                                            }
+                                        })}
+                                </div>
+                            </div>
+                            <div className="row-data">
+                                <p className="row-content">
+                                    {logsState.logsData?.length > 0 && logsState.logsData[selectedRowIndex]?.show && logsState.logsData[selectedRowIndex]?.log}
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>

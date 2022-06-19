@@ -48,7 +48,7 @@ const GenericList = ({ columns }) => {
 
     useEffect(() => {
         if (!logsState.gotData) {
-            getSystemLogs(2);
+            getSystemLogs(8);
         }
     }, []);
 
@@ -196,7 +196,7 @@ const GenericList = ({ columns }) => {
                         />
                     </div>
                     <div className="logs-wrapper">
-                        <div className="logs-number">Showing {logsState.dataLength} live logs in the last 2 hours</div>
+                        <div className="logs-number">Showing {logsState.dataLength} logs in the last 8 hours</div>
                         <div className="logs-dropdown">
                             <SelectComponent
                                 value={logFilter}

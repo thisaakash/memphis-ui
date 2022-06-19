@@ -32,7 +32,6 @@ const PubSubList = (props) => {
     useEffect(() => {
         if (props.producer) {
             let activeProducers = stationState?.stationSocketData?.active_producers || [];
-
             let killedProducers = stationState?.stationSocketData?.killed_producers || [];
             let destroyedProducers = stationState?.stationSocketData?.destroyed_producers || [];
             let primes = activeProducers.concat(killedProducers);
@@ -46,7 +45,7 @@ const PubSubList = (props) => {
             primes = primes.concat(destroyedConsumers);
             setConsumersList(primes);
         }
-    }, []);
+    }, [stationState?.stationSocketData]);
 
     const statusIndication = (is_active, is_deleted) => {
         if (is_active) {

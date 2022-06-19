@@ -56,14 +56,12 @@ const GenericList = ({ columns }) => {
         setIsLoading(true);
         try {
             const data = await httpRequest('GET', ApiEndpoints.GET_SYS_LOGS, {}, {}, { hours: hours });
-            if (data) {
+            if (data?.logs) {
                 let SortData = data.logs?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date)).map((log) => ({ ...log, show: true }));
-                setLogState({ ...logsState, logsData: SortData, dataLength: SortData.length, gotData: true });
-                setIsLoading(false);
+                setLogState({ ...logsState, logsData: SortData, dataLength: SortData?.length, gotData: true });
             }
-        } catch (error) {
-            setLogState({ ...logsState, isLoading: false });
-        }
+        } catch (error) {}
+        setIsLoading(false);
     };
 
     const handleFilter = (data, comingLogs) => {
@@ -72,7 +70,7 @@ const GenericList = ({ columns }) => {
             setIsLoading(true);
             let result;
             if (stateRef.current[1] === 'all') {
-                if (stateRef.current[2].length > 1) {
+                if (stateRef.current[2]?.length > 1) {
                     result = data?.map((log) => {
                         if (log?.log.toLowerCase().includes(stateRef.current[2])) {
                             counter++;
@@ -88,7 +86,7 @@ const GenericList = ({ columns }) => {
                     });
                     result = newData;
                 }
-            } else if (stateRef.current[2].length > 1) {
+            } else if (stateRef.current[2]?.length > 1) {
                 result = data?.map((log) => {
                     if (log.type.toLowerCase() === stateRef.current[1] && log?.log.toLowerCase().includes(stateRef.current[2])) {
                         counter++;

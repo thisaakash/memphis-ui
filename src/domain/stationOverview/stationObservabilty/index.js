@@ -41,17 +41,17 @@ const StationObservabilty = () => {
             autoplay: true,
             animationData: animationData
         });
-    }, [stationState?.stationSocketData?.producers?.length > 0, stationState?.stationSocketData?.consumers?.length > 0]);
+    }, [stationState?.stationSocketData?.active_producers?.length > 0, stationState?.stationSocketData?.active_consumers?.length > 0]);
 
     return (
         <div className="station-observabilty-container">
             <PubSubList producer={true} />
             <div className="thunnel-from-sub">
-                {stationState?.stationSocketData?.producers?.length > 0 && <div style={{ height: '10vw', width: '10vw' }} ref={fromProducer}></div>}
+                {stationState?.stationSocketData?.active_producers?.length > 0 && <div style={{ height: '10vw', width: '10vw' }} ref={fromProducer}></div>}
             </div>
             <Messages />
             <div className="thunnel-to-pub">
-                {stationState?.stationSocketData?.consumers?.length > 0 && <div style={{ height: '10vw', width: '10vw' }} ref={toConsumer}></div>}
+                {stationState?.stationSocketData?.active_consumers?.length > 0 && <div style={{ height: '10vw', width: '10vw' }} ref={toConsumer}></div>}
             </div>
             <PubSubList producer={false} />
         </div>

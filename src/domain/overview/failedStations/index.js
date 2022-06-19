@@ -19,7 +19,7 @@ import { Link } from 'react-router-dom';
 import ErrorSharpIcon from '@material-ui/icons/ErrorSharp';
 import { Context } from '../../../hooks/store';
 import pathDomains from '../../../router';
-import { parsingDate } from '../../../services/dateConvertor';
+import { parsingDate } from '../../../services/valueConvertor';
 
 const FailedStations = () => {
     const [state, dispatch] = useContext(Context);

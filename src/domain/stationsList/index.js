@@ -32,7 +32,7 @@ import pathDomains from '../../router';
 import Loader from '../../components/loader';
 import { SOCKET_URL } from '../../config';
 import { LOCAL_STORAGE_TOKEN } from '../../const/localStorageConsts';
-import { parsingDate } from '../../services/dateConvertor';
+import { parsingDate } from '../../services/valueConvertor';
 
 const StationsList = () => {
     const url = window.location.href;

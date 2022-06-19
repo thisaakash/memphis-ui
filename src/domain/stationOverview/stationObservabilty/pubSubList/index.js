@@ -13,15 +13,56 @@
 
 import './style.scss';
 
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
-import OverflowTip from '../../../../components/tooltip/overflowtip';
 import comingSoonBox from '../../../../assets/images/comingSoonBox.svg';
-import infoIcon from '../../../../assets/images/infoIcon.svg';
+import TooltipComponent from '../../../../components/tooltip/tooltip';
+import OverflowTip from '../../../../components/tooltip/overflowtip';
+import disconnect from '../../../../assets/images/disconnect.svg';
+import connect from '../../../../assets/images/connect.svg';
+
 import { StationStoreContext } from '../..';
 
 const PubSubList = (props) => {
     const [stationState, stationDispatch] = useContext(StationStoreContext);
+
+    const [producersList, setProducersList] = useState([]);
+    const [consumersList, setConsumersList] = useState([]);
+
+    useEffect(() => {
+        if (props.producer) {
+            let activeProducers = stationState?.stationSocketData?.active_producers || [];
+
+            let killedProducers = stationState?.stationSocketData?.killed_producers || [];
+            let destroyedProducers = stationState?.stationSocketData?.destroyed_producers || [];
+            let primes = activeProducers.concat(killedProducers);
+            primes = primes.concat(destroyedProducers);
+            setProducersList(primes);
+        } else {
+            let activeConsumers = stationState?.stationSocketData?.active_consumers || [];
+            let killedConsumers = stationState?.stationSocketData?.killed_consumers || [];
+            let destroyedConsumers = stationState?.stationSocketData?.destroyed_consumers || [];
+            let primes = activeConsumers.concat(killedConsumers);
+            primes = primes.concat(destroyedConsumers);
+            setConsumersList(primes);
+        }
+    }, []);
+
+    const statusIndication = (is_active, is_deleted) => {
+        if (is_active) {
+            return (
+                <TooltipComponent text="Live" minWidth="15px">
+                    <img src={connect} />
+                </TooltipComponent>
+            );
+        } else if (!is_deleted) {
+            return (
+                <TooltipComponent text="Killed" minWidth="15px">
+                    <img src={disconnect} />
+                </TooltipComponent>
+            );
+        }
+    };
 
     return (
         <div className="pubSub-list-container">
@@ -37,27 +78,27 @@ const PubSubList = (props) => {
             </div>
             <div className="rows-wrapper">
                 {props.producer &&
-                    stationState?.stationSocketData?.producers?.length > 0 &&
-                    stationState?.stationSocketData?.producers?.map((row, index) => {
+                    producersList?.length > 0 &&
+                    producersList?.map((row, index) => {
                         return (
-                            <div className="pubSub-row" key={index}>
+                            <div className={row.is_deleted ? 'pubSub-row deleted' : 'pubSub-row'} key={index}>
                                 <OverflowTip text={row.name} width={'100px'}>
                                     {row.name}
                                 </OverflowTip>
                                 <OverflowTip text={row.created_by_user} width={'80px'}>
                                     {row.created_by_user}
                                 </OverflowTip>
-                                <span className="link-row" style={{ width: '15px' }}>
-                                    <img src={infoIcon} />
+                                <span className="status-icon" style={{ width: '15px' }}>
+                                    {statusIndication(row.is_active, row.is_deleted)}
                                 </span>
                             </div>
                         );
                     })}
                 {!props.producer &&
-                    stationState?.stationSocketData?.consumers?.length > 0 &&
-                    stationState?.stationSocketData?.consumers?.map((row, index) => {
+                    consumersList?.length > 0 &&
+                    consumersList?.map((row, index) => {
                         return (
-                            <div className="pubSub-row" key={index}>
+                            <div className={row.is_deleted ? 'pubSub-row deleted' : 'pubSub-row'} key={index}>
                                 <OverflowTip text={row.name} width={'100px'}>
                                     {row.name}
                                 </OverflowTip>
@@ -67,14 +108,13 @@ const PubSubList = (props) => {
                                 <OverflowTip text={row.created_by_user} width={'80px'}>
                                     {row.created_by_user}
                                 </OverflowTip>
-                                <span className="link-row" style={{ width: '15px' }}>
-                                    <img src={infoIcon} />
+                                <span className="status-icon" style={{ width: '15px' }}>
+                                    {statusIndication(row.is_active, row.is_deleted)}
                                 </span>
                             </div>
                         );
                     })}
-                {((props.producer && stationState?.stationSocketData?.producers?.length === 0) ||
-                    (!props.producer && stationState?.stationSocketData?.consumers?.length === 0)) && (
+                {((props.producer && producersList?.length === 0) || (!props.producer && consumersList?.length === 0)) && (
                     <div className="empty-pub-sub">
                         <p>Waiting for {props.producer ? 'producers' : 'consumers'}</p>
                     </div>

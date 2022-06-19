@@ -25,7 +25,7 @@ import HealthyBadge from '../../../components/healthyBadge';
 import HubMarketplace from '../../hubMarketplace';
 import { Context } from '../../../hooks/store';
 import pathDomains from '../../../router';
-import { convertSecondsToDate } from '../../../services/dateConvertor';
+import { convertSecondsToDate } from '../../../services/valueConvertor';
 import { ApiEndpoints } from '../../../const/apiEndpoints';
 import Modal from '../../../components/modal';
 import { httpRequest } from '../../../services/http';

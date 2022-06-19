@@ -18,7 +18,7 @@ import UserType from './userType';
 import { httpRequest } from '../../../services/http';
 import { ApiEndpoints } from '../../../const/apiEndpoints';
 import Modal from '../../../components/modal';
-import { parsingDate } from '../../../services/dateConvertor';
+import { parsingDate } from '../../../services/valueConvertor';
 
 function UserItem(props) {
     const defaultBotId = 1;

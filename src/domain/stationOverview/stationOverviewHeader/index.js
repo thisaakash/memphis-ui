@@ -20,7 +20,7 @@ import { useHistory } from 'react-router-dom';
 import { Progress } from 'antd';
 
 import { CODE_EXAMPLE, DOCKER_CODE_EXAMPLE } from '../../../const/SDKExample';
-import { convertSecondsToDate } from '../../../services/dateConvertor';
+import { convertBytes, convertSecondsToDate } from '../../../services/valueConvertor';
 import averageMesIcon from '../../../assets/images/averageMesIcon.svg';
 import awaitingIcon from '../../../assets/images/awaitingIcon.svg';
 import storageIcon from '../../../assets/images/storageIcon.svg';
@@ -62,26 +62,6 @@ const StationOverviewHeader = (props) => {
                 break;
         }
     }, []);
-
-    function isFloat(n) {
-        return Number(n) === n && n % 1 !== 0;
-    }
-
-    const convertBytes = (bytes) => {
-        const KB = 1024;
-        const MB = 1024 * 1024;
-        if (bytes < KB && bytes > 0) {
-            return `${bytes} Bytes`;
-        } else if (bytes >= KB && bytes < MB) {
-            const parsing = isFloat(bytes / KB) ? Math.round((bytes / KB + Number.EPSILON) * 100) / 100 : bytes / KB;
-            return `${parsing} KB`;
-        } else if (bytes >= MB) {
-            const parsing = isFloat(bytes / MB) ? Math.round((bytes / MB + Number.EPSILON) * 100) / 100 : bytes / MB;
-            return `${parsing} MB`;
-        } else {
-            return '0 Bytes';
-        }
-    };
 
     const returnToStaionsList = () => {
         const url = window.location.href;
@@ -146,7 +126,7 @@ const StationOverviewHeader = (props) => {
                             <p className="title">Total messages</p>
                         </div>
                     </div>
-                    <TooltipComponent text="Include extra bytes added by memphis." color="white" width={'220px'} cursor="pointer">
+                    <TooltipComponent text="Include extra bytes added by memphis." width={'220px'} cursor="pointer">
                         <div className="details-wrapper average">
                             <div className="icon">
                                 <img src={averageMesIcon} width={24} height={24} alt="averageMesIcon" />

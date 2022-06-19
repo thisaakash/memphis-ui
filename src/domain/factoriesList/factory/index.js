@@ -28,7 +28,7 @@ import { ApiEndpoints } from '../../../const/apiEndpoints';
 import Modal from '../../../components/modal';
 import { Context } from '../../../hooks/store';
 import pathDomains from '../../../router';
-import { parsingDate } from '../../../services/dateConvertor';
+import { parsingDate } from '../../../services/valueConvertor';
 
 const Factory = (props) => {
     const [state, dispatch] = useContext(Context);

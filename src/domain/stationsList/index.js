@@ -32,7 +32,7 @@ import pathDomains from '../../router';
 import Loader from '../../components/loader';
 import { SOCKET_URL } from '../../config';
 import { LOCAL_STORAGE_TOKEN } from '../../const/localStorageConsts';
-import { parsingDate } from '../../services/dateConvertor';
+import { parsingDate } from '../../services/valueConvertor';
 
 const StationsList = () => {
     const url = window.location.href;
@@ -52,59 +52,85 @@ const StationsList = () => {
     const createStationRef = useRef(null);
     const [parseDate, setParseDate] = useState('');
     const [botUrl, SetBotUrl] = useState('');
+    const [isDataLoaded, setIsDataLoaded] = useState(false);
 
-    const setBotImage = (botId) => {
-        SetBotUrl(require(`../../assets/images/bots/${botId}.svg`));
-    };
-
-    const handleRegisterToFactory = useCallback((factoryName) => {
-        socket.emit('register_factory_overview_data', factoryName);
-    }, []);
-
-    useEffect(() => {
-        dispatch({ type: 'SET_ROUTE', payload: 'factories' });
+    const getFactoryDetails = async () => {
         setisLoading(true);
-
-        socket = io.connect(SOCKET_URL, {
-            path: '/api/socket.io',
-            query: {
-                authorization: localStorage.getItem(LOCAL_STORAGE_TOKEN)
-            },
-            reconnection: false
-        });
-
-        socket.on('factory_overview_data', (data) => {
+        try {
+            const data = await httpRequest('GET', `${ApiEndpoints.GEL_FACTORY}?factory_name=${urlfactoryName}`);
             setBotImage(data.user_avatar_id || botId);
             setParseDate(parsingDate(data.creation_date));
             setFactoryDetails(data);
             setFactoryName(data.name);
             setFactoryDescription(data.description);
             setisLoading(false);
-        });
+            setIsDataLoaded(true);
+        } catch (error) {
+            setisLoading(false);
+            if (error.status === 404) {
+                history.push(pathDomains.factoriesList);
+            }
+        }
+    };
 
-        socket.on('error', (error) => {
-            history.push(pathDomains.factoriesList);
-        });
+    const setBotImage = (botId) => {
+        SetBotUrl(require(`../../assets/images/bots/${botId}.svg`));
+    };
 
-        setTimeout(() => {
-            handleRegisterToFactory(urlfactoryName);
-        }, 1000);
-
-        return () => {
-            socket.emit('deregister');
-            socket.close();
-        };
+    useEffect(() => {
+        dispatch({ type: 'SET_ROUTE', payload: 'factories' });
+        getFactoryDetails();
     }, []);
+
+    const handleRegisterToFactory = useCallback(
+        (factoryName) => {
+            socket.emit('register_factory_overview_data', factoryName);
+        },
+        [isDataLoaded]
+    );
+
+    useEffect(() => {
+        if (isDataLoaded) {
+            socket = io.connect(SOCKET_URL, {
+                path: '/api/socket.io',
+                query: {
+                    authorization: localStorage.getItem(LOCAL_STORAGE_TOKEN)
+                },
+                reconnection: false
+            });
+
+            socket.on('factory_overview_data', (data) => {
+                setBotImage(data.user_avatar_id || botId);
+                setParseDate(parsingDate(data.creation_date));
+                setFactoryDetails(data);
+                setFactoryName(data.name);
+                setFactoryDescription(data.description);
+            });
+
+            socket.on('error', (error) => {
+                history.push(pathDomains.factoriesList);
+            });
+
+            setTimeout(() => {
+                handleRegisterToFactory(urlfactoryName);
+            }, 1000);
+
+            return () => {
+                socket.emit('deregister');
+                socket.close();
+            };
+        }
+    }, [isDataLoaded]);
 
     const handleEditName = useCallback(() => {
         socket.emit('deregister');
         seteditName(true);
-    }, []);
+    }, [isDataLoaded]);
 
     const handleEditDescription = useCallback(() => {
         socket.emit('deregister');
         seteditDescription(true);
-    }, []);
+    }, [isDataLoaded]);
 
     const handleEditNameBlur = async (e) => {
         if (!e.target.value || e.target.value === factoryDetails.name || e.target.value === '') {

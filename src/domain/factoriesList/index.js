@@ -34,30 +34,47 @@ function FactoriesList() {
     const [modalIsOpen, modalFlip] = useState(false);
     const createFactoryRef = useRef(null);
     const [isLoading, setisLoading] = useState(false);
+    const [isDataLoaded, setIsDataLoaded] = useState(false);
+
+    const getFactories = async () => {
+        setisLoading(true);
+        try {
+            const data = await httpRequest('GET', ApiEndpoints.GEL_ALL_FACTORIES);
+            setFactoriesList(data);
+            setisLoading(false);
+            setIsDataLoaded(true);
+        } catch (error) {
+            setisLoading(false);
+        }
+    };
 
     useEffect(() => {
         dispatch({ type: 'SET_ROUTE', payload: 'factories' });
-        setisLoading(true);
-        const socket = io.connect(SOCKET_URL, {
-            path: '/api/socket.io',
-            query: {
-                authorization: localStorage.getItem(LOCAL_STORAGE_TOKEN)
-            },
-            reconnection: false
-        });
-        socket.on('factories_overview_data', (data) => {
-            setFactoriesList(data);
-            setisLoading(false);
-        });
-
-        setTimeout(() => {
-            socket.emit('register_factories_overview_data');
-        }, 1000);
-        return () => {
-            socket.emit('deregister');
-            socket.close();
-        };
+        getFactories();
     }, []);
+
+    useEffect(() => {
+        if (isDataLoaded) {
+            const socket = io.connect(SOCKET_URL, {
+                path: '/api/socket.io',
+                query: {
+                    authorization: localStorage.getItem(LOCAL_STORAGE_TOKEN)
+                },
+                reconnection: false
+            });
+            socket.on('factories_overview_data', (data) => {
+                setFactoriesList(data);
+            });
+
+            setTimeout(() => {
+                socket.emit('register_factories_overview_data');
+            }, 1000);
+            return () => {
+                socket.emit('deregister');
+                socket.close();
+            };
+        }
+    }, [isDataLoaded]);
 
     const removeFactory = (id) => {
         setFactoriesList(factoriesList.filter((item) => item.id !== id));

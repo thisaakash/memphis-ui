@@ -19,10 +19,24 @@ import React from 'react';
 import { getFontColor, getBackgroundColor, getBorderRadius, getBorderColor, getBoxShadows } from '../../utils/styleTemplates';
 
 const SearchInput = (props) => {
-    const { placeholder, height, width, colorType, backgroundColorType, onChange, iconComponent, borderRadiusType, borderBottom, borderColorType, boxShadowsType } =
-        props;
+    const {
+        placeholder,
+        height,
+        width,
+        colorType,
+        backgroundColorType,
+        onChange,
+        iconComponent,
+        borderRadiusType,
+        borderBottom,
+        borderColorType,
+        boxShadowsType,
+        value,
+        onPressEnter
+    } = props;
 
     const handleChange = (e) => onChange(e);
+    const handlePressEnter = (e) => onPressEnter(e);
 
     const color = getFontColor(colorType);
     const backgroundColor = getBackgroundColor(backgroundColorType);
@@ -34,7 +48,9 @@ const SearchInput = (props) => {
     const fieldProps = {
         placeholder,
         onChange: handleChange,
-        style: { width, height, color, backgroundColor, padding, borderBottom, borderRadius, borderColor, boxShadow }
+        onPressEnter: handlePressEnter,
+        style: { width, height, color, backgroundColor, padding, borderBottom, borderRadius, borderColor, boxShadow },
+        value
     };
 
     return (

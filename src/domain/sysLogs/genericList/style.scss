@@ -43,7 +43,7 @@
         display: flex;
         position: relative;
         width: 100%;
-        height: calc(100% - 65px);
+        height: calc(100% - 45px);
         top: 30px;
         .list {
             position: relative;
@@ -67,7 +67,7 @@
             .rows-wrapper {
                 position: relative;
                 width: calc(100% - 1px);
-                height: calc(100% - 20px);
+                height: calc(100% - 10px);
                 overflow: auto;
                 .log-row {
                     width: 99%;

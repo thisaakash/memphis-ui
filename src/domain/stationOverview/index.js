@@ -51,11 +51,22 @@ const StationOverview = () => {
         }
     };
 
+    const sortData = (data) => {
+        data.audit_logs?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
+        data.messages?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
+        data.active_producers?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
+        data.active_consumers?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
+        data.destroyed_consumers?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
+        data.destroyed_producers?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
+        data.killed_consumers?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
+        data.killed_producers?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
+        return data;
+    };
+
     const getStationDetails = async () => {
         try {
             const data = await httpRequest('GET', `${ApiEndpoints.GET_STATION_DATA}?station_name=${stationName}`);
-            data.audit_logs?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
-            data.messages?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
+            await sortData(data);
             stationDispatch({ type: 'SET_SOCKET_DATA', payload: data });
             setisLoading(false);
             setIsDataLoaded(true);
@@ -85,8 +96,7 @@ const StationOverview = () => {
             });
 
             socket.on('station_overview_data', (data) => {
-                data.audit_logs?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
-                data.messages?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
+                sortData(data);
                 stationDispatch({ type: 'SET_SOCKET_DATA', payload: data });
             });
 

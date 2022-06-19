@@ -17,7 +17,7 @@ import React, { Fragment, useCallback, useContext, useEffect, useRef, useState }
 import io from 'socket.io-client';
 
 import OverflowTip from '../../../components/tooltip/overflowtip';
-import { parsingDate } from '../../../services/dateConvertor';
+import { parsingDate } from '../../../services/valueConvertor';
 import { SOCKET_URL } from '../../../config';
 import { LOCAL_STORAGE_TOKEN } from '../../../const/localStorageConsts';
 import SearchInput from '../../../components/searchInput';

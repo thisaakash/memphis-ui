@@ -27,7 +27,7 @@ const TooltipComponent = (props) => {
             // textAlign: "center",
             boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px',
             whiteSpace: 'pre-line',
-            minWidth: '60px'
+            minWidth: props.minWidth || '60px'
         },
         arrow: {
             color: props.color === 'white' ? '#f7f7f7' : '#2B2E3F'

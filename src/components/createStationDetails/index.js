@@ -21,7 +21,7 @@ import Input from '../Input';
 import SelectComponent from '../select';
 import { httpRequest } from '../../services/http';
 import { ApiEndpoints } from '../../const/apiEndpoints';
-import { convertDateToSeconds } from '../../services/dateConvertor';
+import { convertDateToSeconds } from '../../services/valueConvertor';
 import { useHistory } from 'react-router';
 import pathDomains from '../../router';
 import Helper from '../helper';

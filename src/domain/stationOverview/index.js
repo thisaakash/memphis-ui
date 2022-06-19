@@ -38,8 +38,9 @@ const StationOverview = () => {
     const history = useHistory();
     const [state, dispatch] = useContext(Context);
     const [isLoading, setisLoading] = useState(false);
+    const [isDataLoaded, setIsDataLoaded] = useState(false);
 
-    const getStaionDetails = useCallback(async () => {
+    const getStaionMetaData = async () => {
         try {
             const data = await httpRequest('GET', `${ApiEndpoints.GET_STATION}?station_name=${stationName}`);
             stationDispatch({ type: 'SET_STATION_META_DATA', payload: data });
@@ -48,36 +49,66 @@ const StationOverview = () => {
                 history.push(`${pathDomains.factoriesList}/${url.split('factories/')[1].split('/')[0]}`);
             }
         }
-    }, []);
+    };
+
+    const sortData = (data) => {
+        data.audit_logs?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
+        data.messages?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
+        data.active_producers?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
+        data.active_consumers?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
+        data.destroyed_consumers?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
+        data.destroyed_producers?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
+        data.killed_consumers?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
+        data.killed_producers?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
+        return data;
+    };
+
+    const getStationDetails = async () => {
+        try {
+            const data = await httpRequest('GET', `${ApiEndpoints.GET_STATION_DATA}?station_name=${stationName}`);
+            await sortData(data);
+            stationDispatch({ type: 'SET_SOCKET_DATA', payload: data });
+            setisLoading(false);
+            setIsDataLoaded(true);
+        } catch (error) {
+            setisLoading(false);
+            if (error.status === 404) {
+                history.push(`${pathDomains.factoriesList}/${url.split('factories/')[1].split('/')[0]}`);
+            }
+        }
+    };
 
     useEffect(() => {
         setisLoading(true);
         dispatch({ type: 'SET_ROUTE', payload: 'factories' });
-        getStaionDetails().catch(console.error);
-
-        const socket = io.connect(SOCKET_URL, {
-            path: '/api/socket.io',
-            query: {
-                authorization: localStorage.getItem(LOCAL_STORAGE_TOKEN)
-            },
-            reconnection: false
-        });
-
-        socket.on('station_overview_data', (data) => {
-            data.audit_logs?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
-            data.messages?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
-            stationDispatch({ type: 'SET_SOCKET_DATA', payload: data });
-            setisLoading(false);
-        });
-
-        setTimeout(() => {
-            socket.emit('register_station_overview_data', stationName);
-        }, 1000);
-        return () => {
-            socket.emit('deregister');
-            socket.close();
-        };
+        getStaionMetaData();
+        getStationDetails();
     }, []);
+
+    useEffect(() => {
+        if (isDataLoaded) {
+            const socket = io.connect(SOCKET_URL, {
+                path: '/api/socket.io',
+                query: {
+                    authorization: localStorage.getItem(LOCAL_STORAGE_TOKEN)
+                },
+                reconnection: false
+            });
+
+            socket.on('station_overview_data', (data) => {
+                sortData(data);
+                stationDispatch({ type: 'SET_SOCKET_DATA', payload: data });
+            });
+
+            setTimeout(() => {
+                socket.emit('register_station_overview_data', stationName);
+            }, 1000);
+            return () => {
+                socket.emit('deregister');
+                socket.close();
+            };
+        }
+    }, [isDataLoaded]);
 
     return (
         <StationStoreContext.Provider value={[stationState, stationDispatch]}>

@@ -73,3 +73,23 @@ export const parsingDate = (date) => {
     var options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
     return new Date(date).toLocaleDateString([], options);
 };
+
+function isFloat(n) {
+    return Number(n) === n && n % 1 !== 0;
+}
+
+export const convertBytes = (bytes) => {
+    const KB = 1024;
+    const MB = 1024 * 1024;
+    if (bytes < KB && bytes > 0) {
+        return `${bytes} Bytes`;
+    } else if (bytes >= KB && bytes < MB) {
+        const parsing = isFloat(bytes / KB) ? Math.round((bytes / KB + Number.EPSILON) * 100) / 100 : bytes / KB;
+        return `${parsing} KB`;
+    } else if (bytes >= MB) {
+        const parsing = isFloat(bytes / MB) ? Math.round((bytes / MB + Number.EPSILON) * 100) / 100 : bytes / MB;
+        return `${parsing} MB`;
+    } else {
+        return '0 Bytes';
+    }
+};

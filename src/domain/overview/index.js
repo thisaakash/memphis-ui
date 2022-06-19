@@ -55,9 +55,24 @@ function OverView() {
     const createStationRef = useRef(null);
     const [botUrl, SetBotUrl] = useState(require('../../assets/images/bots/1.svg'));
     const [isLoading, setisLoading] = useState(false);
+    const [isDataLoaded, setIsDataLoaded] = useState(false);
+
+    const getOverviewData = async () => {
+        setisLoading(true);
+        try {
+            const data = await httpRequest('GET', ApiEndpoints.GET_MAIN_OVERVIEW_DATA);
+            data.stations?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
+            dispatch({ type: 'SET_MONITOR_DATA', payload: data });
+            setisLoading(false);
+            setIsDataLoaded(true);
+        } catch (error) {
+            setisLoading(false);
+        }
+    };
 
     useEffect(() => {
         dispatch({ type: 'SET_ROUTE', payload: 'overview' });
+        getOverviewData();
         setBotImage(state?.userData?.avatar_id || localStorage.getItem(LOCAL_STORAGE_AVATAR_ID));
         analyticsModalFlip(
             localStorage.getItem(LOCAL_STORAGE_ALREADY_LOGGED_IN) === 'false' && localStorage.getItem(LOCAL_STORAGE_ALLOW_ANALYTICS) === 'true' && state?.analytics_modal
@@ -65,28 +80,29 @@ function OverView() {
     }, []);
 
     useEffect(() => {
-        setisLoading(true);
-        const socket = io.connect(SOCKET_URL, {
-            path: '/api/socket.io',
-            query: {
-                authorization: localStorage.getItem(LOCAL_STORAGE_TOKEN)
-            },
-            reconnection: false
-        });
-        socket.on('main_overview_data', (data) => {
-            data.stations?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
-            dispatch({ type: 'SET_MONITOR_DATA', payload: data });
-        });
+        if (isDataLoaded) {
+            const socket = io.connect(SOCKET_URL, {
+                path: '/api/socket.io',
+                query: {
+                    authorization: localStorage.getItem(LOCAL_STORAGE_TOKEN)
+                },
+                reconnection: false
+            });
+            socket.on('main_overview_data', (data) => {
+                data.stations?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
+                dispatch({ type: 'SET_MONITOR_DATA', payload: data });
+            });
 
-        setTimeout(() => {
-            socket.emit('register_main_overview_data');
-            setisLoading(false);
-        }, 1000);
-        return () => {
-            socket.emit('deregister');
-            socket.close();
-        };
-    }, []);
+            setTimeout(() => {
+                socket.emit('register_main_overview_data');
+                setisLoading(false);
+            }, 1000);
+            return () => {
+                socket.emit('deregister');
+                socket.close();
+            };
+        }
+    }, [isDataLoaded]);
 
     const setBotImage = (botId) => {
         SetBotUrl(require(`../../assets/images/bots/${botId}.svg`));

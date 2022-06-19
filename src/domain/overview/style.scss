@@ -56,7 +56,7 @@
         .overview-components {
             display: flex;
             flex-direction: row;
-            gap: 40px;
+            justify-content: space-between;
             width: 100%;
             height: calc(100% - 110px);
             .left-side {

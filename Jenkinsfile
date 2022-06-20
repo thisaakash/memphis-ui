@@ -59,7 +59,7 @@ node {
     }
 
     stage('Tests - Remove Docker compose') {
-      sh "docker-compose -f ./memphis-infra/staging/docker/docker-compose-dev-memphis-ui.yml -p memphis down"
+      sh "docker-compose -f ./memphis-infra/docker/docker-compose-dev-memphis-ui.yml -p memphis down"
       sh "docker volume prune -f"
     }
 
@@ -101,7 +101,7 @@ node {
     stage('Push to staging'){
       sh "aws eks --region eu-central-1 update-kubeconfig --name staging-cluster"
       sh "helm uninstall my-memphis --kubeconfig ~/.kube/config -n memphis"
-      sh 'helm install my-memphis memphis-infra/staging/kubernetes/helm/memphis --set analytics="false" --kubeconfig ~/.kube/config --create-namespace --namespace memphis'
+      sh 'helm install my-memphis memphis-infra/kubernetes/helm/memphis --set analytics="false" --kubeconfig ~/.kube/config --create-namespace --namespace memphis'
       sh "rm -rf memphis-infra"
     }
 

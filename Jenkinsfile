@@ -50,7 +50,7 @@ node {
       dir ('memphis-infra'){
         git credentialsId: 'main-github', url: 'git@github.com:memphisdev/memphis-infra.git', branch: 'master'
       }
-      sh "docker-compose -f ./memphis-infra/${branchTag}/docker/docker-compose-dev-memphis-ui.yml -p memphis up -d"
+      sh "docker-compose -f ./memphis-infra/docker/docker-compose-dev-memphis-ui.yml -p memphis up -d"
     }
 
     stage('Tests - Run e2e tests over Docker') {
@@ -63,7 +63,7 @@ node {
     }
 
     stage('Tests - Remove Docker compose') {
-      sh "docker-compose -f ./memphis-infra/${branchTag}/docker/docker-compose-dev-memphis-ui.yml -p memphis down"
+      sh "docker-compose -f ./memphis-infra/docker/docker-compose-dev-memphis-ui.yml -p memphis down"
       sh "docker volume prune -f"
     }
 
@@ -72,7 +72,7 @@ node {
     ////////////////////////////////////////
 
     stage('Tests - Install memphis with helm') {
-      sh "helm install memphis-tests memphis-infra/${branchTag}/kubernetes/memphis --set analytics='false',teston='ui' --create-namespace --namespace memphis-$unique_id"
+      sh "helm install memphis-tests memphis-infra/]\kubernetes/memphis --set analytics='false',teston='ui' --create-namespace --namespace memphis-$unique_id"
     }
 
     stage('Open port forwarding to memphis service') {

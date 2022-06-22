@@ -13,9 +13,9 @@ node {
   try{
 	  
     stage('Login to Docker Hub') {
-	    withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_HUB_CREDS_USR', passwordVariable: 'DOCKER_HUB_CREDS_PSW')]) {
-		  sh 'docker login -u $DOCKER_HUB_CREDS_USR -p $DOCKER_HUB_CREDS_PSW'
-	    }
+      withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_HUB_CREDS_USR', passwordVariable: 'DOCKER_HUB_CREDS_PSW')]) {
+	sh 'docker login -u $DOCKER_HUB_CREDS_USR -p $DOCKER_HUB_CREDS_PSW'
+      }
     }
 	  
     stage('Create memphis namespace in Kubernetes'){
@@ -28,7 +28,7 @@ node {
     }
 
     stage('Build and push docker image to Docker Hub') {
-			sh "docker buildx build --push -t ${repoUrlPrefix}/${imageName}-${gitBranch}-${test_suffix} ."
+      sh "docker buildx build --push -t ${repoUrlPrefix}/${imageName}-${gitBranch}-${test_suffix} ."
     }
 
     stage('Tests - Install/upgrade Memphis cli') {
@@ -87,11 +87,11 @@ node {
       sh(script: """/usr/sbin/lsof -i :5555,9000 | grep kubectl | awk '{print \"kill -9 \"\$2}' | sh""", returnStdout: true)
     }
 		
-		if (env.BRANCH_NAME ==~ /(staging)/) {
-    	stage('Tests - Remove used directories') {
+     if (env.BRANCH_NAME ==~ /(staging)/) {
+       stage('Tests - Remove used directories') {
       	sh "rm -rf memphis-e2e-tests"
     	}
-		}
+     }
 	  
     ////////////////////////////////////////
     ////////////  Build & Push  ////////////
@@ -102,25 +102,25 @@ node {
       sh "docker buildx use builder"
       if (env.BRANCH_NAME ==~ /(beta)/) {
       	sh "docker buildx build --push --tag ${repoUrlPrefix}/${imageName}:beta --platform linux/amd64,linux/arm64 ."
-			}
-			else{
-				if (env.BRANCH_NAME ==~ /(staging)/) {
-					sh "docker buildx build --push --tag ${repoUrlPrefix}/${imageName}-${gitBranch}:${versionTag} --tag ${repoUrlPrefix}/${imageName}-${gitBranch} --platform linux/amd64,linux/arm64 ."
-				}
-				else{
-					sh "docker buildx build --push --tag ${repoUrlPrefix}/${imageName}:${versionTag} --tag ${repoUrlPrefix}/${imageName} --platform linux/amd64,linux/arm64 ."
-				}
-		  }
-		}
+      }
+      else{
+	if (env.BRANCH_NAME ==~ /(staging)/) {
+    	  sh "docker buildx build --push --tag ${repoUrlPrefix}/${imageName}-${gitBranch}:${versionTag} --tag ${repoUrlPrefix}/${imageName}-${gitBranch} --platform linux/amd64,linux/arm64 ."
+	}
+	else{
+	  sh "docker buildx build --push --tag ${repoUrlPrefix}/${imageName}:${versionTag} --tag ${repoUrlPrefix}/${imageName} --platform linux/amd64,linux/arm64 ."
+	}
+      }
+    }
 	  
 	  
     ///////////////////////////////////////
     //////////////  STAGING  //////////////
     ///////////////////////////////////////
 
-		if (env.BRANCH_NAME ==~ /(staging)/) {
-    	stage('Push to staging'){
-	      sh "aws eks --region eu-central-1 update-kubeconfig --name staging-cluster"
+    if (env.BRANCH_NAME ==~ /(staging)/) {
+      stage('Push to staging'){
+        sh "aws eks --region eu-central-1 update-kubeconfig --name staging-cluster"
         sh "helm uninstall my-memphis --kubeconfig ~/.kube/config -n memphis"
         sh 'helm install my-memphis memphis-infra/kubernetes/helm/memphis --set analytics="false" --kubeconfig ~/.kube/config --create-namespace --namespace memphis'
         sh "rm -rf memphis-infra"
@@ -156,7 +156,7 @@ node {
      
       stage('Tests - Remove Docker compose') {
 	
-			if (env.BRANCH_NAME ==~ /(beta)/) {
+	if (env.BRANCH_NAME ==~ /(beta)/) {
           sh "docker-compose -f ./memphis-docker/docker-compose-beta.yml -p memphis down"
         }
         else {
@@ -169,7 +169,7 @@ node {
     //////////////   K8S   ///////////////
     //////////////////////////////////////
 	  
-	  	stage('Tests - Install memphis with helm') {
+      stage('Tests - Install memphis with helm') {
       	sh "rm -rf memphis-k8s"
       	dir ('memphis-k8s'){
        	 git credentialsId: 'main-github', url: 'git@github.com:memphisdev/memphis-k8s.git', branch: gitBranch

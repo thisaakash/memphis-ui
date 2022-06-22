@@ -1,5 +1,5 @@
 def gitBranch = env.BRANCH_NAME
-def imageName = "memphis-broker"
+def imageName = "memphis-ui"
 def gitURL = "git@github.com:Memphisdev/memphis-ui.git"
 def repoUrlPrefix = "memphisos"
 def test_suffix = "test"
@@ -205,7 +205,6 @@ node {
 	  
   } catch (e) {
       currentBuild.result = "FAILED"
-      sh "docker-compose -f ./memphis-infra/docker/docker-compose-dev-memphis-broker.yml -p memphis down"
       sh "kubectl delete ns memphis-$unique_id &"
       cleanWs()
       notifyFailed()

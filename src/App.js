@@ -35,6 +35,7 @@ import { useHistory } from 'react-router-dom';
 import { HANDLE_REFRESH_INTERVAL, SOCKET_URL } from './config';
 import io from 'socket.io-client';
 import { Context } from './hooks/store';
+import SandboxLogin from './domain/sandboxLogin';
 
 const Desktop = ({ children }) => {
     const isDesktop = useMediaQuery({ minWidth: 850 });
@@ -95,7 +96,7 @@ const App = withRouter(() => {
                 {' '}
                 {!authCheck && (
                     <Switch>
-                        <Route exact path={pathDomains.login} component={Login} />
+                        <Route exact path={pathDomains.login} component={process.env.SANDBOX_ENV ? SandboxLogin : Login} />
                         <PrivateRoute
                             exact
                             path={pathDomains.overview}

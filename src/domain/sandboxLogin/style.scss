@@ -1,4 +1,4 @@
-.loginContainers {
+.sandbox-containers {
     width: 100%;
     height: 100%;
     position: absolute;
@@ -6,103 +6,130 @@
     min-width: 800px;
     overflow: auto;
     .desktop-container {
-        position: absolute;
+        position: relative;
         width: 100%;
         height: 100%;
         display: grid;
         grid-template-columns: 50% 50%;
+
         min-height: 600px;
         .desktop-content {
-            position: relative;
-            display: grid;
-            grid-template-rows: 25% 25% 50%;
             .logoImg {
                 padding: 50px;
+                height: 15%;
                 img {
                     width: 175px;
                     height: auto;
                 }
             }
-            .title {
-                font-size: 48px;
-                color: var(--blue);
-                font-weight: 600;
-                margin-bottom: 20px;
-                p {
-                    display: flex;
-                    margin: 5px;
-                    justify-content: center;
-                }
-            }
-            .login-container {
-                display: flex;
+            content {
+                position: relative;
+                display: grid;
+                grid-template-rows: 40% 40%;
+                flex-direction: column;
                 justify-content: center;
-                margin: 5px;
-
-                .login-form {
-                    justify-self: center;
-                    .field {
-                        p {
-                            font-size: 12px;
-                            font-weight: 400;
-                            color: var(--blue);
-                            margin-bottom: 8px;
+                .title {
+                    font-size: 48px;
+                    color: var(--blue);
+                    font-weight: 600;
+                    margin-bottom: 20px;
+                    p {
+                        display: flex;
+                        margin: 5px;
+                        justify-content: center;
+                    }
+                }
+                .login-container {
+                    display: flex;
+                    justify-content: center;
+                    margin: 5px;
+                    flex-direction: column;
+                    width: 500px;
+                    align-items: center;
+                    .login-form {
+                        justify-self: center;
+                        .field {
+                            p {
+                                font-size: 12px;
+                                font-weight: 400;
+                                color: var(--blue);
+                                margin-bottom: 8px;
+                            }
+                        }
+                        .button-container {
+                            padding-top: 20px;
+                        }
+                        .ant-form-item-control {
+                            margin: 0;
+                        }
+                        .ant-form-item-explain-error {
+                            min-width: 195px;
                         }
                     }
-                    .button-container {
-                        padding-top: 20px;
+
+                    .google-pad {
+                        height: 10%;
+                        padding-top: 2%;
                     }
-                    .ant-form-item-control {
-                        margin: 0;
-                    }
-                    .ant-form-item-explain-error {
-                        min-width: 195px;
+
+                    .google-login-button {
+                        // position: absolute !important;
+                        width: 338px !important;
+                        height: 48px !important;
+                        left: 187px !important;
+                        top: 505px !important;
+                        font-family: 'Inter' !important;
+                        font-style: normal !important;
+                        font-weight: 700 !important;
+                        font-size: 18px !important;
+                        line-height: 128% !important;
+                        align-content: center !important;
+                        align-items: center !important;
+                        text-align: center !important;
+
+                        color: #4285f4 !important;
+                        box-sizing: border-box !important;
+                        border: 2px solid #4285f4 !important;
+                        border-radius: 26px !important;
+
+                        padding-left: 14% !important;
                     }
                 }
 
-                .google-login-button {
-                    // position: absolute !important;
-                    width: 338px !important;
-                    height: 48px !important;
-                    left: 187px !important;
-                    top: 505px !important;
+                or {
+                    width: 60%;
+                    text-align: center;
+                    border-bottom: 1px solid #000;
+                    line-height: 0.1em;
+                    margin: 10px 0 20px;
+                    padding-top: 13%;
+                }
 
-                    font-family: 'Inter' !important;
-                    font-style: normal !important;
-                    font-weight: 700 !important;
-                    font-size: 18px !important;
-                    line-height: 128% !important;
-                    align-content: center !important;
-                    align-items: center !important;
-                    text-align: center !important;
+                or span {
+                    background: white;
+                    padding: 0 10px;
+                }
 
+                .admin-access-button {
                     color: #4285f4 !important;
-                    box-sizing: border-box !important;
-                    border: 2px solid #4285f4 !important;
-                    border-radius: 26px !important;
-
-                    padding-left: 14% !important;
+                    border: 0px;
+                    background-color: transparent;
+                    text-decoration: underline;
+                    display: flex;
+                    padding-left: 32%;
+                    cursor: pointer;
+                    padding-top: 10%;
                 }
-            }
-            .admin-access-button {
-                color: #4285f4 !important;
-                border: 0px;
-                background-color: transparent;
-                text-decoration: underline;
-                display: flex;
-                padding-left: 32%;
-                cursor: pointer;
-                padding-top: 10%;
-            }
 
-            .google-access-button {
-                color: #4285f4 !important;
-                border: 0px;
-                background-color: transparent;
-                text-decoration: underline;
-                display: flex;
-                padding-left: 32%;
-                cursor: pointer;
+                .google-access-button {
+                    color: #4285f4 !important;
+                    border: 0px;
+                    background-color: transparent;
+                    text-decoration: underline;
+                    display: flex;
+                    padding-left: 32%;
+                    cursor: pointer;
+                }
             }
         }
         .brand-shapes {

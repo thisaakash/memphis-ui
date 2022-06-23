@@ -41,7 +41,7 @@ const SandboxLogin = (props) => {
         username: '',
         password: ''
     });
-    const GOOGLE_CLIENT_ID = '916272522459-u0f4n2lh9llsielb3l5rob3dnt1fco76.apps.googleusercontent.com';
+    const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
     const [error, setError] = useState('');
     const referer = props?.location?.state?.referer || '/overview';
     const [loadingSubmit, setLoadingSubmit] = useState(false);
@@ -133,35 +133,33 @@ const SandboxLogin = (props) => {
     };
 
     return (
-        <section className="loginContainers">
+        <section className="sandbox-containers">
             {state.loading ? <Loader></Loader> : ''}
+
             <div className="desktop-container">
                 <div className="desktop-content">
                     <div className="logoImg">
                         <img alt="logo" src={betaFullLogo}></img>
                     </div>
-                    <div className="title">
-                        <p>Hey Memphiser,</p>
-                        <p>Let's try us</p>
-                    </div>
-                    <div className="login-container">
-                        {isGoogle ? (
-                            <div>
-                                <div>
-                                    <GoogleLogin
-                                        clientId={GOOGLE_CLIENT_ID}
-                                        className="google-login-button"
-                                        buttonText="Signin with Google"
-                                        onSuccess={handleGoogleSignin}
-                                        onFailure={handleGoogleSignin}
-                                        cookiePolicy={'single_host_origin'}
-                                    />
-                                </div>
-                                <button className="admin-access-button" onClick={() => setIsGoogle(!isGoogle)}>
-                                    Admin access
-                                </button>
+                    <content>
+                        <div className="title">
+                            <p>Hey Memphiser,</p>
+                            <p>Let's try us</p>
+                        </div>
+                        <div className="login-container">
+                            <div className="google-pad">
+                                <GoogleLogin
+                                    clientId={GOOGLE_CLIENT_ID}
+                                    className="google-login-button"
+                                    buttonText="Sign in with Google"
+                                    onSuccess={handleGoogleSignin}
+                                    onFailure={handleGoogleSignin}
+                                    cookiePolicy={'single_host_origin'}
+                                />
                             </div>
-                        ) : (
+                            <or>
+                                <span>or</span>
+                            </or>
                             <div className="login-form">
                                 <Form
                                     {...layout}
@@ -249,19 +247,9 @@ const SandboxLogin = (props) => {
                                         </div>
                                     )}
                                 </Form>
-                                <button
-                                    className="google-access-button"
-                                    width="19vw"
-                                    height="43px"
-                                    fontSize="12px"
-                                    fontWeight="600"
-                                    onClick={() => setIsGoogle(!isGoogle)}
-                                >
-                                    Google Login
-                                </button>
                             </div>
-                        )}
-                    </div>
+                        </div>
+                    </content>
                 </div>
                 <div className="brand-shapes">
                     <img alt="sharps" src={sharps}></img>

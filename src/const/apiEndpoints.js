@@ -24,8 +24,7 @@ export const ApiEndpoints = {
     EDIT_COMPANY_LOGO: '/usermgmt/editCompanyLogo',
     REMOVE_COMPANY_LOGO: '/usermgmt/removeCompanyLogo',
     EDIT_ANALYTICS: '/usermgmt/editAnalytics',
-    GOOGLE_LOGIN: '/sandbox/login',
-    GITHUB_LOGIN: '/sandbox/login',
+    SANDBOX_LOGIN: '/sandbox/login',
 
     //Factory
     CREATE_FACTORY: '/factories/createFactory',

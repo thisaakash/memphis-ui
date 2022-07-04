@@ -32,21 +32,16 @@ import { SOCKET_URL } from '../../config';
 import io from 'socket.io-client';
 import { gapi } from 'gapi-script';
 import { GoogleLogin } from 'react-google-login';
-
-const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
-const GITHUB_REDIRECT_URI = process.env.GITHUB_REDIRECT_URI;
+import { sandboxConst } from '../../const/sandboxConst';
 
 const SandboxLogin = (props) => {
     const [state, dispatch] = useContext(Context);
     const history = useHistory();
-    const [isGoogle, setIsGoogle] = useState('true');
     const [loginForm] = Form.useForm(); // form controller
     const [formFields, setFormFields] = useState({
         username: '',
         password: ''
     });
-    // const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
-    const GOOGLE_CLIENT_ID = '916272522459-u0f4n2lh9llsielb3l5rob3dnt1fco76.apps.googleusercontent.com';
     const [error, setError] = useState('');
     const referer = props?.location?.state?.referer || '/overview';
     const [loadingSubmit, setLoadingSubmit] = useState(false);
@@ -55,7 +50,7 @@ const SandboxLogin = (props) => {
         try {
             const data = await httpRequest(
                 'POST',
-                ApiEndpoints.GITHUB_LOGIN,
+                ApiEndpoints.SANDBOX_LOGIN,
                 {
                     LoginType: 'github',
                     token: code
@@ -66,13 +61,13 @@ const SandboxLogin = (props) => {
             );
             AuthService.saveToLocalStorage(data);
             history.push(referer);
-        } catch (ex) {
-            console.log(ex);
+        } catch (err) {
+            setError(err);
         }
     };
 
-    const handleGithubButtonClick = async () => {
-        window.location.href = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&scope=user&redirect_uri=${GITHUB_REDIRECT_URI}`;
+    const handleGithubButtonClick = () => {
+        window.location.href = `https://github.com/login/oauth/authorize?client_id=${sandboxConst.GITHUB_CLIENT_ID}&scope=user&redirect_uri=${sandboxConst.GITHUB_REDIRECT_URI}`;
     };
 
     useEffect(() => {
@@ -87,12 +82,12 @@ const SandboxLogin = (props) => {
             if (splittedUrl.length > 1) {
                 signinWithGithub(`${splittedUrl[1]}`);
             } else {
-                console.log('Authentication with GitHub failed');
+                setError('Authentication with GitHub failed');
             }
         }
         function start() {
             gapi.client.init({
-                clientId: GOOGLE_CLIENT_ID,
+                clientId: sandboxConst.GOOGLE_CLIENT_ID,
                 scope: 'email'
             });
         }
@@ -141,7 +136,7 @@ const SandboxLogin = (props) => {
         try {
             const data = await httpRequest(
                 'POST',
-                ApiEndpoints.GOOGLE_LOGIN,
+                ApiEndpoints.SANDBOX_LOGIN,
                 {
                     loginType: 'google',
                     token: googleData.tokenId
@@ -191,7 +186,7 @@ const SandboxLogin = (props) => {
                             <div>
                                 <div className="google-pad">
                                     <GoogleLogin
-                                        clientId={GOOGLE_CLIENT_ID}
+                                        clientId={sandboxConst.GOOGLE_CLIENT_ID}
                                         className="google-login-button"
                                         buttonText="Sign in with Google"
                                         onSuccess={handleGoogleSignin}

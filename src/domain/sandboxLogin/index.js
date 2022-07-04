@@ -25,30 +25,65 @@ import { httpRequest } from '../../services/http';
 import AuthService from '../../services/auth';
 import Button from '../../components/button';
 import Loader from '../../components/loader';
+import GitHubLogo from '../../assets/images/GitHubLogo.png';
 import { Context } from '../../hooks/store';
 import Input from '../../components/Input';
 import { SOCKET_URL } from '../../config';
 import io from 'socket.io-client';
 import { gapi } from 'gapi-script';
 import { GoogleLogin } from 'react-google-login';
+import { GOOGLE_CLIENT_ID, GITHUB_CLIENT_ID, GITHUB_REDIRECT_URI } from '../../config';
 
 const SandboxLogin = (props) => {
     const [state, dispatch] = useContext(Context);
     const history = useHistory();
-    const [isGoogle, setIsGoogle] = useState('true');
     const [loginForm] = Form.useForm(); // form controller
     const [formFields, setFormFields] = useState({
         username: '',
         password: ''
     });
-    const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
     const [error, setError] = useState('');
     const referer = props?.location?.state?.referer || '/overview';
     const [loadingSubmit, setLoadingSubmit] = useState(false);
 
+    const signinWithGithub = async (code) => {
+        try {
+            const data = await httpRequest(
+                'POST',
+                ApiEndpoints.SANDBOX_LOGIN,
+                {
+                    LoginType: 'github',
+                    token: code
+                },
+                {},
+                {},
+                false
+            );
+            AuthService.saveToLocalStorage(data);
+            history.push(referer);
+        } catch (err) {
+            setError(err);
+        }
+    };
+
+    const handleGithubButtonClick = () => {
+        window.location.href = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&scope=user&redirect_uri=${GITHUB_REDIRECT_URI}`;
+    };
+
     useEffect(() => {
         if (localStorage.getItem(LOCAL_STORAGE_TOKEN) && AuthService.isValidToken()) {
             history.push(referer);
+        }
+        const url = window.location.href;
+        const shouldSigninWithGithub = url.includes('?code=');
+        const splittedUrl = url.split('?code=');
+        window.history.pushState({}, null, splittedUrl[0]);
+        if (shouldSigninWithGithub) {
+            if (splittedUrl.length > 1) {
+                signinWithGithub(`${splittedUrl[1]}`);
+            } else {
+                setError('Authentication with GitHub failed');
+            }
         }
         function start() {
             gapi.client.init({
@@ -101,9 +136,10 @@ const SandboxLogin = (props) => {
         try {
             const data = await httpRequest(
                 'POST',
-                ApiEndpoints.GOOGLE_LOGIN,
+                ApiEndpoints.SANDBOX_LOGIN,
                 {
-                    Google_token: googleData.tokenId
+                    loginType: 'google',
+                    token: googleData.tokenId
                 },
                 {},
                 {},
@@ -141,23 +177,29 @@ const SandboxLogin = (props) => {
                     <div className="logoImg">
                         <img alt="logo" src={betaFullLogo}></img>
                     </div>
-                    <content>
+                    <content is="x3d">
                         <div className="title">
                             <p>Hey Memphiser,</p>
                             <p>Let's try us</p>
                         </div>
                         <div className="login-container">
-                            <div className="google-pad">
-                                <GoogleLogin
-                                    clientId={GOOGLE_CLIENT_ID}
-                                    className="google-login-button"
-                                    buttonText="Sign in with Google"
-                                    onSuccess={handleGoogleSignin}
-                                    onFailure={handleGoogleSignin}
-                                    cookiePolicy={'single_host_origin'}
-                                />
+                            <div>
+                                <div className="google-pad">
+                                    <GoogleLogin
+                                        clientId={GOOGLE_CLIENT_ID}
+                                        className="google-login-button"
+                                        buttonText="Sign in with Google"
+                                        onSuccess={handleGoogleSignin}
+                                        onFailure={handleGoogleSignin}
+                                        cookiePolicy={'single_host_origin'}
+                                    />
+                                    <button type="button" className="github-login-button" onClick={handleGithubButtonClick}>
+                                        <img src={GitHubLogo} alt="git" className="git-image"></img>
+                                        Sign in with GitHub
+                                    </button>
+                                </div>
                             </div>
-                            <or>
+                            <or is="x3d">
                                 <span>or</span>
                             </or>
                             <div className="login-form">

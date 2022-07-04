@@ -96,7 +96,7 @@ const App = withRouter(() => {
                 {' '}
                 {!authCheck && (
                     <Switch>
-                        <Route exact path={pathDomains.login} component={process.env.SANDBOX_ENV ? SandboxLogin : Login} />
+                        <Route exact path={pathDomains.login} component={process.env.REACT_APP_SANDBOX_ENV ? SandboxLogin : Login} />
                         <PrivateRoute
                             exact
                             path={pathDomains.overview}

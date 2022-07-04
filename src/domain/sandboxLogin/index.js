@@ -32,7 +32,7 @@ import { SOCKET_URL } from '../../config';
 import io from 'socket.io-client';
 import { gapi } from 'gapi-script';
 import { GoogleLogin } from 'react-google-login';
-import { sandboxConst } from '../../const/sandboxConst';
+import { GOOGLE_CLIENT_ID, GITHUB_CLIENT_ID, GITHUB_REDIRECT_URI } from '../../config';
 
 const SandboxLogin = (props) => {
     const [state, dispatch] = useContext(Context);
@@ -67,7 +67,7 @@ const SandboxLogin = (props) => {
     };
 
     const handleGithubButtonClick = () => {
-        window.location.href = `https://github.com/login/oauth/authorize?client_id=${sandboxConst.GITHUB_CLIENT_ID}&scope=user&redirect_uri=${sandboxConst.GITHUB_REDIRECT_URI}`;
+        window.location.href = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&scope=user&redirect_uri=${GITHUB_REDIRECT_URI}`;
     };
 
     useEffect(() => {
@@ -87,7 +87,7 @@ const SandboxLogin = (props) => {
         }
         function start() {
             gapi.client.init({
-                clientId: sandboxConst.GOOGLE_CLIENT_ID,
+                clientId: GOOGLE_CLIENT_ID,
                 scope: 'email'
             });
         }
@@ -186,7 +186,7 @@ const SandboxLogin = (props) => {
                             <div>
                                 <div className="google-pad">
                                     <GoogleLogin
-                                        clientId={sandboxConst.GOOGLE_CLIENT_ID}
+                                        clientId={GOOGLE_CLIENT_ID}
                                         className="google-login-button"
                                         buttonText="Sign in with Google"
                                         onSuccess={handleGoogleSignin}

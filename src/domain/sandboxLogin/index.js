@@ -209,8 +209,6 @@ const SandboxLogin = (props) => {
             {isLoading ? (
                 <Loader></Loader>
             ) : (
-                // {state.loading ? <Loader></Loader> : ''}
-
                 <div className="desktop-container">
                     <div className="desktop-content">
                         <div className="logoImg">

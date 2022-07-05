@@ -37,6 +37,7 @@ import { PRIVACY_URL, SOCKET_URL } from '../../config';
 import { ApiEndpoints } from '../../const/apiEndpoints';
 import { httpRequest } from '../../services/http';
 import Loader from '../../components/loader';
+import GetStarted from './getStarted';
 
 const Desktop = ({ children }) => {
     const isDesktop = useMediaQuery({ minWidth: 850 });
@@ -55,6 +56,7 @@ function OverView() {
     const [botUrl, SetBotUrl] = useState(require('../../assets/images/bots/1.svg'));
     const [isLoading, setisLoading] = useState(false);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
+    const [allStations, setAllStations] = useState([]);
 
     const getOverviewData = async () => {
         setisLoading(true);
@@ -70,6 +72,7 @@ function OverView() {
     };
 
     useEffect(() => {
+        getAllStations();
         dispatch({ type: 'SET_ROUTE', payload: 'overview' });
         getOverviewData();
         setBotImage(state?.userData?.avatar_id || localStorage.getItem(LOCAL_STORAGE_AVATAR_ID));
@@ -113,6 +116,21 @@ function OverView() {
         dispatch({ type: 'ANALYTICS_MODAL', payload: false });
     };
 
+    const getAllStations = async () => {
+        try {
+            const res = await httpRequest('GET', `${ApiEndpoints.GET_ALL_STATIONS}`);
+            if (res){
+                setAllStations(res)
+            }
+            else{
+                console.log("There are no stations")
+            }
+        }
+        catch (err){
+            return;
+        }
+    }
+
     return (
         <div className="overview-container">
             {isLoading && (
@@ -132,7 +150,7 @@ function OverView() {
                                     <h1>Welcome Back, {localStorage.getItem(LOCAL_STORAGE_USER_NAME)}</h1>
                                 ) : (
                                     <h1>Welcome Aboard, {localStorage.getItem(LOCAL_STORAGE_USER_NAME)}</h1>
-                                )}
+                                )}                                
                                 {/* <p className="ok-status">You’re a memphis superhero! All looks good!</p> */}
                             </div>
                         </div>
@@ -150,12 +168,12 @@ function OverView() {
                             onClick={() => modalFlip(true)}
                         />
                     </div>
-                    <div className="overview-components">
+                    <div className="overview-components">{allStations.length === 0 ? <div className="left-side"><GetStarted/></div> : 
                         <div className="left-side">
                             <GenericDetails />
                             <FailedStations />
                             <Throughput />
-                        </div>
+                    </div>}
                         <div className="right-side">
                             <Resources />
                             <SysComponents />

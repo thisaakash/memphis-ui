@@ -83,10 +83,8 @@ const SandboxLogin = (props) => {
         if (shouldSigninWithGoogle) {
             splittedUrl = url.split('?code=');
             window.history.pushState({}, null, splittedUrl[0]);
-            console.log(splittedUrl);
             if (splittedUrl.length > 1) {
                 const code = splittedUrl[1].split('&scope=email')[0];
-                console.log('code : ' + code);
                 handleGoogleSignin(code);
             } else {
                 setError('Authentication with GitHub failed');

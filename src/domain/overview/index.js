@@ -53,6 +53,7 @@ function OverView() {
     const [analyticsModal, analyticsModalFlip] = useState(true);
     const createStationRef = useRef(null);
     const [botUrl, SetBotUrl] = useState(require('../../assets/images/bots/1.svg'));
+    const [username, SetUsername] = useState(localStorage.getItem(LOCAL_STORAGE_USER_NAME));
     const [isLoading, setisLoading] = useState(false);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
 
@@ -73,6 +74,7 @@ function OverView() {
         dispatch({ type: 'SET_ROUTE', payload: 'overview' });
         getOverviewData();
         setBotImage(state?.userData?.avatar_id || localStorage.getItem(LOCAL_STORAGE_AVATAR_ID));
+        setUsernameByEnv();
         analyticsModalFlip(
             localStorage.getItem(LOCAL_STORAGE_ALREADY_LOGGED_IN) === 'false' && localStorage.getItem(LOCAL_STORAGE_ALLOW_ANALYTICS) === 'true' && state?.analytics_modal
         );
@@ -95,6 +97,16 @@ function OverView() {
 
     const setBotImage = (botId) => {
         SetBotUrl(require(`../../assets/images/bots/${botId}.svg`));
+    };
+
+    const setUsernameByEnv = () => {
+        let name;
+        if (process.env.REACT_APP_SANDBOX_ENV) {
+            name = localStorage.getItem(LOCAL_STORAGE_USER_NAME).substring(0, localStorage.getItem(LOCAL_STORAGE_USER_NAME).indexOf('@'));
+        } else {
+            name = localStorage.getItem(LOCAL_STORAGE_USER_NAME);
+        }
+        SetUsername(name);
     };
 
     const dontSendAnalytics = async () => {
@@ -135,15 +147,9 @@ function OverView() {
                             </div>
                             <div className="dynamic-sentences">
                                 {localStorage.getItem(LOCAL_STORAGE_ALREADY_LOGGED_IN) === 'true' ? (
-                                    <h1>
-                                        Welcome Back,{' '}
-                                        {localStorage.getItem(LOCAL_STORAGE_USER_NAME).substring(0, localStorage.getItem(LOCAL_STORAGE_USER_NAME).indexOf('@'))}
-                                    </h1>
+                                    <h1>Welcome Back, {username}</h1>
                                 ) : (
-                                    <h1>
-                                        Welcome Aboard,{' '}
-                                        {localStorage.getItem(LOCAL_STORAGE_USER_NAME).substring(0, localStorage.getItem(LOCAL_STORAGE_USER_NAME).indexOf('@'))}
-                                    </h1>
+                                    <h1>Welcome Aboard, {username}</h1>
                                 )}
                                 {/* <p className="ok-status">You’re a memphis superhero! All looks good!</p> */}
                             </div>

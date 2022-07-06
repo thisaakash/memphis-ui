@@ -160,7 +160,7 @@ function SideBar() {
                             <div className="sub-icon-wrapper">
                                 <img
                                     className="sandboxUserImg"
-                                    src={localStorage.getItem('profile_pic') || botUrl}
+                                    src={localStorage.getItem('profile_pic') || botUrl} // profile_pic is available only in sandbox env
                                     width={localStorage.getItem('profile_pic') ? 35 : 25}
                                     height={localStorage.getItem('profile_pic') ? 35 : 25}
                                     alt="bot"

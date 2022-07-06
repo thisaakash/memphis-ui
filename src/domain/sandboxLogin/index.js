@@ -60,7 +60,7 @@ const SandboxLogin = (props) => {
                 false
             );
             AuthService.saveToLocalStorage(data);
-            localStorage.setItem('profile_pic', data.profile_pic);
+            localStorage.setItem('profile_pic', data.profile_pic); // profile_pic is available only in sandbox env
             history.push(referer);
             setisLoading(false);
         } catch (err) {
@@ -181,7 +181,7 @@ const SandboxLogin = (props) => {
                 false
             );
             AuthService.saveToLocalStorage(data);
-            localStorage.setItem('profile_pic', data.profile_pic);
+            localStorage.setItem('profile_pic', data.profile_pic); // profile_pic is available only in sandbox env
             history.push(referer);
             setisLoading(false);
         } catch (err) {

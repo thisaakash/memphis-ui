@@ -40,7 +40,7 @@ function Profile() {
 
     useEffect(() => {
         setUserName(localStorage.getItem(LOCAL_STORAGE_USER_NAME));
-        setAvatar(localStorage.getItem('profile_pic') || state?.userData?.avatar_id || Number(localStorage.getItem(LOCAL_STORAGE_AVATAR_ID)));
+        setAvatar(localStorage.getItem('profile_pic') || state?.userData?.avatar_id || Number(localStorage.getItem(LOCAL_STORAGE_AVATAR_ID))); // profile_pic is available only in sandbox env
         setAllowAnalytics(localStorage.getItem(LOCAL_STORAGE_ALLOW_ANALYTICS) === 'false' ? false : true);
     }, []);
 
@@ -106,7 +106,7 @@ function Profile() {
                     <div className={avatar === 1 ? 'sub-icon-wrapper sub-icon-wrapper-border' : 'sub-icon-wrapper'} onClick={() => editAvatar(1)}>
                         <img
                             className="sandboxUserImg"
-                            src={localStorage.getItem('profile_pic') || Bot1}
+                            src={localStorage.getItem('profile_pic') || Bot1} // profile_pic is available only in sandbox env
                             width={localStorage.getItem('profile_pic') ? 35 : 25}
                             height={localStorage.getItem('profile_pic') ? 35 : 25}
                             border-raduis={'50%'}

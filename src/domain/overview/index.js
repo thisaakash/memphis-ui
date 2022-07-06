@@ -74,7 +74,9 @@ function OverView() {
         dispatch({ type: 'SET_ROUTE', payload: 'overview' });
         getOverviewData();
         setBotImage(state?.userData?.avatar_id || localStorage.getItem(LOCAL_STORAGE_AVATAR_ID));
-        setUsernameByEnv();
+        if (process.env.REACT_APP_SANDBOX_ENV) {
+            setUsernameByEnv();
+        }
         analyticsModalFlip(
             localStorage.getItem(LOCAL_STORAGE_ALREADY_LOGGED_IN) === 'false' && localStorage.getItem(LOCAL_STORAGE_ALLOW_ANALYTICS) === 'true' && state?.analytics_modal
         );
@@ -100,13 +102,7 @@ function OverView() {
     };
 
     const setUsernameByEnv = () => {
-        let name;
-        if (process.env.REACT_APP_SANDBOX_ENV) {
-            name = localStorage.getItem(LOCAL_STORAGE_USER_NAME).substring(0, localStorage.getItem(LOCAL_STORAGE_USER_NAME).indexOf('@'));
-        } else {
-            name = localStorage.getItem(LOCAL_STORAGE_USER_NAME);
-        }
-        SetUsername(name);
+        SetUsername(localStorage.getItem(LOCAL_STORAGE_USER_NAME).substring(0, localStorage.getItem(LOCAL_STORAGE_USER_NAME).indexOf('@')));
     };
 
     const dontSendAnalytics = async () => {

@@ -158,7 +158,7 @@ function SideBar() {
                         key="subMenu"
                         icon={
                             <div className="sub-icon-wrapper">
-                                <img src={botUrl} width={25} height={25} alt="bot"></img>
+                                <img className="sandboxUserImg" src={localStorage.getItem('profile_pic') || botUrl} width={35} height={35} alt="bot"></img>
                             </div>
                         }
                     >

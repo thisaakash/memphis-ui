@@ -16,8 +16,7 @@ import axios from 'axios';
 
 import { SERVER_URL, SHOWABLE_ERROR_STATUS_CODE, AUTHENTICATION_ERROR_STATUS_CODE } from '../config';
 import { ApiEndpoints } from '../const/apiEndpoints';
-import { LOCAL_STORAGE_TOKEN } from '../const/localStorageConsts.js';
-import AuthService from './auth';
+import { LOCAL_STORAGE_TOKEN, LOCAL_STORAGE_EXPIRED_TOKEN } from '../const/localStorageConsts.js';
 
 export async function httpRequest(method, endPointUrl, data = {}, headers = {}, queryParams = {}, authNeeded = true, timeout = 0) {
     if (authNeeded) {
@@ -70,7 +69,10 @@ export async function handleRefreshTokenRequest() {
     try {
         const url = `${SERVER_URL}${ApiEndpoints.REFRESH_TOKEN}`;
         const res = await HTTP({ method: 'POST', url });
-        await AuthService.saveToLocalStorage(res.data);
+        const now = new Date();
+        const expiryToken = now.getTime() + res.data.expires_in;
+        localStorage.setItem(LOCAL_STORAGE_TOKEN, res.data.jwt);
+        localStorage.setItem(LOCAL_STORAGE_EXPIRED_TOKEN, expiryToken);
         return true;
     } catch (err) {
         localStorage.clear();

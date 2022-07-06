@@ -125,13 +125,19 @@ function OverView() {
                     <div className="header">
                         <div className="header-welcome">
                             <div className="bot-wrapper">
-                                <img src={botUrl} width={40} height={40} alt="bot"></img>
+                                <img className="sandboxUserImg" src={localStorage.getItem('profile_pic') || botUrl} width={60} height={60} alt="bot"></img>
                             </div>
                             <div className="dynamic-sentences">
                                 {localStorage.getItem(LOCAL_STORAGE_ALREADY_LOGGED_IN) === 'true' ? (
-                                    <h1>Welcome Back, {localStorage.getItem(LOCAL_STORAGE_USER_NAME)}</h1>
+                                    <h1>
+                                        Welcome Back,{' '}
+                                        {localStorage.getItem(LOCAL_STORAGE_USER_NAME).substring(0, localStorage.getItem(LOCAL_STORAGE_USER_NAME).indexOf('@'))}
+                                    </h1>
                                 ) : (
-                                    <h1>Welcome Aboard, {localStorage.getItem(LOCAL_STORAGE_USER_NAME)}</h1>
+                                    <h1>
+                                        Welcome Aboard,{' '}
+                                        {localStorage.getItem(LOCAL_STORAGE_USER_NAME).substring(0, localStorage.getItem(LOCAL_STORAGE_USER_NAME).indexOf('@'))}
+                                    </h1>
                                 )}
                                 {/* <p className="ok-status">You’re a memphis superhero! All looks good!</p> */}
                             </div>

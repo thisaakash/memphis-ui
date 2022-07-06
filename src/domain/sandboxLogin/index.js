@@ -60,6 +60,7 @@ const SandboxLogin = (props) => {
                 false
             );
             AuthService.saveToLocalStorage(data);
+            localStorage.setItem('profile_pic', data.profile_pic);
             history.push(referer);
             setisLoading(false);
         } catch (err) {
@@ -180,6 +181,7 @@ const SandboxLogin = (props) => {
                 false
             );
             AuthService.saveToLocalStorage(data);
+            localStorage.setItem('profile_pic', data.profile_pic);
             history.push(referer);
             setisLoading(false);
         } catch (err) {

@@ -125,7 +125,13 @@ function OverView() {
                     <div className="header">
                         <div className="header-welcome">
                             <div className="bot-wrapper">
-                                <img className="sandboxUserImg" src={localStorage.getItem('profile_pic') || botUrl} width={60} height={60} alt="bot"></img>
+                                <img
+                                    className="sandboxUserImg"
+                                    src={localStorage.getItem('profile_pic') || botUrl}
+                                    width={localStorage.getItem('profile_pic') ? 60 : 40}
+                                    height={localStorage.getItem('profile_pic') ? 60 : 40}
+                                    alt="bot"
+                                ></img>
                             </div>
                             <div className="dynamic-sentences">
                                 {localStorage.getItem(LOCAL_STORAGE_ALREADY_LOGGED_IN) === 'true' ? (

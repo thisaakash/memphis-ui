@@ -92,7 +92,13 @@ const Factory = (props) => {
                 </Link>
                 <div className="factory-owner">
                     <div className="user-avatar">
-                        <img className="sandboxUserImg" src={localStorage.getItem('profile_pic') || botUrl} width={35} height={35} alt="bot"></img>
+                        <img
+                            className="sandboxUserImg"
+                            src={localStorage.getItem('profile_pic') || botUrl}
+                            width={localStorage.getItem('profile_pic') ? 35 : 25}
+                            height={localStorage.getItem('profile_pic') ? 35 : 25}
+                            alt="bot"
+                        ></img>
                     </div>
                     <div className="user-details">
                         <p>{props.content.created_by_user}</p>

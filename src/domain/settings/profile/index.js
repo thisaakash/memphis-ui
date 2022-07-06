@@ -104,7 +104,14 @@ function Profile() {
                 <p>Select your avatar</p>
                 <div className="avatar-section">
                     <div className={avatar === 1 ? 'sub-icon-wrapper sub-icon-wrapper-border' : 'sub-icon-wrapper'} onClick={() => editAvatar(1)}>
-                        <img className="sandboxUserImg" src={localStorage.getItem('profile_pic') || Bot1} width={35} height={35} border-raduis={'50%'} alt="bot1"></img>
+                        <img
+                            className="sandboxUserImg"
+                            src={localStorage.getItem('profile_pic') || Bot1}
+                            width={localStorage.getItem('profile_pic') ? 35 : 25}
+                            height={localStorage.getItem('profile_pic') ? 35 : 25}
+                            border-raduis={'50%'}
+                            alt="bot1"
+                        ></img>
                     </div>
                     <div className={avatar === 2 ? 'sub-icon-wrapper sub-icon-wrapper-border' : 'sub-icon-wrapper'} onClick={() => editAvatar(2)}>
                         <img src={Bot2} width={25} height={25} alt="bot2"></img>

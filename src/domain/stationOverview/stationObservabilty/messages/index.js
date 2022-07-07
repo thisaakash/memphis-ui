@@ -17,6 +17,9 @@ import React, { useContext, useState } from 'react';
 import { StationStoreContext } from '../..';
 import OverflowTip from '../../../../components/tooltip/overflowtip';
 import { convertBytes, parsingDate } from '../../../../services/valueConvertor';
+import { InfoOutlined } from '@material-ui/icons';
+import CustomTabs from '../../../../components/Tabs';
+import { Divider } from 'antd';
 
 const messagesColumns = [
     {
@@ -34,9 +37,15 @@ const messagesColumns = [
 const Messages = () => {
     const [stationState, stationDispatch] = useContext(StationStoreContext);
     const [selectedRowIndex, setSelectedRowIndex] = useState(0);
+    const [tabValue, setTabValue] = useState(0);
+    const tabs = ['All', 'Poison'];
 
     const onSelectedRow = (rowIndex) => {
         setSelectedRowIndex(rowIndex);
+    };
+
+    const handleChangeMenuItem = (_, newValue) => {
+        setTabValue(newValue);
     };
 
     return (
@@ -44,9 +53,13 @@ const Messages = () => {
             <div className="header">
                 <p className="title">Station</p>
                 {stationState?.stationSocketData?.messages?.length > 0 && (
-                    <p className="messages-hint">*last {stationState?.stationSocketData?.messages?.length} messages</p>
+                    <div className="messages-amount">
+                        <InfoOutlined />
+                        <p>Showing last {stationState?.stationSocketData?.messages?.length} messages</p>
+                    </div>
                 )}
             </div>
+            <CustomTabs value={tabValue} onChange={handleChangeMenuItem} tabs={tabs}></CustomTabs>
             {stationState?.stationSocketData?.messages?.length > 0 ? (
                 <div className="list-wrapper">
                     <div className="list">

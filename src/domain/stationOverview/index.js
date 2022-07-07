@@ -27,6 +27,7 @@ import pathDomains from '../../router';
 import Reducer from './hooks/reducer';
 import Loader from '../../components/loader';
 import { useHistory } from 'react-router-dom';
+import { parsingDate } from '../../services/valueConvertor';
 
 const StationOverview = () => {
     const [stationState, stationDispatch] = useReducer(Reducer);
@@ -38,7 +39,8 @@ const StationOverview = () => {
 
     const getStaionMetaData = async () => {
         try {
-            const data = await httpRequest('GET', `${ApiEndpoints.GET_STATION}?station_name=${stationName}`);
+            let data = await httpRequest('GET', `${ApiEndpoints.GET_STATION}?station_name=${stationName}`);
+            data.creation_date = await parsingDate(data.creation_date);
             stationDispatch({ type: 'SET_STATION_META_DATA', payload: data });
         } catch (error) {
             if (error.status === 404) {
@@ -107,18 +109,8 @@ const StationOverview = () => {
                         <div className="overview-header">
                             <StationOverviewHeader />
                         </div>
-                        <div className="overview-top">
-                            <div className="station-observability">
-                                <StationObservabilty />
-                            </div>
-                        </div>
-                        <div className="overview-bottom">
-                            <div className="auditing">
-                                <Auditing />
-                            </div>
-                            <div className="throughput">
-                                <Throughput />
-                            </div>
+                        <div className="station-observability">
+                            <StationObservabilty />
                         </div>
                     </div>
                 )}

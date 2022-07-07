@@ -18,8 +18,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import comingSoonBox from '../../../../assets/images/comingSoonBox.svg';
 import TooltipComponent from '../../../../components/tooltip/tooltip';
 import OverflowTip from '../../../../components/tooltip/overflowtip';
-import disconnect from '../../../../assets/images/disconnect.svg';
-import connect from '../../../../assets/images/connect.svg';
+import { DeleteForeverRounded } from '@material-ui/icons';
 
 import { StationStoreContext } from '../..';
 
@@ -50,14 +49,26 @@ const PubSubList = (props) => {
     const statusIndication = (is_active, is_deleted) => {
         if (is_active) {
             return (
-                <TooltipComponent text="Live" minWidth="15px">
-                    <img src={connect} />
+                <TooltipComponent text="Live" minWidth="35px">
+                    <div className="circle-status active">
+                        <div className="dot active-dot"></div>
+                    </div>
                 </TooltipComponent>
             );
         } else if (!is_deleted) {
             return (
-                <TooltipComponent text="Disconnected" minWidth="15px">
-                    <img src={disconnect} />
+                <TooltipComponent text="Disconnected" minWidth="35px">
+                    <div className="circle-status disconnected">
+                        <div className="dot disconnected-dot"></div>
+                    </div>
+                </TooltipComponent>
+            );
+        } else {
+            return (
+                <TooltipComponent text="Deleted" minWidth="35px">
+                    <div className="circle-status deleted">
+                        <DeleteForeverRounded />
+                    </div>
                 </TooltipComponent>
             );
         }
@@ -69,12 +80,23 @@ const PubSubList = (props) => {
                 <p className="title">{props.producer ? 'Producer' : 'Consumer'}</p>
                 {/* <p className="add-connector-button">{props.producer ? 'Add producer' : 'Add consumer'}</p> */}
             </div>
-            <div className="coulmns-table">
-                <span style={{ width: '100px' }}>Name</span>
-                {!props.producer && <span style={{ width: '100px' }}>Cg</span>}
-                <span style={{ width: '80px' }}>User</span>
-                <span style={{ width: '15px' }}></span>
-            </div>
+            {props.producer && (
+                <div className="coulmns-table">
+                    <span style={{ width: '100px' }}>Name</span>
+                    <span style={{ width: '80px' }}>User</span>
+                    <span style={{ width: '35px' }}>Status</span>
+                </div>
+            )}
+            {!props.producer && (
+                <div className="coulmns-table">
+                    <span style={{ width: '85px' }}>CG name</span>
+                    <span style={{ width: '60px' }}>User</span>
+                    <span style={{ width: '70px', textAlign: 'center' }}>Unprocessed</span>
+                    <span style={{ width: '70px', textAlign: 'center' }}>Poison</span>
+                    <span style={{ width: '35px', textAlign: 'center' }}>Status</span>
+                </div>
+            )}
+
             <div className="rows-wrapper">
                 {props.producer &&
                     producersList?.length > 0 &&
@@ -87,7 +109,7 @@ const PubSubList = (props) => {
                                 <OverflowTip text={row.created_by_user} width={'80px'}>
                                     {row.created_by_user}
                                 </OverflowTip>
-                                <span className="status-icon" style={{ width: '15px' }}>
+                                <span className="status-icon" style={{ width: '35px' }}>
                                     {statusIndication(row.is_active, row.is_deleted)}
                                 </span>
                             </div>
@@ -98,16 +120,19 @@ const PubSubList = (props) => {
                     consumersList?.map((row, index) => {
                         return (
                             <div className={row.is_deleted ? 'pubSub-row deleted' : 'pubSub-row'} key={index}>
-                                <OverflowTip text={row.name} width={'100px'}>
-                                    {row.name}
-                                </OverflowTip>
-                                <OverflowTip text={row.consumers_group} width={'100px'}>
+                                <OverflowTip text={row.consumers_group} width={'85px'}>
                                     {row.consumers_group}
                                 </OverflowTip>
-                                <OverflowTip text={row.created_by_user} width={'80px'}>
+                                <OverflowTip text={row.created_by_user} width={'60px'}>
                                     {row.created_by_user}
                                 </OverflowTip>
-                                <span className="status-icon" style={{ width: '15px' }}>
+                                <OverflowTip text={row.created_by_user} width={'70px'} textAlign={'center'}>
+                                    180,000
+                                </OverflowTip>
+                                <OverflowTip text={row.created_by_user} width={'70px'} textAlign={'center'}>
+                                    100,000
+                                </OverflowTip>
+                                <span className="status-icon" style={{ width: '35px' }}>
                                     {statusIndication(row.is_active, row.is_deleted)}
                                 </span>
                             </div>

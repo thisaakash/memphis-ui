@@ -38,11 +38,11 @@ export function getFontColor(colorType) {
         case 'none':
             return 'transparent';
         case 'black':
-            return '#2b2e3f';
+            return '#1D1D1D';
         case 'purple':
             return '#6557FF';
         case 'navy':
-            return '#2b2e3f';
+            return '#1D1D1D';
         case 'gray':
             return '#A9A9A9';
         case 'white':
@@ -63,7 +63,7 @@ export function getBackgroundColor(backgroundColor) {
         case 'red':
             return '#CD5C5C';
         case 'navy':
-            return 'rgba(43,46,63,0.85)';
+            return '#1D1D1D';
         case 'turquoise':
             return '#5CA6A0';
         case 'none':

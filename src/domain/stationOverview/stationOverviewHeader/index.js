@@ -15,7 +15,6 @@ import './style.scss';
 
 import React, { useContext, useEffect, useState } from 'react';
 import { CopyBlock, atomOneLight } from 'react-code-blocks';
-import CloseIcon from '@material-ui/icons/Close';
 import { useHistory } from 'react-router-dom';
 import { Progress } from 'antd';
 
@@ -34,15 +33,18 @@ import Modal from '../../../components/modal';
 import pathDomains from '../../../router';
 import { StationStoreContext } from '..';
 import TooltipComponent from '../../../components/tooltip/tooltip';
+import Auditing from '../auditing';
 
 const StationOverviewHeader = (props) => {
     const [state, dispatch] = useContext(Context);
     const [stationState, stationDispatch] = useContext(StationStoreContext);
     const history = useHistory();
     const [retentionValue, setRetentionValue] = useState('');
-    const [open, modalFlip] = useState(false);
+    const [sdkModal, setSdkModal] = useState(false);
+    const [auditModal, setAuditModal] = useState(false);
     const selectLngOption = ['Node.js'];
     const [langSelected, setLangSelected] = useState('Node.js');
+
     const codeExample = process.env.DOCKER_ENV ? DOCKER_CODE_EXAMPLE : CODE_EXAMPLE;
     const handleSelectLang = (e) => {
         setLangSelected(e);
@@ -72,7 +74,12 @@ const StationOverviewHeader = (props) => {
     return (
         <div className="station-overview-header">
             <div className="title-wrapper">
-                <h1 className="station-name">Overview - {stationState?.stationMetaData?.name}</h1>
+                <div className="station-details">
+                    <h1 className="station-name">{stationState?.stationMetaData?.name}</h1>
+                    <span className="created-by">
+                        Created by <b>{stationState?.stationMetaData?.created_by_user}</b> at {stationState?.stationMetaData?.creation_date}
+                    </span>
+                </div>
                 <div id="e2e-tests-station-close-btn">
                     <Button
                         width="80px"
@@ -80,29 +87,13 @@ const StationOverviewHeader = (props) => {
                         placeholder="Back"
                         colorType="white"
                         radiusType="circle"
-                        backgroundColorType="purple"
+                        backgroundColorType="navy"
                         fontSize="13px"
                         fontWeight="600"
-                        border="purple"
+                        border="navy"
                         onClick={() => returnToStaionsList()}
                     />
-
-                    {/* <CloseIcon onClick={() => returnToStaionsList()} style={{ cursor: 'pointer' }} /> */}
                 </div>
-            </div>
-            <div className="sdk-button">
-                <Button
-                    width="105px"
-                    height="22px"
-                    placeholder="Code example"
-                    colorType="white"
-                    radiusType="circle"
-                    backgroundColorType="purple"
-                    fontSize="13px"
-                    fontWeight="600"
-                    border="purple"
-                    onClick={() => modalFlip(true)}
-                />
             </div>
             <div className="details">
                 <div className="main-details">
@@ -122,8 +113,8 @@ const StationOverviewHeader = (props) => {
                             <img src={awaitingIcon} width={22} height={44} alt="awaitingIcon" />
                         </div>
                         <div className="more-details">
-                            <p className="number">{stationState?.stationSocketData?.total_messages || 0}</p>
                             <p className="title">Total messages</p>
+                            <p className="number">{stationState?.stationSocketData?.total_messages || 0}</p>
                         </div>
                     </div>
                     <TooltipComponent text="Include extra bytes added by memphis." width={'220px'} cursor="pointer">
@@ -132,8 +123,8 @@ const StationOverviewHeader = (props) => {
                                 <img src={averageMesIcon} width={24} height={24} alt="averageMesIcon" />
                             </div>
                             <div className="more-details">
-                                <p className="number">{convertBytes(stationState?.stationSocketData?.average_message_size)}</p>
                                 <p className="title">Av. message size</p>
+                                <p className="number">{convertBytes(stationState?.stationSocketData?.average_message_size)}</p>
                             </div>
                         </div>
                     </TooltipComponent>
@@ -168,8 +159,26 @@ const StationOverviewHeader = (props) => {
                         </div>
                     </div> */}
                 </div>
+                <div className="info-buttons">
+                    <div className="sdk">
+                        <p>SDK</p>
+                        <span onClick={() => setSdkModal(true)}>View Details ></span>
+                    </div>
+                    <div className="audit">
+                        <p>Audit</p>
+                        <span onClick={() => setAuditModal(true)}>View Details ></span>
+                    </div>
+                </div>
             </div>
-            <Modal header="SDK" minHeight="650px" minWidth="500px" closeAction={() => modalFlip(false)} clickOutside={() => modalFlip(false)} open={open} hr={false}>
+            <Modal
+                header="SDK"
+                minHeight="650px"
+                minWidth="500px"
+                closeAction={() => setSdkModal(false)}
+                clickOutside={() => setSdkModal(false)}
+                open={sdkModal}
+                hr={false}
+            >
                 <div className="sdk-details-container">
                     <div className="select-lan">
                         <p>Language</p>
@@ -200,6 +209,17 @@ const StationOverviewHeader = (props) => {
                         </div>
                     </div>
                 </div>
+            </Modal>
+            <Modal
+                header="Audit"
+                minHeight="400px"
+                minWidth="800px"
+                closeAction={() => setAuditModal(false)}
+                clickOutside={() => setAuditModal(false)}
+                open={auditModal}
+                hr={false}
+            >
+                <Auditing />
             </Modal>
         </div>
     );

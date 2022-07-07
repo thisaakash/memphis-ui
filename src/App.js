@@ -56,7 +56,6 @@ const App = withRouter(() => {
     useEffect(async () => {
         await handleRefresh(true);
         setAuthCheck(false);
-        console.log(process.env.REACT_APP_SANDBOX_ENV);
 
         const interval = setInterval(() => {
             handleRefresh(false);

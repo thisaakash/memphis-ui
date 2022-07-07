@@ -181,10 +181,7 @@ const SandboxLogin = (props) => {
                 false
             );
             AuthService.saveToLocalStorage(data);
-            debugger;
-            // const pic = await httpRequest('GET', data.profile_pic);
-            const pic = await data.profile_pic;
-            localStorage.setItem('profile_pic', pic); // profile_pic is available only in sandbox env
+            localStorage.setItem('profile_pic', data.profile_pic); // profile_pic is available only in sandbox env
             history.push(referer);
             setisLoading(false);
         } catch (err) {

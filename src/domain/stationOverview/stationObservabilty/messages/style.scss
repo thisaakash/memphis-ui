@@ -8,28 +8,39 @@
     background: white;
     position: relative;
     .header {
-        padding: 15px 0px 0px 15px;
+        padding: 15px 15px 0px 15px;
         display: flex;
         line-height: 30px;
-        .title {
-            font-weight: 600;
-            font-size: 14px;
-            margin: 0;
-        }
-        .messages-amount{
+        justify-content:space-between;
+        .left-side{
             display: flex;
-            margin-left: 16px;
-            color: #737373;
-            svg {
-                width: 11px;
-                margin-right: 5px;
-                height: 100%;
-            }
-            p{
+            .title {
+                font-weight: 600;
+                font-size: 14px;
                 margin: 0;
-                font-size: 10px;
-                font-weight: 500;
             }
+            .messages-amount{
+                display: flex;
+                margin-left: 16px;
+                color: #737373;
+                svg {
+                    width: 11px;
+                    margin-right: 5px;
+                    height: 100%;
+                }
+                p{
+                    margin: 0;
+                    font-size: 10px;
+                    font-weight: 500;
+                }
+            }
+        }
+        .right-side{
+            position: relative;
+            display: flex;
+            width: 190px;
+            justify-content: space-between;
+            top: 10px;
         }
         .add-functions-button {
             cursor: pointer;
@@ -37,6 +48,9 @@
             font-weight: 600;
             font-size: 12px;
         }
+    }
+    .ant-tabs-tab{
+        color: rgba(28, 46, 69, 0.6);
     }
     .ant-tabs-nav-wrap{
         padding-left: 15px !important;

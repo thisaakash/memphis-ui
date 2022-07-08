@@ -44,7 +44,7 @@
         width: calc(100%);
         height: calc(100% - 85px);
         overflow: auto;
-        padding: 0px 15px 0px 15px;
+        padding: 0px 15px 0px 20px;
         .pubSub-row {
             height: 35px;
             display: flex;
@@ -54,6 +54,7 @@
             cursor: pointer;
             font-weight: 400;
             font-size: 12px;
+            padding-left: 5px;
             .status-icon
             {
                 position: relative;
@@ -106,6 +107,7 @@
         }
         .pubSub-row:nth-child(even) {
             background-color: #f8f8f8;
+            border-radius: 5px;
         }
         .empty-pub-sub{
             display: flex;

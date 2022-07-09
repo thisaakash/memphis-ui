@@ -1,0 +1,118 @@
+.create-station-form-create-app-user {
+    height: 83.2%;
+    position: relative;
+    padding: 30px;
+    border: 1px solid #f2f2f2;
+    border-radius: 8px;
+    margin-left: 23px;
+
+    .app-user-icon {
+        // margin-top: 33px;
+        // margin-left: 47px;
+    }
+
+    .header-create-app-user {
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 24px;
+        line-height: 29px;
+        color: #1d1d1d;
+    }
+    .header-enter-user-name {
+        width: 129px;
+        height: 20px;
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 20px;
+        color: #2e2c34;
+    }
+    .create-app-user {
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 16px;
+    }
+
+    .connection-details-container {
+        height: 144px;
+        background: rgba(239, 239, 243, 0.05);
+        border: 1px solid #f3f3f3;
+        border-radius: 4px;
+
+        .user-details-container {
+            height: 44px;
+            display: flex;
+            padding-left: 20px;
+            justify-content: flex-start;
+
+            background: #f6f6fc;
+            align-items: center;
+
+            .user-check {
+                margin-bottom: 5px;
+                margin-right: 5px;
+            }
+
+            .user-connection-details {
+                font-family: 'Inter';
+                font-style: normal;
+                font-weight: 600;
+                font-size: 14px;
+                align-self: flex-end;
+
+                color: #2e2c34;
+            }
+        }
+
+        .container-username-token {
+            font-family: 'Inter';
+            font-style: italic;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 196.5%;
+            margin-left: 20px;
+            margin-top: 20px;
+            color: #2e2c34;
+
+            .username-container,
+            .token-container {
+                display: flex;
+                align-items: center;
+
+                .username,
+                .token {
+                    margin-right: 10px;
+                }
+
+                .copy-icon {
+                    align-items: center;
+                    margin-bottom: 12px;
+                }
+            }
+        }
+    }
+
+    .information-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .information-img {
+            margin-bottom: 30px;
+            margin-right: 5px;
+        }
+        .information {
+            font-family: 'Inter';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 150%;
+            color: #b4b4b4;
+            margin-top: 5px;
+        }
+    }
+}

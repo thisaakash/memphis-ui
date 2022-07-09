@@ -119,17 +119,15 @@ function OverView() {
     const getAllStations = async () => {
         try {
             const res = await httpRequest('GET', `${ApiEndpoints.GET_ALL_STATIONS}`);
-            if (res){
-                setAllStations(res)
+            if (res) {
+                setAllStations(res);
+            } else {
+                console.log('There are no stations');
             }
-            else{
-                console.log("There are no stations")
-            }
-        }
-        catch (err){
+        } catch (err) {
             return;
         }
-    }
+    };
 
     return (
         <div className="overview-container">
@@ -150,7 +148,7 @@ function OverView() {
                                     <h1>Welcome Back, {localStorage.getItem(LOCAL_STORAGE_USER_NAME)}</h1>
                                 ) : (
                                     <h1>Welcome Aboard, {localStorage.getItem(LOCAL_STORAGE_USER_NAME)}</h1>
-                                )}                                
+                                )}
                                 {/* <p className="ok-status">You’re a memphis superhero! All looks good!</p> */}
                             </div>
                         </div>
@@ -168,12 +166,18 @@ function OverView() {
                             onClick={() => modalFlip(true)}
                         />
                     </div>
-                    <div className="overview-components">{allStations.length === 0 ? <div className="left-side"><GetStarted/></div> : 
-                        <div className="left-side">
-                            <GenericDetails />
-                            <FailedStations />
-                            <Throughput />
-                    </div>}
+                    <div className="overview-components">
+                        {allStations.length === 0 ? (
+                            <div className="left-side">
+                                <GetStarted />
+                            </div>
+                        ) : (
+                            <div className="left-side">
+                                <GenericDetails />
+                                <FailedStations />
+                                <Throughput />
+                            </div>
+                        )}
                         <div className="right-side">
                             <Resources />
                             <SysComponents />

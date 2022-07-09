@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Form, InputNumber } from 'antd';
-import Input from '../../../components/Input';
-import RadioButton from '../../../components/radioButton';
+import Input from '../../../../components/Input';
+import RadioButton from '../../../../components/radioButton';
 import './style.scss';
-import { convertDateToSeconds } from '../../../services/valueConvertor';
-import { ApiEndpoints } from '../../../const/apiEndpoints';
-import { httpRequest } from '../../../services/http';
-import { useHistory } from 'react-router';
-import pathDomains from '../../../router';
-import GetStartedIcon from '../../../assets/images/getStartedIcon.svg'
+import { convertDateToSeconds } from '../../../../services/valueConvertor';
+import { ApiEndpoints } from '../../../../const/apiEndpoints';
+import { httpRequest } from '../../../../services/http';
+import GetStartedIcon from '../../../../assets/images/getStartedIcon.svg';
 
 const retanionOptions = [
     {
@@ -41,10 +39,8 @@ const storageOptions = [
     }
 ];
 
-
 const CreateStationForm = (props) => {
-    const {createStationFormRef} = props;
-    const history = useHistory();
+    const { createStationFormRef } = props;
     const [creationForm] = Form.useForm();
     const [formFields, setFormFields] = useState({
         factory_name: '',
@@ -74,7 +70,7 @@ const CreateStationForm = (props) => {
     const handleRetentionMessagesChange = (e) => {
         setRetentionMessagesValue(e.target.value);
     };
-    
+
     const handleDaysChange = (e) => {
         setTimeSeparator({ ...timeSeparator, days: e });
     };
@@ -89,7 +85,7 @@ const CreateStationForm = (props) => {
     };
 
     const onFinish = async () => {
-        try{
+        try {
             const values = await creationForm.validateFields();
             if (values?.errorFields) {
                 return;
@@ -113,10 +109,9 @@ const CreateStationForm = (props) => {
                     createStation(bodyRequest);
                 } catch (error) {}
             }
+        } catch (error) {
+            console.log(`validate error ${JSON.stringify(error)}`);
         }
-        catch (error){
-            console.log(`validate error ${JSON.stringify(error)}`)  
-            }
     };
 
     const createStation = async (bodyRequest) => {
@@ -125,9 +120,11 @@ const CreateStationForm = (props) => {
             if (data) {
                 // history.push(`${pathDomains.factoriesList}/${bodyRequest.factory_name}/${data.name}`);
             }
-        } catch (error) {console.log(error)}
+        } catch (error) {
+            console.log(error);
+        }
     };
- 
+
     const updateFormState = (field, value) => {
         let updatedValue = { ...formFields };
         updatedValue[field] = value;
@@ -135,72 +132,79 @@ const CreateStationForm = (props) => {
     };
 
     return (
-        <Form name="form" form={creationForm} autoComplete="off" className="create-station-form" >
-            <img src={GetStartedIcon} alt="getstarted" width="35.5" height="28.4" />
-            <h1>Create Station</h1>
+        <Form name="form" form={creationForm} autoComplete="off" className="create-station-form-getstarted">
+            <img src={GetStartedIcon} alt="getstarted" width="35.5" height="28.4" className="get-startetd-icon" />
+            <h1 className="header-getstarted-form">Create Station</h1>
             <Form.Item
-                    name="factory_name"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Type here'
-                        }
-                    ]}
-                    style={{ marginBottom: '0' }}
-                >
-                    <div>
-                        <h4>Enter factory name</h4>
-                        <p>A factory presents the application/use case that the user requires to build, and, within it, all the stations (queues) that establish the use case</p>
-                        <Input
-                            placeholder="Type Factory name"
-                            type="text"
-                            radiusType="semi-round"
-                            colorType="black"
-                            backgroundColorType="none"
-                            borderColorType="gray"
-                            width="450px"
-                            height="40px"
-                            onBlur={(e) => updateFormState('factory_name', e.target.value)} 
-                            onChange={(e) => updateFormState('factory_name', e.target.value)}
-                            value={formFields.factory_name}
-                        />
-                    </div>
+                name="factory_name"
+                rules={[
+                    {
+                        required: true,
+                        message: 'Type here'
+                    }
+                ]}
+                style={{ marginBottom: '10px' }}
+            >
+                <div>
+                    <h4 className="field-title">Enter factory name</h4>
+                    <p className="field-description">
+                        A factory presents the application/use case that the user requires to build, and, within it, all the stations (queues) that establish the use case
+                    </p>
+                    <Input
+                        placeholder="Type Factory name"
+                        type="text"
+                        radiusType="semi-round"
+                        colorType="black"
+                        backgroundColorType="none"
+                        borderColorType="gray"
+                        width="450px"
+                        height="40px"
+                        onBlur={(e) => updateFormState('factory_name', e.target.value)}
+                        onChange={(e) => updateFormState('factory_name', e.target.value)}
+                        value={formFields.factory_name}
+                    />
+                </div>
+            </Form.Item>
+            <Form.Item
+                name="name"
+                rules={[
+                    {
+                        required: true,
+                        message: 'Type here'
+                    }
+                ]}
+                style={{ marginBottom: '10px' }}
+            >
+                <div>
+                    <h4 className="field-title">Enter station name</h4>
+                    <p className="field-description">RabbitMQ has queues, Kafka has topics, and Memphis has stations.</p>
+                    <Input
+                        placeholder="Type Station name"
+                        type="text"
+                        radiusType="semi-round"
+                        colorType="black"
+                        backgroundColorType="none"
+                        borderColorType="gray"
+                        width="450px"
+                        height="40px"
+                        onBlur={(e) => updateFormState('name', e.target.value)}
+                        onChange={(e) => updateFormState('name', e.target.value)}
+                        value={formFields.name}
+                    />
+                </div>
+            </Form.Item>
+
+            <div className="retention">
+                <h4 className="field-title">Retention type</h4>
+                <p className="field-description">By which criteria messages will be expel from the station</p>
+                <Form.Item name="retention_type" initialValue={formFields.retention_type}>
+                    <RadioButton
+                        options={retanionOptions}
+                        radioValue={formFields.retention_type}
+                        optionType="button"
+                        onChange={(e) => updateFormState('retention_type', e.target.value)}
+                    />
                 </Form.Item>
-                <Form.Item
-                    name="name"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Type here'
-                        }
-                    ]}
-                    style={{ marginBottom: '0' }}
-                >
-                    <div>
-                        <h4>Enter station name</h4>
-                        <p>RabbitMQ has queues, Kafka has topics, and Memphis has stations.</p>
-                        <Input
-                            placeholder="Type Station name"
-                            type="text"
-                            radiusType="semi-round"
-                            colorType="black"
-                            backgroundColorType="none"
-                            borderColorType="gray"
-                            width="450px"
-                            height="40px"
-                            onBlur={(e) => updateFormState('name', e.target.value)}
-                            onChange={(e) => updateFormState('name', e.target.value)}
-                            value={formFields.name}
-                        />
-                    </div>
-                </Form.Item>
-                
-                <div className="retention">
-                    <h4>Retention type</h4>
-                    <p>By which criteria messages will be expel from the station</p>
-                    <Form.Item name="retention_type" initialValue={formFields.retention_type}>
-                        <RadioButton options={retanionOptions} radioValue={formFields.retention_type} optionType='button' onChange={(e) => updateFormState('retention_type', e.target.value)} />
-                    </Form.Item>
 
                 {formFields.retention_type === 'message_age_sec' && (
                     <div className="time-value">
@@ -273,19 +277,23 @@ const CreateStationForm = (props) => {
                         </div>
                     </Form.Item>
                 )}
-                </div>
+            </div>
+            <div className="storage-replicas-container">
                 <div className="storage">
-                    <h4 className="field-title">
-                        Storage Type
-                    </h4>
-                    <p>Type of message persistence</p>
+                    <h4 className="field-title">Storage Type</h4>
+                    <p className="field-description">Type of message persistence</p>
                     <Form.Item name="storage_type" initialValue={formFields.storage_type}>
-                        <RadioButton options={storageOptions} radioValue={formFields.storage_type} optionType='button' onChange={(e) => updateFormState('storage_type', e.target.value)} />
+                        <RadioButton
+                            options={storageOptions}
+                            radioValue={formFields.storage_type}
+                            optionType="button"
+                            onChange={(e) => updateFormState('storage_type', e.target.value)}
+                        />
                     </Form.Item>
                 </div>
                 <div className="replicas">
                     <h4 className="field-title">Replicas</h4>
-                    <p>Amount of mirrors per message</p>
+                    <p className="field-description">Amount of mirrors per message</p>
                     <div className="replicas-value">
                         <Form.Item name="replicas" initialValue={formFields.replicas}>
                             <InputNumber
@@ -298,9 +306,9 @@ const CreateStationForm = (props) => {
                             />
                         </Form.Item>
                     </div>
-                </div> 
+                </div>
+            </div>
         </Form>
     );
-
-}
+};
 export default CreateStationForm;

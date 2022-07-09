@@ -36,6 +36,7 @@ const Button = (props) => {
         textAlign,
         minWidth,
         marginBottom,
+        marginTop,
         boxShadowStyle,
         minHeight,
         zIndex,
@@ -53,7 +54,7 @@ const Button = (props) => {
     const opacity = disabled ? '0.5' : '1';
     const boxShadow = getBoxShadows(boxShadowStyle);
 
-    const styleButtonContainer = { margin: margin, textAlign: textAlign, marginBottom: marginBottom || null };
+    const styleButtonContainer = { margin: margin, textAlign: textAlign, marginBottom: marginBottom || null, marginTop: marginTop || null };
 
     const fieldProps = {
         onClick: handleClick,

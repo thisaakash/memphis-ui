@@ -104,3 +104,45 @@ export const DOCKER_CODE_EXAMPLE = `const memphis = require("memphis-dev");
         memphis.close();
     }
 })();`;
+
+export const CODE_CONSUME = `const memphis = require("memphis-dev");
+
+(async function () {
+    try {
+        await memphis.connect({
+            host: "<memphis-cluster>",
+            username: "<user of type application>",
+            connectionToken: "<connectio_token>"
+        });
+
+const consumer = await memphis.consumer({
+    stationName: "test",
+    consumerName: "consumer_app",
+    consumerGroup: ""
+});
+consumer.on("message", message => {
+    console.log(message.getData().toString());
+    message.ack();
+});
+consumer.on("error", error => {
+    console.log(error);
+});`;
+
+export const CODE_PRODUCE = `const memphis = require("memphis-dev");
+
+(async function () {
+    try {
+        await memphis.connect({
+            host: "<memphis-cluster>",
+            username: "<user of type application>",
+            connectionToken: "<connectio_token>"
+        });
+
+const producer = await memphis.producer({
+    stationName: "test",
+    producerName: "producer_app"
+});
+await producer.produce({
+    message: Buffer.from('Hello world')
+});
+console.log("Message sent");`;

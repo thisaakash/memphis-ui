@@ -81,7 +81,8 @@ const StationOverview = () => {
     }, []);
 
     useEffect(() => {
-        state.socket?.on('station_overview_data', (data) => {
+        debugger
+        state.socket?.on(`station_overview_data_${stationName}`, (data) => {
             sortData(data);
             stationDispatch({ type: 'SET_SOCKET_DATA', payload: data });
         });

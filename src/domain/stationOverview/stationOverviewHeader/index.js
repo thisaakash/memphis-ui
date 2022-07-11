@@ -41,9 +41,9 @@ const StationOverviewHeader = (props) => {
     const history = useHistory();
     const [retentionValue, setRetentionValue] = useState('');
     const [open, modalFlip] = useState(false);
-    const selectLngOption = ['Node.js'];
-    const [langSelected, setLangSelected] = useState('Node.js');
-    const codeExample = process.env.DOCKER_ENV ? DOCKER_CODE_EXAMPLE : CODE_EXAMPLE;
+    const selectLngOption = ['Go', 'Node.js'];
+    const [langSelected, setLangSelected] = useState('Go');
+    const codeExample = CODE_EXAMPLE[langSelected].code;
     const handleSelectLang = (e) => {
         setLangSelected(e);
     };
@@ -190,13 +190,13 @@ const StationOverviewHeader = (props) => {
                         <p>Installation</p>
                         <div className="install-copy">
                             <p></p>
-                            <CopyBlock language={'jsx'} text={'npm i memphis-dev --save'} showLineNumbers={false} theme={atomOneLight} wrapLines={true} codeBlock />
+                            <CopyBlock text={CODE_EXAMPLE[langSelected].installation} showLineNumbers={false} theme={atomOneLight} wrapLines={true} codeBlock />
                         </div>
                     </div>
                     <div className="code-example">
-                        <p>which should output something like</p>
+                        <p>Code</p>
                         <div className="code-content">
-                            <CopyBlock language={'jsx'} text={codeExample} showLineNumbers={true} theme={atomOneLight} wrapLines={true} codeBlock />
+                            <CopyBlock language={CODE_EXAMPLE[langSelected].langCode} text={codeExample} showLineNumbers={true} theme={atomOneLight} wrapLines={true} codeBlock />
                         </div>
                     </div>
                 </div>

@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Form, InputNumber } from 'antd';
 import Input from '../../../../components/Input';
 import RadioButton from '../../../../components/radioButton';
 import './style.scss';
-import { convertDateToSeconds } from '../../../../services/valueConvertor';
+import { convertDateToSeconds, convertSecondsToDateObject } from '../../../../services/valueConvertor';
 import { ApiEndpoints } from '../../../../const/apiEndpoints';
 import { httpRequest } from '../../../../services/http';
 import GetStartedIcon from '../../../../assets/images/getStartedIcon.svg';
+import { GetStartedStoreContext } from '..';
 
 const retanionOptions = [
     {
@@ -42,6 +43,8 @@ const storageOptions = [
 const CreateStationForm = (props) => {
     const { createStationFormRef } = props;
     const [creationForm] = Form.useForm();
+    const [getStartedState, getStartedDispatch] = useContext(GetStartedStoreContext);
+
     const [formFields, setFormFields] = useState({
         factory_name: '',
         name: '',
@@ -62,7 +65,49 @@ const CreateStationForm = (props) => {
 
     useEffect(() => {
         createStationFormRef.current = onFinish;
+        getStartedDispatch({ type: 'SET_NEXT_DISABLE', payload: true });
+        saveFormField();
     }, []);
+
+    useEffect(() => {
+        if (formFields.factory_name !== '' && formFields.name !== '') {
+            getStartedDispatch({ type: 'SET_NEXT_DISABLE', payload: false });
+        }
+    }, [formFields]);
+
+    const saveFormField = () => {
+        if (getStartedState?.formFieldsCreateStation) {
+            setFormFields({
+                factory_name: getStartedState?.formFieldsCreateStation?.factory_name,
+                name: getStartedState?.formFieldsCreateStation?.name,
+                retention_type: getStartedState?.formFieldsCreateStation?.retention_type,
+                retention_value: getStartedState?.formFieldsCreateStation?.retention_value,
+                storage_type: getStartedState?.formFieldsCreateStation?.storage_type,
+                replicas: getStartedState?.formFieldsCreateStation?.replicas
+            });
+            if (getStartedState?.formFieldsCreateStation?.retention_type === 'bytes') {
+                setRetentionSizeValue(getStartedState?.formFieldsCreateStation?.retention_value);
+            }
+            if (getStartedState?.formFieldsCreateStation?.retention_type === 'messages') {
+                setRetentionMessagesValue(getStartedState?.formFieldsCreateStation?.retention_value);
+            }
+            if (getStartedState?.formFieldsCreateStation?.retention_type === 'message_age_sec') {
+                const timeObject = convertSecondsToDateObject(getStartedState?.formFieldsCreateStation?.retention_value);
+                const { days, hours, minutes, seconds } = timeObject;
+                setTimeSeparator({
+                    days,
+                    hours,
+                    minutes,
+                    seconds
+                });
+            }
+        } else {
+            setFormFields({ factory_name: '', name: '', retention_type: 'message_age_sec', retention_value: '', storage_type: 'file', replicas: 1 });
+            setRetentionMessagesValue('10');
+            setRetentionSizeValue('1000');
+            setTimeSeparator({ days: 7, hours: 0, minutes: 0, seconds: 0 });
+        }
+    };
 
     const handleRetentionSizeChange = (e) => {
         setRetentionSizeValue(e.target.value);
@@ -87,7 +132,9 @@ const CreateStationForm = (props) => {
     const onFinish = async () => {
         try {
             const values = await creationForm.validateFields();
-            if (values?.errorFields) {
+            console.log('values', values);
+            if (values?.errorFields || values.name === undefined || values.factory_name === undefined) {
+                // getStartedDispatch({ type: 'SET_NEXT_DISABLE', payload: true });
                 return;
             } else {
                 if (values.retention_type === 'message_age_sec') {
@@ -96,6 +143,9 @@ const CreateStationForm = (props) => {
                     values['retention_value'] = Number(values.retentionSizeValue);
                 } else {
                     values['retention_value'] = Number(values.retentionMessagesValue);
+                }
+                if (values.name === getStartedState?.formFieldsCreateStation?.name || values.factory_name === getStartedState?.formFieldsCreateStation?.factory_name) {
+                    return;
                 }
                 try {
                     const bodyRequest = {
@@ -118,7 +168,9 @@ const CreateStationForm = (props) => {
         try {
             const data = await httpRequest('POST', ApiEndpoints.CREATE_STATION, bodyRequest);
             if (data) {
-                // history.push(`${pathDomains.factoriesList}/${bodyRequest.factory_name}/${data.name}`);
+                getStartedDispatch({ type: 'SET_FACTORY', payload: bodyRequest.factory_name });
+                getStartedDispatch({ type: 'SET_STATION', payload: data.name });
+                getStartedDispatch({ type: 'SET_FORM_FIELDS_CREATE_STATION', payload: bodyRequest });
             }
         } catch (error) {
             console.log(error);
@@ -160,7 +212,9 @@ const CreateStationForm = (props) => {
                         width="450px"
                         height="40px"
                         onBlur={(e) => updateFormState('factory_name', e.target.value)}
-                        onChange={(e) => updateFormState('factory_name', e.target.value)}
+                        onChange={(e) => {
+                            updateFormState('factory_name', e.target.value);
+                        }}
                         value={formFields.factory_name}
                     />
                 </div>
@@ -199,6 +253,7 @@ const CreateStationForm = (props) => {
                 <p className="field-description">By which criteria messages will be expel from the station</p>
                 <Form.Item name="retention_type" initialValue={formFields.retention_type}>
                     <RadioButton
+                        className="radio-button"
                         options={retanionOptions}
                         radioValue={formFields.retention_type}
                         optionType="button"
@@ -209,29 +264,29 @@ const CreateStationForm = (props) => {
                 {formFields.retention_type === 'message_age_sec' && (
                     <div className="time-value">
                         <div className="days-section">
-                            <Form.Item name="days" initialValue={timeSeparator.days}>
-                                <InputNumber bordered={false} min={0} max={100} keyboard={true} onChange={(e) => handleDaysChange(e)} value={timeSeparator.days} />
+                            <Form.Item name="days" initialValue={timeSeparator?.days}>
+                                <InputNumber bordered={false} min={0} max={100} keyboard={true} onChange={(e) => handleDaysChange(e)} value={timeSeparator?.days} />
                             </Form.Item>
                             <p>days</p>
                         </div>
                         <p className="separator">:</p>
                         <div className="hours-section">
-                            <Form.Item name="hours" initialValue={timeSeparator.hours}>
-                                <InputNumber bordered={false} min={0} max={24} keyboard={true} onChange={(e) => handleHoursChange(e)} value={timeSeparator.hours} />
+                            <Form.Item name="hours" initialValue={timeSeparator?.hours}>
+                                <InputNumber bordered={false} min={0} max={24} keyboard={true} onChange={(e) => handleHoursChange(e)} value={timeSeparator?.hours} />
                             </Form.Item>
                             <p>hours</p>
                         </div>
                         <p className="separator">:</p>
                         <div className="minutes-section">
-                            <Form.Item name="minutes" initialValue={timeSeparator.minutes}>
-                                <InputNumber bordered={false} min={0} max={60} keyboard={true} onChange={(e) => handleMinutesChange(e)} value={timeSeparator.minutes} />
+                            <Form.Item name="minutes" initialValue={timeSeparator?.minutes}>
+                                <InputNumber bordered={false} min={0} max={60} keyboard={true} onChange={(e) => handleMinutesChange(e)} value={timeSeparator?.minutes} />
                             </Form.Item>
                             <p>minutes</p>
                         </div>
                         <p className="separator">:</p>
                         <div className="seconds-section">
-                            <Form.Item name="seconds" initialValue={timeSeparator.seconds}>
-                                <InputNumber bordered={false} min={0} max={60} keyboard={true} onChange={(e) => handleSecondsChange(e)} value={timeSeparator.seconds} />
+                            <Form.Item name="seconds" initialValue={timeSeparator?.seconds}>
+                                <InputNumber bordered={false} min={0} max={60} keyboard={true} onChange={(e) => handleSecondsChange(e)} value={timeSeparator?.seconds} />
                             </Form.Item>
                             <p>seconds</p>
                         </div>
@@ -296,14 +351,7 @@ const CreateStationForm = (props) => {
                     <p className="field-description">Amount of mirrors per message</p>
                     <div className="replicas-value">
                         <Form.Item name="replicas" initialValue={formFields.replicas}>
-                            <InputNumber
-                                bordered={false}
-                                min={1}
-                                max={5}
-                                keyboard={true}
-                                value={formFields.replicas}
-                                onChange={(e) => updateFormState('replicas', e.target.value)}
-                            />
+                            <InputNumber bordered={false} min={1} max={5} keyboard={true} value={formFields.replicas} onChange={(e) => updateFormState('replicas', e)} />
                         </Form.Item>
                     </div>
                 </div>

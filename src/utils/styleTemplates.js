@@ -66,6 +66,8 @@ export function getBackgroundColor(backgroundColor) {
             return 'rgba(43,46,63,0.85)';
         case 'turquoise':
             return '#5CA6A0';
+        case 'black':
+            return '#18171E';
         case 'none':
             return 'transparent';
         default:

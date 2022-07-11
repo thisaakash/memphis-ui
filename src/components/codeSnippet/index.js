@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import './style.scss';
 import EditorCodeSnippet from '../editorCodeSnippet';
 import CopyClipboard from '../../assets/images/copyClipboard.svg';
 import ClickableImage from '../clickableImage';
+import { GetStartedStoreContext } from '../../domain/overview/getStarted';
 
 const CodeSnippet = (props) => {
     const { onCopyToClipBoard, languageOption, codeSnippet } = props;
+    const [getStartedState, getStartedDispatch] = useContext(GetStartedStoreContext);
 
     const options = (EditorCodeSnippet.IStandaloneEditorConstructionOptions = {
         readOnly: true,
@@ -31,20 +33,15 @@ const CodeSnippet = (props) => {
     const onCopy = () => {
         navigator.clipboard.writeText(codeSnippet);
         onCopyToClipBoard();
+        getStartedDispatch({ type: 'SET_NEXT_DISABLE', payload: false });
     };
 
+    useEffect(() => {
+        getStartedDispatch({ type: 'SET_NEXT_DISABLE', payload: true });
+    }, []);
+
     return (
-        <div
-            style={{
-                marginTop: '15px',
-                display: 'flex',
-                justifyContent: 'space-between',
-                padding: '10px',
-                border: '1px solid #D8D8D8',
-                borderRadius: '4px'
-                // boxSizing: 'border-box'
-            }}
-        >
+        <div className="editor-code-snippet-container">
             <EditorCodeSnippet
                 height="30vh"
                 // height="100%"

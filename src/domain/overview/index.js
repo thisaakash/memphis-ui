@@ -167,7 +167,7 @@ function OverView() {
                         />
                     </div>
                     <div className="overview-components">
-                        {allStations.length === 0 ? (
+                        {allStations.length === 0 || localStorage.getItem(LOCAL_STORAGE_ALREADY_LOGGED_IN) === 'false' ? (
                             <div className="left-side">
                                 <GetStarted />
                             </div>

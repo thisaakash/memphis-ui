@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Form } from 'antd';
 
 import SelectComponent from '../../../../components/select';
 import CodeSnippet from '../../../../components/codeSnippet';
 import Button from '../../../../components/button';
 import SuccessfullyReceivedProduce from '../../../../assets/images/successfullyReceivedProduce.svg';
+import { GetStartedStoreContext } from '..';
 
 const screenEnum = {
     DATA_SNIPPET: 0,
@@ -12,16 +13,22 @@ const screenEnum = {
     DATA_RECIEVED: 2
 };
 
-const ProduceConsumeData = ({ headerImage, headerTitle, waitingImage, languagesOptions, onNext, ...props }) => {
-    // const {headerImage , headerTitle, waitingImage, languagesOptions, onNext} = props
+const ProduceConsumeData = (props) => {
+    const { headerImage, headerTitle, waitingImage, languagesOptions, onNext, produceConsumeDataRef } = props;
     const [creationForm] = Form.useForm();
     const [isCopyToClipBoard, setCopyToClipBoard] = useState(screenEnum['DATA_SNIPPET']);
     const [languageOption, setLanguageOption] = useState();
+    const [getStartedState, getStartedDispatch] = useContext(GetStartedStoreContext);
 
     useEffect(() => {
         setLanguageOption(languagesOptions['Node.js']);
+        // produceConsumeDataRef.current = curr;
         // setCopyToClipBoard(screenEnum['DATA_SNIPPET']);
     }, []);
+
+    // const curr = () => {
+    //     setCopyToClipBoard(screenEnum['DATA_WAITING']);
+    // };
 
     const updateDisplayLanguage = (lang) => {
         setLanguageOption(languagesOptions[lang]);
@@ -84,6 +91,7 @@ const ProduceConsumeData = ({ headerImage, headerTitle, waitingImage, languagesO
                                 fontWeight="bold"
                                 onClick={() => {
                                     setCopyToClipBoard(screenEnum['DATA_RECIEVED']);
+                                    getStartedDispatch({ type: 'SET_NEXT_DISABLE', payload: false });
                                 }}
                             />
                         </div>
@@ -106,7 +114,10 @@ const ProduceConsumeData = ({ headerImage, headerTitle, waitingImage, languagesO
                     </div>
                 ) : (
                     <CodeSnippet
-                        onCopyToClipBoard={() => setCopyToClipBoard(screenEnum['DATA_WAITING'])}
+                        onCopyToClipBoard={() => {
+                            // setCopyToClipBoard(screenEnum['DATA_WAITING']);
+                            getStartedDispatch({ type: 'SET_NEXT_DISABLE', payload: false });
+                        }}
                         languageOption={languageOption}
                         codeSnippet={languageOption?.value}
                     />

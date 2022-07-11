@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Form } from 'antd';
 import Input from '../../../../components/Input';
 
@@ -6,17 +6,29 @@ import './style.scss';
 import { httpRequest } from '../../../../services/http';
 import { ApiEndpoints } from '../../../../const/apiEndpoints';
 import Button from '../../../../components/button';
-import pathDomains from '../../../../router';
-import { useHistory } from 'react-router-dom';
 import AppUserIcon from '../../../../assets/images/usersIconActive.svg';
 import CopyIcon from '../../../../assets/images/copy.svg';
 import Information from '../../../../assets/images/information.svg';
 import UserCheck from '../../../../assets/images/userCheck.svg';
+import CreatingTheUser from '../../../../assets/images/creatingTheUser.svg';
+import ClickableImage from '../../../../components/clickableImage';
+import { GetStartedStoreContext } from '..';
+import SelectedClipboard from '../../../../assets/images/selectedClipboard.svg';
 
-const CreateAppUser = (props) => {
-    const { createStationFormRef } = props;
+const screenEnum = {
+    CREATE_USER_PAGE: 0,
+    DATA_WAITING: 1,
+    DATA_RECIEVED: 2
+};
+
+const CreateAppUser = () => {
     const [appUser, setAppUser] = useState({});
     const [creationForm] = Form.useForm();
+    const [selectedClipboardUserName, setSelectedClipboardUserName] = useState(false);
+    const [selectedClipboardToken, setSelectedClipboardToken] = useState(false);
+    const [isCreatedUser, setCreatedUser] = useState(screenEnum['CREATE_USER_PAGE']);
+    const [getStartedState, getStartedDispatch] = useContext(GetStartedStoreContext);
+
     const [formFields, setFormFields] = useState({
         username: '',
         // password: '',
@@ -24,12 +36,25 @@ const CreateAppUser = (props) => {
     });
 
     useEffect(() => {
-        createStationFormRef.current = onFinish;
+        // createStationFormRef.current = onFinish;
+        // getStartedDispatch({ type: 'SET_USER_NAME', payload: localStorage.getItem(LOCAL_STORAGE_USER_NAME) });
+        getStartedDispatch({ type: 'SET_NEXT_DISABLE', payload: true });
+        getStartedDispatch({ type: 'SET_CREATE_APP_USER_DISABLE', payload: false });
+        if (getStartedState?.username) {
+            setFormFields({ ...formFields, username: getStartedState.username });
+        }
     }, []);
 
     useEffect(() => {
-        console.log(appUser);
-    }, [appUser]);
+        if (formFields?.username !== '' && formFields?.username !== ' ') {
+            getStartedDispatch({ type: 'SET_NEXT_DISABLE', payload: false });
+        }
+    }, [formFields.username]);
+
+    const onCopy = async (copyParam) => {
+        navigator.clipboard.writeText(copyParam);
+        // onCopyToClipBoard();
+    };
 
     const updateFormState = (field, value) => {
         console.log('field', field, 'value', value);
@@ -40,15 +65,19 @@ const CreateAppUser = (props) => {
 
     const createAppUser = async (bodyRequest) => {
         try {
-            console.log(bodyRequest);
             const data = await httpRequest('POST', ApiEndpoints.ADD_USER, bodyRequest);
-            console.log('data', typeof data);
+            setCreatedUser(screenEnum['DATA_WAITING']);
+
             if (data) {
+                getStartedDispatch({ type: 'SET_USER_NAME', payload: data?.username });
+                getStartedDispatch({ type: 'SET_CREATE_APP_USER_DISABLE', payload: true });
+                setTimeout(() => {
+                    setCreatedUser(screenEnum['DATA_RECIEVED']);
+                }, 1000);
                 setAppUser(data);
-                console.log(`${pathDomains.factoriesList}/${bodyRequest.factory_name}/${data.name}`);
-                // history.push(`${pathDomains.factoriesList}/${bodyRequest.factory_name}/${data.name}`);
             }
         } catch (error) {
+            setCreatedUser(screenEnum['CREATE_USER_PAGE']);
             console.log(error);
         }
     };
@@ -65,7 +94,9 @@ const CreateAppUser = (props) => {
                         user_type: 'application'
                     };
                     createAppUser(bodyRequest);
-                } catch (error) {}
+                } catch (error) {
+                    console.log('err create user', error);
+                }
             }
         } catch (error) {
             console.log(`validate error ${JSON.stringify(error)}`);
@@ -116,29 +147,62 @@ const CreateAppUser = (props) => {
                 fontWeight="bold"
                 marginBottom="15px"
                 marginTop="15px"
-                // disabled={backDisable}
+                disabled={getStartedState.createAppUserDisable}
                 onClick={onFinish}
             />
-            <div className="connection-details-container">
-                <div className="user-details-container">
-                    <img src={UserCheck} alt="usercheck" width="20px" height="20px" className="user-check"></img>
-                    <p className="user-connection-details">User connection details</p>
+            {isCreatedUser === screenEnum['DATA_WAITING'] ? (
+                <div>
+                    <img src={CreatingTheUser} alt="creating-the-user"></img>
+                    <p>We are creating the user</p>
                 </div>
-                <div className="container-username-token">
-                    <div className="username-container">
-                        <p className="username">Username: app</p>
-                        <img src={CopyIcon} alt="copyIcon" width="14.53px" height="14.5px" className="copy-icon" />
+            ) : isCreatedUser === screenEnum['DATA_RECIEVED'] ? (
+                <div className="connection-details-container">
+                    <div className="user-details-container">
+                        <img src={UserCheck} alt="usercheck" width="20px" height="20px" className="user-check"></img>
+                        <p className="user-connection-details">User connection details</p>
                     </div>
-                    <div className="token-container">
-                        <p className="token">Connection token: memphis</p>
-                        <img src={CopyIcon} alt="copyIcon" width="14.53px" height="14.5px" className="copy-icon" />
+                    <div className="container-username-token">
+                        <div className="username-container">
+                            <p className="username">Username: {getStartedState.username}</p>
+                            {selectedClipboardUserName ? (
+                                <ClickableImage image={SelectedClipboard}></ClickableImage>
+                            ) : (
+                                <ClickableImage
+                                    image={CopyIcon}
+                                    alt="copyIcon"
+                                    width="14.53px"
+                                    height="14.5px"
+                                    onClick={() => {
+                                        onCopy(getStartedState.username);
+                                        setSelectedClipboardUserName(true);
+                                    }}
+                                    className="copy-icon"
+                                />
+                            )}
+                        </div>
+                        <div className="token-container">
+                            <p className="token">Connection token: memphis</p>
+                            {selectedClipboardToken ? (
+                                <ClickableImage image={SelectedClipboard}></ClickableImage>
+                            ) : (
+                                <ClickableImage
+                                    image={CopyIcon}
+                                    alt="copyIcon"
+                                    className="copy-icon"
+                                    onClick={() => {
+                                        onCopy('memphis');
+                                        setSelectedClipboardToken(true);
+                                    }}
+                                />
+                            )}
+                        </div>
+                    </div>
+                    <div className="information-container">
+                        <img src={Information} alt="information" width="13.33px" height="13.33px" className="information-img" />
+                        <p className="information">Please note when you close this modal, you will not be able to restore your user details!!</p>
                     </div>
                 </div>
-            </div>
-            <div className="information-container">
-                <img src={Information} alt="information" width="13.33px" height="13.33px" className="information-img" />
-                <p className="information">Please note when you close this modal, you will not be able to restore your user details!!</p>
-            </div>
+            ) : null}
         </Form>
     );
 };

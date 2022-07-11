@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useReducer, useRef, useState } from 'react';
+import React, { createContext, useEffect, useReducer, useRef } from 'react';
 import Button from '../../../components/button';
 import CreateStationForm from './createStationForm';
 import SideStep from './sideStep';
@@ -86,7 +86,8 @@ const GetStarted = (props) => {
                         {getStartedState?.currentStep === 4 && <ConsumeData />}
                         {getStartedState?.currentStep === 5 && <Finsih />}
                         <div className="btnContainer">
-                            <Button
+                            {/* remark the logic for back button for this sprint */}
+                            {/* <Button
                                 width="129px"
                                 height="42px"
                                 placeholder="Back"
@@ -97,7 +98,7 @@ const GetStarted = (props) => {
                                 fontWeight="bold"
                                 disabled={getStartedState?.backDisable}
                                 onClick={onBack}
-                            />
+                            /> */}
                             <Button
                                 width="129px"
                                 height="42px"

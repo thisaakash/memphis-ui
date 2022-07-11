@@ -40,6 +40,11 @@ const Reducer = (getStartedState, action) => {
                 ...getStartedState,
                 formFieldsCreateStation: action.payload
             };
+        case 'SET_BROKER_CONNECTION_CREDS':
+            return {
+                ...getStartedState,
+                connectionCreds: action.payload
+            };
         default:
             return getStartedState;
     }

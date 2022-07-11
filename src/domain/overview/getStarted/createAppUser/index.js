@@ -22,7 +22,6 @@ const screenEnum = {
 };
 
 const CreateAppUser = () => {
-    const [appUser, setAppUser] = useState({});
     const [creationForm] = Form.useForm();
     const [selectedClipboardUserName, setSelectedClipboardUserName] = useState(false);
     const [selectedClipboardToken, setSelectedClipboardToken] = useState(false);
@@ -57,7 +56,6 @@ const CreateAppUser = () => {
     };
 
     const updateFormState = (field, value) => {
-        console.log('field', field, 'value', value);
         let updatedValue = { ...formFields };
         updatedValue[field] = value;
         setFormFields((formFields) => ({ ...formFields, ...updatedValue }));
@@ -70,11 +68,12 @@ const CreateAppUser = () => {
 
             if (data) {
                 getStartedDispatch({ type: 'SET_USER_NAME', payload: data?.username });
+                getStartedDispatch({ type: 'SET_BROKER_CONNECTION_CREDS', payload: data?.broker_connection_creds });
+
                 getStartedDispatch({ type: 'SET_CREATE_APP_USER_DISABLE', payload: true });
                 setTimeout(() => {
                     setCreatedUser(screenEnum['DATA_RECIEVED']);
                 }, 1000);
-                setAppUser(data);
             }
         } catch (error) {
             setCreatedUser(screenEnum['CREATE_USER_PAGE']);
@@ -181,7 +180,7 @@ const CreateAppUser = () => {
                             )}
                         </div>
                         <div className="token-container">
-                            <p className="token">Connection token: memphis</p>
+                            <p className="token">Connection token: {getStartedState?.connectionCreds}</p>
                             {selectedClipboardToken ? (
                                 <ClickableImage image={SelectedClipboard}></ClickableImage>
                             ) : (
@@ -190,7 +189,7 @@ const CreateAppUser = () => {
                                     alt="copyIcon"
                                     className="copy-icon"
                                     onClick={() => {
-                                        onCopy('memphis');
+                                        onCopy(getStartedState.connectionCreds);
                                         setSelectedClipboardToken(true);
                                     }}
                                 />

@@ -22,11 +22,13 @@
     border-radius: 8px;
 
     .btnContainer {
-        justify-content: space-between;
+        // remark space between style because the back button
+        // justify-content: space-between;
         display: flex;
         margin-top: 7px;
         margin-bottom: 30px;
         // margin-right: 10px;
+        justify-content: flex-end;
     }
 
     .getstarted-header {

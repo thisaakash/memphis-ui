@@ -23,8 +23,10 @@ const ConsumeData = () => {
             headerImage={ConsumeDataImg}
             headerTitle={'Consume data'}
             waitingImage={WaitingConsumeData}
+            waitingTitle={'Waiting to consume messages from the station'}
             languagesOptions={languagesOptions}
-            onNext={() => {}}
+            activeData={'active_consumers'}
+            dataName={'demo_consumer_name'}
         ></ProduceConsumeData>
     );
 };

@@ -13,7 +13,6 @@ const steps = [{ stepName: 'Create Station' }, { stepName: 'Create App user' }, 
 
 const GetStarted = (props) => {
     const createStationFormRef = useRef(null);
-    const produceFormRef = useRef(null);
     const [getStartedState, getStartedDispatch] = useReducer(Reducer);
 
     const SideStepList = () => {
@@ -60,6 +59,7 @@ const GetStarted = (props) => {
 
     useEffect(() => {
         getStartedDispatch({ type: 'SET_CURRENT_STEP', payload: 1 });
+        return;
     }, []);
 
     useEffect(() => {
@@ -82,7 +82,7 @@ const GetStarted = (props) => {
                     <div /*style={{ width: '70%' }}*/>
                         {getStartedState?.currentStep === 1 && <CreateStationForm createStationFormRef={createStationFormRef} />}
                         {getStartedState?.currentStep === 2 && <CreateAppUser />}
-                        {getStartedState?.currentStep === 3 && <ProduceData produceFormRef={produceFormRef} />}
+                        {getStartedState?.currentStep === 3 && <ProduceData />}
                         {getStartedState?.currentStep === 4 && <ConsumeData />}
                         {getStartedState?.currentStep === 5 && <Finsih />}
                         <div className="btnContainer">

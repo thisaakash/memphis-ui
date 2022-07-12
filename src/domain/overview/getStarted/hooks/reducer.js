@@ -45,6 +45,11 @@ const Reducer = (getStartedState, action) => {
                 ...getStartedState,
                 connectionCreds: action.payload
             };
+        case 'GET_STATION_DATA':
+            return {
+                ...getStartedState,
+                stationData: action.payload
+            };
         default:
             return getStartedState;
     }

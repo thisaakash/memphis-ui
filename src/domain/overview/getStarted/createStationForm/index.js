@@ -132,7 +132,6 @@ const CreateStationForm = (props) => {
     const onFinish = async () => {
         try {
             const values = await creationForm.validateFields();
-            console.log('values', values);
             if (values?.errorFields || values.name === undefined || values.factory_name === undefined) {
                 // getStartedDispatch({ type: 'SET_NEXT_DISABLE', payload: true });
                 return;

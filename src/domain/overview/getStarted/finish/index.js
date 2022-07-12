@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Form } from 'antd';
 import ReadyToroll from '../../../../assets/images/readyToRoll.svg';
 import Button from '../../../../components/button';
@@ -14,6 +14,10 @@ const Finsih = () => {
     const [creationForm] = Form.useForm();
     const history = useHistory();
     const [getStartedState, getStartedDispatch] = useContext(GetStartedStoreContext);
+
+    useEffect(() => {
+        getStartedDispatch({ type: 'SET_NEXT_DISABLE', payload: false });
+    }, []);
 
     const onFinish = (e) => {
         e.preventDefault();

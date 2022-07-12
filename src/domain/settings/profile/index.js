@@ -40,7 +40,7 @@ function Profile() {
 
     useEffect(() => {
         setUserName(localStorage.getItem(LOCAL_STORAGE_USER_NAME));
-        setAvatar(state?.userData?.avatar_id || Number(localStorage.getItem(LOCAL_STORAGE_AVATAR_ID)));
+        setAvatar(localStorage.getItem('profile_pic') || state?.userData?.avatar_id || Number(localStorage.getItem(LOCAL_STORAGE_AVATAR_ID))); // profile_pic is available only in sandbox env
         setAllowAnalytics(localStorage.getItem(LOCAL_STORAGE_ALLOW_ANALYTICS) === 'false' ? false : true);
     }, []);
 
@@ -103,13 +103,47 @@ function Profile() {
             <div className="profile-sections">
                 <p>Select your avatar</p>
                 <div className="avatar-section">
-                    <div className={avatar === 1 ? 'sub-icon-wrapper sub-icon-wrapper-border' : 'sub-icon-wrapper'} onClick={() => editAvatar(1)}>
-                        <img src={Bot1} width={25} height={25} alt="bot1"></img>
+                    <div
+                        className={
+                            process.env.REACT_APP_SANDBOX_ENV
+                                ? 'sub-icon-wrapper-sandbox'
+                                : avatar === 1
+                                ? 'sub-icon-wrapper sub-icon-wrapper-border'
+                                : 'sub-icon-wrapper'
+                        }
+                        onClick={process.env.REACT_APP_SANDBOX_ENV ? '' : () => editAvatar(1)}
+                    >
+                        <img
+                            className="sandboxUserImg"
+                            src={localStorage.getItem('profile_pic') || Bot1} // profile_pic is available only in sandbox env
+                            width={localStorage.getItem('profile_pic') ? 35 : 25}
+                            height={localStorage.getItem('profile_pic') ? 35 : 25}
+                            border-raduis={'50%'}
+                            alt="bot1"
+                        ></img>
                     </div>
-                    <div className={avatar === 2 ? 'sub-icon-wrapper sub-icon-wrapper-border' : 'sub-icon-wrapper'} onClick={() => editAvatar(2)}>
+                    <div
+                        className={
+                            process.env.REACT_APP_SANDBOX_ENV
+                                ? 'sub-icon-wrapper-sandbox'
+                                : avatar === 2
+                                ? 'sub-icon-wrapper sub-icon-wrapper-border'
+                                : 'sub-icon-wrapper'
+                        }
+                        onClick={process.env.REACT_APP_SANDBOX_ENV ? '' : () => editAvatar(2)}
+                    >
                         <img src={Bot2} width={25} height={25} alt="bot2"></img>
                     </div>
-                    <div className={avatar === 3 ? 'sub-icon-wrapper sub-icon-wrapper-border' : 'sub-icon-wrapper'} onClick={() => editAvatar(3)}>
+                    <div
+                        className={
+                            process.env.REACT_APP_SANDBOX_ENV
+                                ? 'sub-icon-wrapper-sandbox'
+                                : avatar === 3
+                                ? 'sub-icon-wrapper sub-icon-wrapper-border'
+                                : 'sub-icon-wrapper'
+                        }
+                        onClick={process.env.REACT_APP_SANDBOX_ENV ? '' : () => editAvatar(3)}
+                    >
                         <img src={Bot3} width={25} height={25} alt="bot3"></img>
                     </div>
                 </div>

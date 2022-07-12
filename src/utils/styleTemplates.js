@@ -59,7 +59,7 @@ export function getBackgroundColor(backgroundColor) {
         case 'white':
             return '#FFFFFF';
         case 'orange':
-            return '#fbbd71';
+            return '#FFC633';
         case 'red':
             return '#CD5C5C';
         case 'navy':

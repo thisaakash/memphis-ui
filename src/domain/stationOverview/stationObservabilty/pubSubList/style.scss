@@ -14,6 +14,7 @@
         border-bottom: 1px solid #e9e9e9;
         line-height: 35px;
         padding-left: 15px;
+        padding-bottom:5px;
         .title {
             font-weight: 600;
             font-size: 14px;
@@ -37,77 +38,99 @@
         span{
             font-weight: 400;
             font-size: 12px;
+            color: #979797;
         }
     }
     .rows-wrapper {
-        position: absolute;
+        position: relative;
         width: calc(100%);
-        height: calc(100% - 85px);
+        height: calc(100% - 70px);
         overflow: auto;
-        padding: 0px 15px 0px 20px;
-        .pubSub-row {
-            height: 35px;
-            display: flex;
-            color: #1d1d1d;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            font-weight: 400;
-            font-size: 12px;
-            padding-left: 5px;
-            .status-icon
-            {
-                position: relative;
+        padding-left: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        .list-container{
+            height: calc(100% - 55px);
+            overflow: auto;
+            .pubSub-row {
+                height: 35px;
                 display: flex;
-                justify-content:center;
-                .circle-status{
-                    border-radius: 32px;
-                    width: 18px;
-                    height: 18px;
+                color: #1d1d1d;
+                justify-content: space-between;
+                align-items: center;
+                cursor: pointer;
+                font-weight: 400;
+                font-size: 12px;
+                padding-left: 5px;
+                margin-right: 10px;
+                margin-top: 1%;
+                .status-icon
+                {
+                    position: relative;
                     display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    .dot{
-                        width: 6px;
-                        height: 6px;
-                        border-radius: 50px;
+                    justify-content:center;
+                    .circle-status{
+                        border-radius: 32px;
+                        width: 18px;
+                        height: 18px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        .dot{
+                            width: 6px;
+                            height: 6px;
+                            border-radius: 50px;
+                        }
+                        .disconnected-dot{
+                            background: #F7685B;
+                        }
+                        .active-dot {
+                            background: #2ED47A;
+                        }
+                        .proccesing{
+                            background: #2ED47A;
+                            animation: blinker 0.5s cubic-bezier(.5, 0, 1, 1) infinite alternate;  
+                        }
                     }
-                    .disconnected-dot{
-                        background: #F7685B;
+                    .disconnected{
+                        background: #FEE4E2;
                     }
-                    .active-dot {
-                        background: #2ED47A;
+                    .active{
+                        background: #DDF8E9;
                     }
-                    .proccesing{
-                        background: #2ED47A;
-                        animation: blinker 0.5s cubic-bezier(.5, 0, 1, 1) infinite alternate;  
+                    .deleted svg {
+                        width: 15px;
+                        color: #ADADAD;
                     }
+                    img{
+                        width: 12px;
+                        display: block;
+                        cursor: pointer; 
+                    }
+                } 
+                div{
+                    cursor: pointer !important; 
                 }
-                .disconnected{
-                    background: #FEE4E2;
-                }
-                .active{
-                    background: #DDF8E9;
-                }
-                .deleted svg {
-                    width: 13px;
-                    color: #F7685B;
-                }
-                img{
-                    width: 12px;
-                    display: block;
-                    cursor: pointer;
-                    
-                }
-            } 
-           
+               
+            }
+            .selected-deleted{
+                color: #ADADAD !important;
+                border: 1px solid #6557FF;
+                border-radius: 4px;
+            }
+            .selected{
+                background: #E3E0FF !important;
+                border: 1px solid #6557FF;
+                border-radius: 4px;
+            }
+            .pubSub-row:nth-child(even) {
+                background-color: #f8f8f8;
+                border-radius: 5px;
+            }
         }
-        .deleted{
-            color: #D8D8D8 !important
-        }
-        .pubSub-row:nth-child(even) {
-            background-color: #f8f8f8;
-            border-radius: 5px;
+        .collapse-wrapper{
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #FFFFFF 26.87%);
         }
         .empty-pub-sub{
             display: flex;
@@ -122,6 +145,9 @@
                 font-weight: 600;
                 font-size: 16px;
             }
+        }
+        .ant-space {
+            width: 100%;
         }
     }
 }

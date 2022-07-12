@@ -14,41 +14,176 @@
 import './style.scss';
 
 import React, { useContext, useState } from 'react';
-import { StationStoreContext } from '../..';
-import OverflowTip from '../../../../components/tooltip/overflowtip';
-import { convertBytes, parsingDate } from '../../../../services/valueConvertor';
-import { InfoOutlined } from '@material-ui/icons';
-import CustomTabs from '../../../../components/Tabs';
-import { Divider, Table } from 'antd';
-import Button from '../../../../components/button';
+import { Checkbox } from 'antd';
+import { Collapse, Space } from 'antd';
 
-const messagesColumns = [
+import { convertBytes, parsingDate } from '../../../../services/valueConvertor';
+import Journey from '../../../../assets/images/journey.svg';
+import OverflowTip from '../../../../components/tooltip/overflowtip';
+import CustomTabs from '../../../../components/Tabs';
+import Button from '../../../../components/button';
+import { InfoOutlined } from '@material-ui/icons';
+import { StationStoreContext } from '../..';
+import CustomCollapse from '../components/customCollapse';
+import MultiCollapse from '../components/multiCollapse';
+import { useHistory } from 'react-router-dom';
+
+const dataSource = [
     {
-        title: 'Message',
-        dataIndex: 'message'
+        id: '1',
+        name: 'Mike',
+        age: 32,
+        address: '10 Downing Street'
     },
     {
-        title: 'Details'
+        id: '2',
+        name: 'John',
+        age: 42,
+        address: '10 Downing Street'
+    },
+    {
+        id: '3',
+        name: 'Avi',
+        age: 42,
+        address: '10 Downing Street'
+    },
+    {
+        id: '4',
+        name: 'Idan',
+        age: 42,
+        address: '10 Downing Street'
+    }
+];
+
+const produceData = [
+    {
+        name: 'Name',
+        value: 'Logger'
+    },
+    {
+        name: 'User',
+        value: 'root'
+    },
+    {
+        name: 'IP',
+        value: '61.103.206.105'
+    }
+];
+const Details = [
+    {
+        name: 'Message size',
+        value: '10 Bytes'
+    },
+    {
+        name: 'Date Created',
+        value: 'July 7, 2022'
+    },
+    {
+        name: 'Time sent',
+        value: '1:48 PM'
+    }
+];
+
+const message = `{"web-app": {
+    "servlet": [   
+      {
+        "servlet-name": "cofaxCDS",
+        "servlet-class": "org.cofax.cds.CDSServlet",
+        "init-param": {
+          "configGlossary:installationAt": "Philadelphia, PA",
+          "configGlossary:adminEmail": "ksm@pobox.com",
+          "configGlossary:poweredBy": "Cofax",
+          "configGlossary:poweredByIcon": "/images/cofax.gif"}`;
+
+const CGData = [
+    {
+        name: 'CG_1',
+        status: 'active',
+        details: [
+            {
+                name: 'unprocessed messages',
+                value: '2'
+            },
+            {
+                name: 'In process Message',
+                value: '4'
+            },
+            {
+                name: 'poison messages',
+                value: '12'
+            },
+            {
+                name: 'max_ack_time',
+                value: '12sec'
+            },
+            {
+                name: 'max_message_deliveries',
+                value: '421'
+            }
+        ]
+    },
+    {
+        name: 'CG_2',
+        status: 'active',
+        details: [
+            {
+                name: 'unprocessed messages',
+                value: '2'
+            },
+            {
+                name: 'In process Message',
+                value: '4'
+            },
+            {
+                name: 'poison messages',
+                value: '12'
+            },
+            {
+                name: 'max_ack_time',
+                value: '12sec'
+            },
+            {
+                name: 'max_message_deliveries',
+                value: '142'
+            }
+        ]
     }
 ];
 
 const Messages = () => {
     const [stationState, stationDispatch] = useContext(StationStoreContext);
-    const [selectedRowIndex, setSelectedRowIndex] = useState([]);
-    const [tabValue, setTabValue] = useState(0);
+    const [selectedRowIndex, setSelectedRowIndex] = useState('1');
+    const [isCheck, setIsCheck] = useState([]);
+    const [isCheckAll, setIsCheckAll] = useState(false);
+    const [tabValue, setTabValue] = useState('0');
     const tabs = ['All', 'Poison'];
+    const history = useHistory();
 
     const onSelectedRow = (rowIndex) => {
         setSelectedRowIndex(rowIndex);
     };
 
-    const handleChangeMenuItem = (_, newValue) => {
-        setTabValue(newValue);
+    const onCheckedAll = (e) => {
+        setIsCheckAll(!isCheckAll);
+        setIsCheck(dataSource.map((li) => li.id));
+        if (isCheckAll) {
+            setIsCheck([]);
+        }
     };
 
-    const rowSelection = {
-        selectedRowIndex,
-        onChange: onSelectedRow
+    const handleCheckedClick = (e) => {
+        const { id, checked } = e.target;
+        setIsCheck([...isCheck, id]);
+        if (!checked) {
+            setIsCheck(isCheck.filter((item) => item !== id));
+        }
+        if (isCheck.length === 1 && !checked) {
+            setIsCheckAll(false);
+        }
+    };
+
+    const handleChangeMenuItem = (newValue) => {
+        setTabValue(newValue);
     };
 
     return (
@@ -63,78 +198,93 @@ const Messages = () => {
                         </div>
                     )}
                 </div>
-                <div className="right-side">
-                    <Button
-                        width="80px"
-                        height="32px"
-                        placeholder="Ack"
-                        colorType="white"
-                        radiusType="circle"
-                        backgroundColorType="purple"
-                        fontSize="12px"
-                        fontWeight="600"
-                        onClick={() => {}}
-                    />
-                    <Button
-                        width="100px"
-                        height="32px"
-                        placeholder="Resend"
-                        colorType="white"
-                        radiusType="circle"
-                        backgroundColorType="purple"
-                        fontSize="12px"
-                        fontWeight="600"
-                        onClick={() => {}}
-                    />
-                </div>
+                {tabValue === '1' && (
+                    <div className="right-side">
+                        <Button
+                            width="80px"
+                            height="32px"
+                            placeholder="Ack"
+                            colorType="white"
+                            radiusType="circle"
+                            backgroundColorType="purple"
+                            fontSize="12px"
+                            fontWeight="600"
+                            onClick={() => {}}
+                        />
+                        <Button
+                            width="100px"
+                            height="32px"
+                            placeholder="Resend"
+                            colorType="white"
+                            radiusType="circle"
+                            backgroundColorType="purple"
+                            fontSize="12px"
+                            fontWeight="600"
+                            onClick={() => {}}
+                        />
+                    </div>
+                )}
             </div>
-            <CustomTabs value={tabValue} onChange={handleChangeMenuItem} tabs={tabs}></CustomTabs>
+            <div className="tabs">
+                <CustomTabs value={tabValue} onChange={handleChangeMenuItem} tabs={tabs}></CustomTabs>
+            </div>
             {stationState?.stationSocketData?.messages?.length > 0 ? (
-                // <div className="list-wrapper">
-                //     <div className="list">
-                //         <div className="coulmns-table">
-                //             {messagesColumns?.map((column, index) => {
-                //                 return (
-                //                     <span key={index} style={{ width: column.width }}>
-                //                         {column.title}
-                //                     </span>
-                //                 );
-                //             })}
-                //         </div>
-                //         <div className="rows-wrapper">
-                //             {stationState?.stationSocketData?.messages?.map((row, index) => {
-                //                 return (
-                //                     <div className={selectedRowIndex === index ? 'pubSub-row selected' : 'pubSub-row'} key={index} onClick={() => onSelectedRow(index)}>
-                //                         <OverflowTip text={row?.produced_by} width={'100px'}>
-                //                             {row?.produced_by}
-                //                         </OverflowTip>
-                //                         <OverflowTip text={parsingDate(row?.creation_date)} width={'150px'}>
-                //                             {parsingDate(row?.creation_date)}
-                //                         </OverflowTip>
-                //                     </div>
-                //                 );
-                //             })}
-                //             {!stationState?.stationSocketData?.messages && (
-                //                 <div className="empty-messages">
-                //                     <p>Waiting for messages</p>
-                //                 </div>
-                //             )}
-                //         </div>
-                //     </div>
-                //     <div className="row-data">
-                //         { && <p>{stationState?.stationSocketData.messages[selectedRowIndex]?.message}</p>}
-                //     </div>
-                // </div>stationState?.stationSocketData.messages
-                <div>
-                    <Table
-                        rowSelection={rowSelection}
-                        columns={messagesColumns}
-                        dataSource={stationState?.stationSocketData.messages}
-                        pagination={false}
-                        scroll={{
-                            y: 500
-                        }}
-                    />
+                <div className="list-wrapper">
+                    <div className="coulmns-table">
+                        <div className={tabValue === '0' ? 'left-coulmn all' : 'left-coulmn'}>
+                            {tabValue === '1' && <Checkbox checked={isCheckAll} id="selectAll" onChange={onCheckedAll} name="selectAll" />}
+                            <p>Message</p>
+                        </div>
+                        <p className="right-coulmn">Details</p>
+                    </div>
+                    <div className="list">
+                        <div className={tabValue === '0' ? 'rows-wrapper all' : 'rows-wrapper'}>
+                            {dataSource?.map(({ id, name }) => {
+                                return (
+                                    <div className={selectedRowIndex === id ? 'message-row selected' : 'message-row'} key={id} onClick={() => onSelectedRow(id)}>
+                                        {tabValue === '1' && <Checkbox key={id} checked={isCheck.includes(id)} id={id} onChange={handleCheckedClick} name={name} />}
+                                        <OverflowTip text={name} width={'100px'}>
+                                            {name}
+                                        </OverflowTip>
+                                    </div>
+                                );
+                            })}
+
+                            {!stationState?.stationSocketData?.messages && (
+                                <div className="empty-messages">
+                                    <p>Waiting for messages</p>
+                                </div>
+                            )}
+                        </div>
+                        <div className="message-wrapper">
+                            <div className="row-data">
+                                <Space direction="vertical">
+                                    <CustomCollapse header="Producer" status={true} defaultOpen={true} data={produceData} />
+                                    <MultiCollapse header="Failed CGs" data={CGData} />
+                                    <CustomCollapse header="Details" data={Details} />
+                                    <CustomCollapse header="message" defaultOpen={true} data={message} message={true} />
+                                </Space>
+                            </div>
+                            {tabValue === '1' && (
+                                <Button
+                                    width="96%"
+                                    height="35px"
+                                    placeholder={
+                                        <div className="botton-title">
+                                            <img src={Journey} alt="Journey" />
+                                            <p>Message Journey</p>
+                                        </div>
+                                    }
+                                    colorType="black"
+                                    radiusType="semi-round"
+                                    backgroundColorType="orange"
+                                    fontSize="12px"
+                                    fontWeight="600"
+                                    onClick={() => history.push(`${window.location.pathname}/${'tetetet'}`)}
+                                />
+                            )}
+                        </div>
+                    </div>
                 </div>
             ) : (
                 <div className="empty-messages">

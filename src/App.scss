@@ -61,13 +61,6 @@
     line-height: 30px;
 }
 
-// .containers{
-//   position: absolute;
-//   width: 90%;
-//   height: 90%;
-//   top: 70px;
-// }
-
 ::-webkit-scrollbar {
     width: 3px;
     height: 4px;
@@ -135,4 +128,12 @@
 }
 .required-field-mark{
     color: var(--red);
+}
+
+.ant-checkbox-checked .ant-checkbox-inner {
+    background-color: var(--purple);
+    border-color: var(--purple);
+  }
+  .ant-checkbox-checked .ant-checkbox-inner::after {
+    background-color: var(--purple);
 }

@@ -51,28 +51,30 @@ const PoisionMessage = ({ stationName, messageId }) => {
                 <p>
                     {stationName} / {messageId}
                 </p>
-                <Button
-                    width="65px"
-                    height="25px"
-                    placeholder="Ack"
-                    colorType="white"
-                    radiusType="circle"
-                    backgroundColorType="purple"
-                    fontSize="12px"
-                    fontWeight="600"
-                    onClick={() => {}}
-                />
-                <Button
-                    width="65px"
-                    height="24px"
-                    placeholder="Resend"
-                    colorType="white"
-                    radiusType="circle"
-                    backgroundColorType="purple"
-                    fontSize="12px"
-                    fontWeight="600"
-                    onClick={() => {}}
-                />
+                <div className="btn-row">
+                    <Button
+                        width="65px"
+                        height="25px"
+                        placeholder="Ack"
+                        colorType="white"
+                        radiusType="circle"
+                        backgroundColorType="purple"
+                        fontSize="12px"
+                        fontWeight="600"
+                        onClick={() => {}}
+                    />
+                    <Button
+                        width="65px"
+                        height="24px"
+                        placeholder="Resend"
+                        colorType="white"
+                        radiusType="circle"
+                        backgroundColorType="purple"
+                        fontSize="12px"
+                        fontWeight="600"
+                        onClick={() => {}}
+                    />
+                </div>
             </header>
             <div className="content-wrapper">
                 <Space direction="vertical">

@@ -16,36 +16,78 @@ import './style.scss';
 import React from 'react';
 import StatusIndication from '../../../../components/indication';
 
-const produceData = [
+const consumeData = [
     {
-        name: 'Name',
-        value: 'Logger'
+        name: 'unprocessed messages',
+        value: '2'
     },
     {
-        name: 'User',
-        value: 'root'
+        name: 'In process Message',
+        value: '4'
     },
     {
-        name: 'IP',
-        value: '61.103.206.105'
+        name: 'poison messages',
+        value: '12'
+    },
+    {
+        name: 'max_ack_time',
+        value: '12sec'
+    },
+    {
+        name: 'max_message_deliveries',
+        value: '421'
+    }
+];
+
+const CGData = [
+    {
+        name: 'consumer_1',
+        status: 'active',
+        details: [
+            {
+                name: 'user',
+                value: 'root'
+            },
+            {
+                name: 'IP',
+                value: '130.69.203.16'
+            }
+        ]
+    },
+    {
+        name: 'CG_2',
+        status: 'active',
+        details: [
+            {
+                name: 'user',
+                value: 'root'
+            },
+            {
+                name: 'IP',
+                value: '130.69.203.16'
+            }
+        ]
     }
 ];
 const ConsumerGroup = () => {
     return (
         <div className="consumer-group">
             <header is="x3d">
-                <p>Producer</p>
+                <p>CG 1</p>
                 <StatusIndication is_active={true} is_deleted={false} />
             </header>
             <div className="content-wrapper">
-                {produceData?.map((row, index) => {
-                    return (
-                        <content is="x3d" key={index}>
-                            <p>{row.name}</p>
-                            <span>{row.value}</span>
-                        </content>
-                    );
-                })}
+                <div className="details">
+                    {consumeData?.map((row, index) => {
+                        return (
+                            <content is="x3d" key={index}>
+                                <p>{row.name}</p>
+                                <span>{row.value}</span>
+                            </content>
+                        );
+                    })}
+                </div>
+                <div className="consumers"></div>
             </div>
         </div>
     );

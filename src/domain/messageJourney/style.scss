@@ -23,6 +23,27 @@
     //     width: 100% !important;
     //     height: 095% !important;
     // }
+    .ant-collapse-item.ant-collapse-no-arrow {
+        background: #FFFFFF;
+        border: 1px solid #EFEFEF;
+        box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.06);
+        border-radius: 8px;
+    }
+    .collapse-header{
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        p{
+            margin: 0;
+            font-family: 'InterSemiBold';
+            font-size: 14px;
+        }
+        img{
+            width: 12px;
+            margin-left: 10px;
+        }
+        
+    }
 }
     
     .node-wrapper{
@@ -36,3 +57,5 @@
     .Canvas-module_container__22cN4.Canvas-module_pannable__1d7xd{
         overflow: overlay !important;
     }
+
+    

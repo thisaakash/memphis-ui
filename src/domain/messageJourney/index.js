@@ -26,6 +26,7 @@ import { Canvas, Node, Edge, Port, MarkerArrow, Label } from 'reaflow';
 import CustomCollapse from '../stationOverview/stationObservabilty/components/customCollapse';
 import Producer from './components/producer';
 import PoisionMessage from './components/poisionMessage';
+import ConsumerGroup from './components/consumerGroup';
 
 const nodes = [
     {
@@ -57,6 +58,59 @@ const produceData = [
     {
         name: 'IP',
         value: '61.103.206.105'
+    }
+];
+const consumeData = [
+    {
+        name: 'unprocessed messages',
+        value: '2'
+    },
+    {
+        name: 'In process Message',
+        value: '4'
+    },
+    {
+        name: 'poison messages',
+        value: '12'
+    },
+    {
+        name: 'max_ack_time',
+        value: '12sec'
+    },
+    {
+        name: 'max_message_deliveries',
+        value: '421'
+    }
+];
+
+const CGData = [
+    {
+        name: 'consumer_1',
+        status: 'active',
+        details: [
+            {
+                name: 'user',
+                value: 'root'
+            },
+            {
+                name: 'IP',
+                value: '130.69.203.16'
+            }
+        ]
+    },
+    {
+        name: 'CG_2',
+        status: 'active',
+        details: [
+            {
+                name: 'user',
+                value: 'root'
+            },
+            {
+                name: 'IP',
+                value: '130.69.203.16'
+            }
+        ]
     }
 ];
 const MessageJourney = () => {
@@ -265,12 +319,12 @@ const MessageJourney = () => {
                                 }
                             ]}
                             node={
-                                <Node style={{ stroke: 'white', fill: 'white', strokeWidth: 1 }} label={<Label style={{ display: 'none' }} />}>
+                                <Node style={{ stroke: 'transparent', fill: 'transparent', strokeWidth: 1 }} label={<Label style={{ display: 'none' }} />}>
                                     {(event) => (
                                         <foreignObject height={event.height} width={event.width} x={0} y={0} className="node-wrapper">
                                             {event.node.data.value === 'producer' && <Producer />}
                                             {event.node.data.value === 'station' && <PoisionMessage stationName={stationName} messageId={messageId} />}
-                                            {event.node.data.value === 'consumer' && <Producer />}
+                                            {event.node.data.value === 'consumer' && <ConsumerGroup />}
                                         </foreignObject>
                                     )}
                                 </Node>

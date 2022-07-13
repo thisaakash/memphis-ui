@@ -81,7 +81,7 @@ const MultiCollapse = ({ status, data, maxWidth, header, defaultOpen, message })
                                     {row.details?.length > 0 &&
                                         row.details?.map((row, index) => {
                                             return (
-                                                <div className="panel-child">
+                                                <div className="panel-child" key={index}>
                                                     <content is="x3d" key={index}>
                                                         <p>{row.name}</p>
                                                         <span>{row.value}</span>

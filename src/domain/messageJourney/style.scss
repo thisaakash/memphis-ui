@@ -1,7 +1,22 @@
-.logs-container {
+.message-journey-container {
     width: calc(100% - 70px);
     position: absolute;
     padding: 1vw;
     min-width: 700px;
     height: 100%;
+    .bread-crumbs{
+        display: flex;
+        height: 30px;
+        align-items: center;
+        img{
+            margin-right: 10px;
+        }
+        p{
+            margin: 0;
+            font-weight: 600;
+            font-size: 24px;
+            line-height: 29px;
+            color: #1D1D1D; 
+        }
+    }
 }

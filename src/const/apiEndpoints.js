@@ -37,6 +37,7 @@ export const ApiEndpoints = {
     CREATE_STATION: '/stations/createStation',
     REMOVE_STATION: '/stations/removeStation',
     GET_STATION: '/stations/getStation',
+    GET_POISION_MESSAGE_JOURNEY: '/stations/getPoisonMessageJourney',
 
     //Producers
     GET_ALL_PRODUCERS_BY_STATION: '/producers/getAllProducersByStation',

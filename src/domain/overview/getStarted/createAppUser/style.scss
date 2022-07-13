@@ -1,14 +1,15 @@
 .create-station-form-create-app-user {
-    height: 83.2%;
-    position: relative;
+    width: 100%;
+    height: 80%;
     padding: 30px;
     border: 1px solid #f2f2f2;
     border-radius: 8px;
     margin-left: 23px;
+    min-height: 53vh;
+    min-width: 38vw;
 
     .app-user-icon {
-        // margin-top: 33px;
-        // margin-left: 47px;
+        margin-bottom: 13px;
     }
 
     .header-create-app-user {
@@ -18,6 +19,7 @@
         font-size: 24px;
         line-height: 29px;
         color: #1d1d1d;
+        margin-bottom: 20px;
     }
     .header-enter-user-name {
         width: 129px;
@@ -28,6 +30,7 @@
         font-size: 16px;
         line-height: 20px;
         color: #2e2c34;
+        margin-bottom: 20px;
     }
     .create-app-user {
         font-family: 'Inter';
@@ -35,6 +38,14 @@
         font-weight: 600;
         font-size: 12px;
         line-height: 16px;
+    }
+
+    .creating-the-user-container {
+        text-align: center;
+        justify-content: center;
+        .create-the-user-header {
+            margin-top: 19px;
+        }
     }
 
     .connection-details-container {
@@ -86,11 +97,14 @@
                 .username,
                 .token {
                     margin-right: 10px;
+                    font-size: 14px;
+                    font-family: 'Inter';
+                    font-style: italic;
                 }
 
                 .copy-icon {
                     align-items: center;
-                    margin-bottom: 12px;
+                    margin-bottom: 16px;
                 }
             }
         }
@@ -98,11 +112,11 @@
 
     .information-container {
         display: flex;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: center;
 
         .information-img {
-            margin-bottom: 30px;
+            margin-bottom: 10px;
             margin-right: 5px;
         }
         .information {

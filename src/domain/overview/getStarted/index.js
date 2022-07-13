@@ -4,10 +4,10 @@ import CreateStationForm from './createStationForm';
 import SideStep from './sideStep';
 import './style.scss';
 import CreateAppUser from './createAppUser';
-import ProduceData from './produceData';
 import ConsumeData from './consumeData';
 import Finsih from './finish';
 import Reducer from './hooks/reducer';
+import ProduceData from './produceData';
 
 const steps = [{ stepName: 'Create Station' }, { stepName: 'Create App user' }, { stepName: 'Produce data' }, { stepName: 'Consume data' }, { stepName: 'Finish' }];
 
@@ -79,7 +79,7 @@ const GetStarted = (props) => {
                     <div>
                         <SideStepList />
                     </div>
-                    <div /*style={{ width: '70%' }}*/>
+                    <div>
                         {getStartedState?.currentStep === 1 && <CreateStationForm createStationFormRef={createStationFormRef} />}
                         {getStartedState?.currentStep === 2 && <CreateAppUser />}
                         {getStartedState?.currentStep === 3 && <ProduceData />}
@@ -100,17 +100,18 @@ const GetStarted = (props) => {
                                 onClick={onBack}
                             /> */}
                             <Button
-                                width="129px"
+                                width={getStartedState?.currentStep === 5 ? '150px' : '129px'}
                                 height="42px"
-                                placeholder={getStartedState?.currentStep === 5 ? 'Lauch Dashboard' : 'Next'}
+                                placeholder={getStartedState?.currentStep === 5 ? 'Lanuch Dashboard' : 'Next'}
                                 colorType="white"
                                 radiusType="circle"
                                 backgroundColorType={getStartedState?.nextDisable ? '#D8D8D8' : 'purple'}
                                 fontSize="16px"
                                 fontWeight="bold"
                                 htmlType="submit"
+                                marginTop="30px"
+                                marginRight="30px"
                                 disabled={getStartedState?.nextDisable}
-                                // onClick={() => createStationFormRef.current()}
                                 onClick={onNext}
                                 // isLoading={true}
                             />

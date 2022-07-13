@@ -23,7 +23,7 @@ const retanionOptions = [
     {
         id: 3,
         value: 'messages',
-        label: 'Messages'
+        label: 'Queue'
     }
 ];
 
@@ -202,7 +202,7 @@ const CreateStationForm = (props) => {
                         A factory presents the application/use case that the user requires to build, and, within it, all the stations (queues) that establish the use case
                     </p>
                     <Input
-                        placeholder="Type Factory name"
+                        placeholder="Type factory name"
                         type="text"
                         radiusType="semi-round"
                         colorType="black"
@@ -232,7 +232,7 @@ const CreateStationForm = (props) => {
                     <h4 className="field-title">Enter station name</h4>
                     <p className="field-description">RabbitMQ has queues, Kafka has topics, and Memphis has stations.</p>
                     <Input
-                        placeholder="Type Station name"
+                        placeholder="Type station name"
                         type="text"
                         radiusType="semi-round"
                         colorType="black"
@@ -256,6 +256,7 @@ const CreateStationForm = (props) => {
                         options={retanionOptions}
                         radioValue={formFields.retention_type}
                         optionType="button"
+                        style={{ marginRight: '20px', content: '' }}
                         onChange={(e) => updateFormState('retention_type', e.target.value)}
                     />
                 </Form.Item>
@@ -334,7 +335,7 @@ const CreateStationForm = (props) => {
             </div>
             <div className="storage-replicas-container">
                 <div className="storage">
-                    <h4 className="field-title">Storage Type</h4>
+                    <h4 className="field-title">Storage type</h4>
                     <p className="field-description">Type of message persistence</p>
                     <Form.Item name="storage_type" initialValue={formFields.storage_type}>
                         <RadioButton

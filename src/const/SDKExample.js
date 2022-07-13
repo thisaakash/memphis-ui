@@ -105,18 +105,18 @@ export const DOCKER_CODE_EXAMPLE = `const memphis = require("memphis-dev");
     }
 })();`;
 
-export const CODE_CONSUME = `const memphis = require("memphis-dev");
+export const CODE_CONSUME_JAVASCRIPT = `const memphis = require("memphis-dev");
 
 (async function () {
     try {
         await memphis.connect({
-            host: "<memphis-cluster>",
-            username: "<user of type application>",
-            connectionToken: "<connectio_token>"
+            host: "<memphis_host>",
+            username: "<username>",
+            connectionToken: "<connection_token>"
         });
 
 const consumer = await memphis.consumer({
-    stationName: "test",
+    stationName: "<station_name>",
     consumerName: "consumer_app",
     consumerGroup: ""
 });
@@ -128,21 +128,87 @@ consumer.on("error", error => {
     console.log(error);
 });`;
 
-export const CODE_PRODUCE = `const memphis = require("memphis-dev");
+export const CODE_PRODUCE_JAVASCRIPT = `const memphis = require("memphis-dev");
 
 (async function () {
     try {
         await memphis.connect({
-            host: "<memphis-cluster>",
-            username: "<user of type application>",
-            connectionToken: "<connectio_token>"
+            host: "<memphis_host>",
+            username: "<username>",
+            connectionToken: "<connection_token>"
         });
 
 const producer = await memphis.producer({
-    stationName: "test",
+    stationName: "<station_name>",
     producerName: "producer_app"
 });
 await producer.produce({
     message: Buffer.from('Hello world')
 });
 console.log("Message sent");`;
+
+export const CODE_CONSUME_GO = `package main
+
+import (
+	"fmt"
+	"os"
+	"time"
+
+	"github.com/memphisdev/memphis.go"
+)
+
+func main() {
+	conn, err := memphis.Connect("<memphis_host>", "<username>", "<connection_token>")
+	if err != nil {
+		os.Exit(1)
+	}
+	defer conn.Close()
+
+	consumer, err := conn.CreateConsumer("<station_name>", "consumer_app", memphis.PullInterval(15*time.Second))
+
+	if err != nil {
+		fmt.Printf("Consumer creation failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	handler := func(msgs []*memphis.Msg, err error) {
+		if err != nil {
+			fmt.Printf("Fetch failed: %v\n", err)
+			return
+		}
+
+		for _, msg := range msgs {
+			fmt.Println(string(msg.Data()))
+			msg.Ack()
+		}
+	}
+
+	consumer.Consume(handler)
+
+	time.Sleep(30 * time.Second)
+}`;
+
+export const CODE_PRODUCE_GO = `package main
+
+import (
+	"fmt"
+	"os"
+
+	"github.com/memphisdev/memphis.go"
+)
+
+func main() {
+	c, err := memphis.Connect("<memphis_host>", "<username>", "<connection_token>")
+	if err != nil {
+		os.Exit(1)
+	}
+	defer c.Close()
+
+	p, err := c.CreateProducer("<station_name>", "producer_app")
+	err = p.Produce([]byte("You have a message!"))
+
+	if err != nil {
+		fmt.Errorf("Produce failed: %v", err)
+		os.Exit(1)
+	}
+}`;

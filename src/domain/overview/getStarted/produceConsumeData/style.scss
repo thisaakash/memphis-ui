@@ -1,0 +1,63 @@
+.create-produce-data {
+    padding: 25px;
+    border: 1px solid #f2f2f2;
+    border-radius: 8px;
+    margin-left: 13px;
+    min-height: 53vh;
+    min-width: 40vw;
+
+    .produce-data-icon {
+        margin-top: 34px;
+        margin-bottom: 18px;
+    }
+    .header-create-produce-data {
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 24px;
+        line-height: 29px;
+        color: #1d1d1d;
+        margin-bottom: 55px;
+    }
+
+    .header-language {
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 20px;
+        color: #2e2c34;
+        margin-bottom: 16px;
+    }
+
+    .data-waiting-container {
+        margin-top: 15px;
+        padding: 10px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        border: 1px solid #d8d8d8;
+        border-radius: 4px;
+    }
+
+    .successfully-container {
+        margin-top: 15px;
+        padding: 10px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        border: 1px solid #d8d8d8;
+        border-radius: 4px;
+
+        .successfully-consume-produce {
+            font-family: 'Inter';
+            font-style: normal;
+            font-weight: 600;
+            font-size: 18px;
+            color: #1d1d1d;
+            margin-top: 15px;
+        }
+    }
+}

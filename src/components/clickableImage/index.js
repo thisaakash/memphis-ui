@@ -5,7 +5,7 @@ const ClickableImage = (props) => {
     const { image, style, onClick } = props;
 
     return (
-        <Button type="link" style={style ? style : null} onClick={onClick}>
+        <Button type="link" style={style ? style : null} onClick={onClick} {...props}>
             <img src={image} alt={image}></img>
         </Button>
     );

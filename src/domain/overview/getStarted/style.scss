@@ -1,20 +1,8 @@
 .getstarted-container {
     box-sizing: border-box;
-    // max-height: calc(100% - 250px);
-    height: 100%;
-    // max-height: 90%;
-    // flex-basis: 100%;
-    //
-    // min-width: 30%;
-    // max-height: 850px;
-    // min-height: 20%;
-    max-height: 100%;
-    // min-height: 30%;
-    overflow-y: hidden;
-    overflow-x: auto;
-    // overflow: scroll;
-    // overflow: auto;
-    // overflow: hidden;
+    max-height: 100vh;
+    max-width: 60vw;
+    overflow: auto;
     padding: 45px;
     background: #ffffff;
     border: 1px solid #e9e9e9;
@@ -27,7 +15,6 @@
         display: flex;
         margin-top: 7px;
         margin-bottom: 30px;
-        // margin-right: 10px;
         justify-content: flex-end;
     }
 

@@ -25,38 +25,36 @@ const Finsih = () => {
     };
 
     return (
-        <Form name="form" form={creationForm} autoComplete="off">
-            <div className="finish-container">
-                <img className="image-finish" src={ReadyToroll} height="150px" width="150px" alt="ready-to-roll"></img>
-                <p className="p-finish">You are ready to roll</p>
-                <Button
-                    className="go-to-station"
-                    width="138px"
-                    height="36px"
-                    placeholder="Go to station"
-                    colorType="purple"
-                    radiusType="circle"
-                    backgroundColorType="white"
-                    fontSize="12px"
-                    fontWeight="bold"
-                    border="1px solid #EEEEEE"
-                    borderRadius="31px"
-                    onClick={(e) => {
-                        onFinish(e);
-                    }}
-                />
-                <p className="p-finish">Link to our channels</p>
-                <div className="container-icons-finish">
-                    <Link to={{ pathname: 'https://memphiscommunity.slack.com/archives/C03KRNC6R3Q' }} target="_blank">
-                        <img src={SlackIcon} alt="slack-icon"></img>
-                    </Link>
-                    <Link to={{ pathname: 'https://github.com/memphisdev/memphis-broker' }} target="_blank">
-                        <img src={GithubIcon} alt="github-icon"></img>
-                    </Link>
-                    <Link to={{ pathname: 'https://discord.com/invite/WZpysvAeTf' }} target="_blank">
-                        <img src={DiscordIcon} alt="discord_icon"></img>
-                    </Link>
-                </div>
+        <Form name="form" form={creationForm} autoComplete="off" className="finish-container">
+            <img className="image-finish" src={ReadyToroll} height="150px" width="150px" alt="ready-to-roll"></img>
+            <p className="header-finish">You are ready to roll</p>
+            <p className="sub-header-finish">Congratulations - You’ve created your first broker app. </p>
+            <Button
+                width="192px"
+                height="42px"
+                placeholder="Go to station"
+                radiusType="circle"
+                backgroundColorType="white"
+                fontSize="16px"
+                fontWeight="bold"
+                border="1px solid #EEEEEE"
+                borderRadius="31px"
+                boxShadowStyle="none"
+                onClick={(e) => {
+                    onFinish(e);
+                }}
+            />
+            <div className="container-icons-finish">
+                <p className="link-finish-header">Link to our channels</p>
+                <Link className="icon-image" to={{ pathname: 'https://memphiscommunity.slack.com/archives/C03KRNC6R3Q' }} target="_blank">
+                    <img src={SlackIcon} width="25px" height="25px" alt="slack-icon"></img>
+                </Link>
+                <Link className="icon-image" to={{ pathname: 'https://github.com/memphisdev' }} target="_blank">
+                    <img src={GithubIcon} width="25px" height="25px" alt="github-icon"></img>
+                </Link>
+                <Link className="icon-image" to={{ pathname: 'https://discord.com/invite/WZpysvAeTf' }} target="_blank">
+                    <img src={DiscordIcon} width="25px" height="25px" alt="discord_icon"></img>
+                </Link>
             </div>
         </Form>
     );

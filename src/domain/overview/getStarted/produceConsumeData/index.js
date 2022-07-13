@@ -7,6 +7,7 @@ import SuccessfullyReceivedProduce from '../../../../assets/images/successfullyR
 import { GetStartedStoreContext } from '..';
 import { httpRequest } from '../../../../services/http';
 import { ApiEndpoints } from '../../../../const/apiEndpoints';
+import './style.scss';
 
 const screenEnum = {
     DATA_SNIPPET: 0,
@@ -20,7 +21,7 @@ const ProduceConsumeData = (props) => {
     const [isCopyToClipBoard, setCopyToClipBoard] = useState(screenEnum['DATA_SNIPPET']);
     const [languageOption, setLanguageOption] = useState();
     const [getStartedState, getStartedDispatch] = useContext(GetStartedStoreContext);
-    const [intervalStationDetails, setIntervalStationDetails] = useState();
+    let intervalStationDetails = null;
 
     const getStationDetails = async () => {
         try {
@@ -28,7 +29,19 @@ const ProduceConsumeData = (props) => {
             if (data) {
                 getStartedDispatch({ type: 'GET_STATION_DATA', payload: data });
             }
-        } catch (error) {}
+        } catch (error) {
+            if (error?.status === 666) {
+                clearInterval(intervalStationDetails);
+            }
+        }
+    };
+
+    const onCopyToClipBoard = () => {
+        setCopyToClipBoard(screenEnum['DATA_WAITING']);
+
+        intervalStationDetails = window.setInterval(() => {
+            getStationDetails();
+        }, 3000);
     };
 
     useEffect(() => {
@@ -63,9 +76,9 @@ const ProduceConsumeData = (props) => {
     };
 
     return (
-        <Form name="form" form={creationForm} autoComplete="off" className="create-station-form-create-app-user">
+        <Form name="form" form={creationForm} autoComplete="off" className="create-produce-data">
             <img src={headerImage} alt={headerImage} width="40px" height="40px" className="produce-data-icon"></img>
-            <h1 className="header-create-app-user">{headerTitle}</h1>
+            <h1 className="header-create-produce-data">{headerTitle}</h1>
             <Form.Item
                 name="languages"
                 rules={[
@@ -77,7 +90,7 @@ const ProduceConsumeData = (props) => {
                 style={{ marginBottom: '0' }}
             >
                 <div>
-                    <h4 className="header-enter-user-name">Language</h4>
+                    <h4 className="header-language">Language</h4>
                     <SelectComponent
                         initialValue={languageOption?.name}
                         value={languageOption?.name}
@@ -93,21 +106,10 @@ const ProduceConsumeData = (props) => {
                     />
                 </div>
                 {isCopyToClipBoard === screenEnum['DATA_WAITING'] ? (
-                    <div
-                        style={{
-                            marginTop: '15px',
-                            padding: '10px',
-                            textAlign: 'center',
-                            display: 'flex',
-                            alignItems: 'center',
-                            flexDirection: 'column',
-                            border: '1px solid #D8D8D8',
-                            borderRadius: '4px'
-                        }}
-                    >
+                    <div className="data-waiting-container">
                         <img height="75px" width="100px" src={waitingImage} alt="waiting-data"></img>
                         <p>{waitingTitle}</p>
-                        <div style={{ alignSelf: 'center' }}>
+                        <div>
                             <Button
                                 width="129px"
                                 height="40px"
@@ -125,30 +127,14 @@ const ProduceConsumeData = (props) => {
                         </div>
                     </div>
                 ) : isCopyToClipBoard === screenEnum['DATA_RECIEVED'] ? (
-                    <div
-                        style={{
-                            marginTop: '15px',
-                            padding: '10px',
-                            textAlign: 'center',
-                            display: 'flex',
-                            alignItems: 'center',
-                            flexDirection: 'column',
-                            border: '1px solid #D8D8D8',
-                            borderRadius: '4px'
-                        }}
-                    >
-                        <img src={SuccessfullyReceivedProduce} alt="successfully-received-produce" width="70px" height="70px"></img>
-                        <p>Successfully Received</p>
+                    <div className="successfully-container">
+                        <img src={SuccessfullyReceivedProduce} alt="successfully-received-produce"></img>
+                        <p className="successfully-consume-produce">Successfully Received</p>
                     </div>
                 ) : (
                     <CodeSnippet
                         onCopyToClipBoard={() => {
-                            setCopyToClipBoard(screenEnum['DATA_WAITING']);
-                            setIntervalStationDetails(
-                                window.setInterval(() => {
-                                    getStationDetails();
-                                }, 3000)
-                            );
+                            onCopyToClipBoard();
                         }}
                         languageOption={languageOption}
                         codeSnippet={languageOption?.value}

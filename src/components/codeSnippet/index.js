@@ -42,16 +42,8 @@ const CodeSnippet = (props) => {
 
     return (
         <div className="editor-code-snippet-container">
-            <EditorCodeSnippet
-                height="30vh"
-                // height="100%"
-                width="49vh"
-                path={languageOption?.name}
-                options={options}
-                language={languageOption?.language}
-                value={codeSnippet}
-            />
-            <ClickableImage image={CopyClipboard} onClick={onCopy}></ClickableImage>
+            <EditorCodeSnippet height="30vh" width="37vw" path={languageOption?.name} options={options} language={languageOption?.language} value={codeSnippet} />
+            <ClickableImage className="clipboard-image" image={CopyClipboard} onClick={onCopy}></ClickableImage>
         </div>
     );
 };

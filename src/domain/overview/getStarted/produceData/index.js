@@ -1,23 +1,38 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import ProduceDataImg from '../../../../assets/images/produceData.svg';
-import { CODE_PRODUCE } from '../../../../const/SDKExample';
+import { CODE_PRODUCE_GO, CODE_PRODUCE_JAVASCRIPT } from '../../../../const/SDKExample';
 import WaitingProduceData from '../../../../assets/images/waitingProduceData.svg';
 import ProduceConsumeData from '../produceConsumeData';
-
-const languagesOptions = {
-    // Python: {
-    //     name: 'Python',
-    //     language: 'python',
-    //     value: `print('hello')`
-    // },
-    'Node.js': {
-        name: 'Node.js',
-        language: 'javascript',
-        value: CODE_PRODUCE
-    }
-};
+import { GetStartedStoreContext } from '..';
 
 const ProduceData = (props) => {
+    const [getStartedState, getStartedDispatch] = useContext(GetStartedStoreContext);
+    const host = process.env.REACT_APP_SANDBOX_ENV ? 'broker.sandbox.memphis.dev' : 'localhost';
+
+    const languagesOptions = {
+        Go: {
+            name: 'Go',
+            language: 'go',
+            value: CODE_PRODUCE_GO.replace('<username>', getStartedState?.username)
+                .replace('<memphis_host>', host)
+                .replace('<connection_token>', getStartedState?.connectionCreds)
+                .replace('<station_name>', getStartedState?.stationName)
+        },
+        // Python: {
+        //     name: 'Python',
+        //     language: 'python',
+        //     value: `print('hello')`
+        // },
+        'Node.js': {
+            name: 'Node.js',
+            language: 'javascript',
+            value: CODE_PRODUCE_JAVASCRIPT.replace('<username>', getStartedState?.username)
+                .replace('<memphis_host>', host)
+                .replace('<connection_token>', getStartedState?.connectionCreds)
+                .replace('<station_name>', getStartedState?.stationName)
+        }
+    };
+
     return (
         <ProduceConsumeData
             headerImage={ProduceDataImg}

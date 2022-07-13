@@ -30,13 +30,10 @@ const CreateAppUser = () => {
 
     const [formFields, setFormFields] = useState({
         username: '',
-        // password: '',
         user_type: 'application'
     });
 
     useEffect(() => {
-        // createStationFormRef.current = onFinish;
-        // getStartedDispatch({ type: 'SET_USER_NAME', payload: localStorage.getItem(LOCAL_STORAGE_USER_NAME) });
         getStartedDispatch({ type: 'SET_NEXT_DISABLE', payload: true });
         getStartedDispatch({ type: 'SET_CREATE_APP_USER_DISABLE', payload: false });
         if (getStartedState?.username) {
@@ -44,15 +41,8 @@ const CreateAppUser = () => {
         }
     }, []);
 
-    useEffect(() => {
-        if (formFields?.username !== '' && formFields?.username !== ' ') {
-            getStartedDispatch({ type: 'SET_NEXT_DISABLE', payload: false });
-        }
-    }, [formFields.username]);
-
     const onCopy = async (copyParam) => {
         navigator.clipboard.writeText(copyParam);
-        // onCopyToClipBoard();
     };
 
     const updateFormState = (field, value) => {
@@ -73,6 +63,7 @@ const CreateAppUser = () => {
                 getStartedDispatch({ type: 'SET_CREATE_APP_USER_DISABLE', payload: true });
                 setTimeout(() => {
                     setCreatedUser(screenEnum['DATA_RECIEVED']);
+                    getStartedDispatch({ type: 'SET_NEXT_DISABLE', payload: false });
                 }, 1000);
             }
         } catch (error) {
@@ -104,104 +95,103 @@ const CreateAppUser = () => {
 
     return (
         <Form name="form" form={creationForm} autoComplete="off" className="create-station-form-create-app-user">
-            <img src={AppUserIcon} alt="appUserIcon" width="40px" height="40px" className="app-user-icon"></img>
-            <h1 className="header-create-app-user">Create app user</h1>
-            <Form.Item
-                name="username"
-                rules={[
-                    {
-                        required: true,
-                        message: 'Type here'
-                    }
-                ]}
-                style={{ marginBottom: '0' }}
-            >
-                <div>
-                    <h4 className="header-enter-user-name">Enter user name</h4>
-                    <Input
-                        // className="username-input"
-                        placeholder="Type User name"
-                        type="text"
-                        radiusType="semi-round"
-                        colorType="black"
-                        backgroundColorType="none"
-                        borderColorType="gray"
-                        width="371px"
-                        height="38px"
-                        onBlur={(e) => updateFormState('username', e.target.value)}
-                        onChange={(e) => updateFormState('username', e.target.value)}
-                        value={formFields.username}
-                    />
-                </div>
-            </Form.Item>
-            <Button
-                className="create-app-user"
-                width="138px"
-                height="36px"
-                placeholder="Create app user"
-                colorType="white"
-                radiusType="circle"
-                backgroundColorType="purple"
-                fontSize="12px"
-                fontWeight="bold"
-                marginBottom="15px"
-                marginTop="15px"
-                disabled={getStartedState.createAppUserDisable}
-                onClick={onFinish}
-            />
-            {isCreatedUser === screenEnum['DATA_WAITING'] ? (
-                <div>
-                    <img src={CreatingTheUser} alt="creating-the-user"></img>
-                    <p>We are creating the user</p>
-                </div>
-            ) : isCreatedUser === screenEnum['DATA_RECIEVED'] ? (
-                <div className="connection-details-container">
-                    <div className="user-details-container">
-                        <img src={UserCheck} alt="usercheck" width="20px" height="20px" className="user-check"></img>
-                        <p className="user-connection-details">User connection details</p>
+            <div>
+                <img src={AppUserIcon} alt="appUserIcon" width="40px" height="40px" className="app-user-icon"></img>
+                <h1 className="header-create-app-user">Create app user</h1>
+                <Form.Item
+                    name="username"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Type here'
+                        }
+                    ]}
+                    style={{ marginBottom: '0' }}
+                >
+                    <div>
+                        <h4 className="header-enter-user-name">Enter user name</h4>
+                        <Input
+                            placeholder="Type user name"
+                            type="text"
+                            radiusType="semi-round"
+                            colorType="black"
+                            backgroundColorType="none"
+                            borderColorType="gray"
+                            width="371px"
+                            height="38px"
+                            onBlur={(e) => updateFormState('username', e.target.value)}
+                            onChange={(e) => updateFormState('username', e.target.value)}
+                            value={formFields.username}
+                        />
                     </div>
-                    <div className="container-username-token">
-                        <div className="username-container">
-                            <p className="username">Username: {getStartedState.username}</p>
-                            {selectedClipboardUserName ? (
-                                <ClickableImage image={SelectedClipboard}></ClickableImage>
-                            ) : (
-                                <ClickableImage
-                                    image={CopyIcon}
-                                    alt="copyIcon"
-                                    width="14.53px"
-                                    height="14.5px"
-                                    onClick={() => {
-                                        onCopy(getStartedState.username);
-                                        setSelectedClipboardUserName(true);
-                                    }}
-                                    className="copy-icon"
-                                />
-                            )}
+                </Form.Item>
+                <Button
+                    className="create-app-user"
+                    width="138px"
+                    height="36px"
+                    placeholder="Create app user"
+                    colorType="white"
+                    radiusType="circle"
+                    backgroundColorType="purple"
+                    fontSize="12px"
+                    fontWeight="bold"
+                    marginBottom="15px"
+                    marginTop="15px"
+                    disabled={getStartedState.createAppUserDisable}
+                    onClick={onFinish}
+                />
+                {isCreatedUser === screenEnum['DATA_WAITING'] ? (
+                    <div className="creating-the-user-container">
+                        <img src={CreatingTheUser} alt="creating-the-user"></img>
+                        <p className="create-the-user-header">We are creating the user</p>
+                    </div>
+                ) : isCreatedUser === screenEnum['DATA_RECIEVED'] ? (
+                    <div className="connection-details-container">
+                        <div className="user-details-container">
+                            <img src={UserCheck} alt="usercheck" width="20px" height="20px" className="user-check"></img>
+                            <p className="user-connection-details">User connection details</p>
                         </div>
-                        <div className="token-container">
-                            <p className="token">Connection token: {getStartedState?.connectionCreds}</p>
-                            {selectedClipboardToken ? (
-                                <ClickableImage image={SelectedClipboard}></ClickableImage>
-                            ) : (
-                                <ClickableImage
-                                    image={CopyIcon}
-                                    alt="copyIcon"
-                                    className="copy-icon"
-                                    onClick={() => {
-                                        onCopy(getStartedState.connectionCreds);
-                                        setSelectedClipboardToken(true);
-                                    }}
-                                />
-                            )}
+                        <div className="container-username-token">
+                            <div className="username-container">
+                                <p className="username">Username: {getStartedState.username}</p>
+                                {selectedClipboardUserName ? (
+                                    <ClickableImage image={SelectedClipboard} className="copy-icon"></ClickableImage>
+                                ) : (
+                                    <ClickableImage
+                                        image={CopyIcon}
+                                        alt="copyIcon"
+                                        className="copy-icon"
+                                        onClick={() => {
+                                            onCopy(getStartedState.username);
+                                            setSelectedClipboardUserName(true);
+                                        }}
+                                    />
+                                )}
+                            </div>
+                            <div className="token-container">
+                                <p className="token">Connection token: {getStartedState?.connectionCreds}</p>
+                                {selectedClipboardToken ? (
+                                    <ClickableImage image={SelectedClipboard} className="copy-icon"></ClickableImage>
+                                ) : (
+                                    <ClickableImage
+                                        image={CopyIcon}
+                                        alt="copyIcon"
+                                        className="copy-icon"
+                                        onClick={() => {
+                                            onCopy(getStartedState.connectionCreds);
+                                            setSelectedClipboardToken(true);
+                                        }}
+                                    />
+                                )}
+                            </div>
+                        </div>
+                        <div className="information-container">
+                            <img src={Information} alt="information" width="13.33px" height="13.33px" className="information-img" />
+                            <p className="information">Please note when you close this modal, you will not be able to restore your user details!!</p>
                         </div>
                     </div>
-                    <div className="information-container">
-                        <img src={Information} alt="information" width="13.33px" height="13.33px" className="information-img" />
-                        <p className="information">Please note when you close this modal, you will not be able to restore your user details!!</p>
-                    </div>
-                </div>
-            ) : null}
+                ) : null}
+            </div>
         </Form>
     );
 };

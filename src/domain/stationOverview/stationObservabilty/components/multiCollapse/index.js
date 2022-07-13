@@ -12,35 +12,23 @@
 // limitations under the License.
 import './style.scss';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Collapse } from 'antd';
 
 import CollapseArrow from '../../../../../assets/images/collapseArrow.svg';
-import Copy from '../../../../../assets/images/copy.svg';
-import Copied from '../../../../../assets/images/copied.svg';
 import StatusIndication from '../../../../../components/indication';
-import CustomCollapse from '../customCollapse';
 
 const { Panel } = Collapse;
 
 const MultiCollapse = ({ status, data, maxWidth, header, defaultOpen, message }) => {
     const [activeKey, setActiveKey] = useState(defaultOpen ? ['1'] : []);
     const [activeChiledKey, setActiveChiledKey] = useState();
-    const [copied, setCopied] = useState(false);
 
     const onChange = (key) => {
         setActiveKey(key);
     };
     const onChiledChange = (key) => {
         setActiveChiledKey(key);
-    };
-
-    const handleCopy = () => {
-        setCopied(true);
-        navigator.clipboard.writeText(data);
-        setTimeout(() => {
-            setCopied(false);
-        }, 3000);
     };
 
     return (

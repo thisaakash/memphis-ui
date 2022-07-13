@@ -78,7 +78,7 @@ const PoisionMessage = ({ stationName, messageId }) => {
             </header>
             <div className="content-wrapper">
                 <Space direction="vertical">
-                    <CustomCollapse header="Details" data={Details} />
+                    <CustomCollapse header="Details" defaultOpen={true} data={Details} />
                     <CustomCollapse header="message" defaultOpen={true} data={message} message={true} />
                 </Space>
             </div>

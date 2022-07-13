@@ -15,6 +15,7 @@ import './style.scss';
 
 import React from 'react';
 import StatusIndication from '../../../../components/indication';
+import CustomCollapse from '../../../stationOverview/stationObservabilty/components/customCollapse';
 
 const consumeData = [
     {
@@ -78,6 +79,7 @@ const ConsumerGroup = () => {
             </header>
             <div className="content-wrapper">
                 <div className="details">
+                    <p className="title">Details</p>
                     {consumeData?.map((row, index) => {
                         return (
                             <content is="x3d" key={index}>
@@ -87,7 +89,11 @@ const ConsumerGroup = () => {
                         );
                     })}
                 </div>
-                <div className="consumers"></div>
+                <div className="consumers">
+                    {CGData.map((row, index) => {
+                        return <CustomCollapse key={index} header={row.name} status={true} defaultOpen={index === 0 ? true : false} data={row.details} />;
+                    })}
+                </div>
             </div>
         </div>
     );

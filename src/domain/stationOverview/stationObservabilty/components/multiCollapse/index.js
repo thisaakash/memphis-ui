@@ -18,7 +18,7 @@ import { Collapse } from 'antd';
 import CollapseArrow from '../../../../../assets/images/collapseArrow.svg';
 import Copy from '../../../../../assets/images/copy.svg';
 import Copied from '../../../../../assets/images/copied.svg';
-import StatusIndication from '../indication';
+import StatusIndication from '../../../../../components/indication';
 import CustomCollapse from '../customCollapse';
 
 const { Panel } = Collapse;

@@ -21,7 +21,7 @@ import OverflowTip from '../../../../components/tooltip/overflowtip';
 import { DeleteForeverRounded } from '@material-ui/icons';
 
 import { StationStoreContext } from '../..';
-import StatusIndication from '../components/indication';
+import StatusIndication from '../../../../components/indication';
 import CustomCollapse from '../components/customCollapse';
 import MultiCollapse from '../components/multiCollapse';
 import { Space } from 'antd';

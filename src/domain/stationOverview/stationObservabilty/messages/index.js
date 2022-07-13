@@ -15,7 +15,7 @@ import './style.scss';
 
 import React, { useContext, useState } from 'react';
 import { Checkbox } from 'antd';
-import { Collapse, Space } from 'antd';
+import { Space } from 'antd';
 
 import { convertBytes, parsingDate } from '../../../../services/valueConvertor';
 import Journey from '../../../../assets/images/journey.svg';
@@ -280,7 +280,7 @@ const Messages = () => {
                                     backgroundColorType="orange"
                                     fontSize="12px"
                                     fontWeight="600"
-                                    onClick={() => history.push(`${window.location.pathname}/${'62cd670725f3bda8e8417c91'}`)}
+                                    onClick={() => history.push(`${window.location.pathname}/${'62ce914925f3bda8e841d03a'}`)}
                                 />
                             )}
                         </div>

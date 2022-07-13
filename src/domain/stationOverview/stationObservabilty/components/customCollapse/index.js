@@ -18,7 +18,7 @@ import { Collapse } from 'antd';
 import CollapseArrow from '../../../../../assets/images/collapseArrow.svg';
 import Copy from '../../../../../assets/images/copy.svg';
 import Copied from '../../../../../assets/images/copied.svg';
-import StatusIndication from '../indication';
+import StatusIndication from '../../../../../components/indication';
 
 const { Panel } = Collapse;
 
@@ -55,7 +55,6 @@ const CustomCollapse = ({ status, data, maxWidth, header, defaultOpen, message }
                 {message ? (
                     <div className="message">
                         {message && activeKey.length > 0 && <img src={copied ? Copied : Copy} onClick={() => handleCopy()} className={'copy-icon'} />}
-
                         <p>{data}</p>
                     </div>
                 ) : (

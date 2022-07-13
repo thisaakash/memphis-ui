@@ -12,7 +12,7 @@
 // limitations under the License.
 import './style.scss';
 import React from 'react';
-import TooltipComponent from '../../../../../components/tooltip/tooltip';
+import TooltipComponent from '../tooltip/tooltip';
 import { DeleteForeverRounded } from '@material-ui/icons';
 
 const StatusIndication = ({ is_active, is_deleted }) => {

@@ -16,36 +16,24 @@ import './style.scss';
 import React from 'react';
 import StatusIndication from '../../../../components/indication';
 
-const produceData = [
-    {
-        name: 'Name',
-        value: 'Logger'
-    },
-    {
-        name: 'User',
-        value: 'root'
-    },
-    {
-        name: 'IP',
-        value: '61.103.206.105'
-    }
-];
-const Producer = () => {
+const Producer = ({ data }) => {
+    console.log(data);
     return (
         <div className="poision-producer">
             <header is="x3d">
                 <p>Producer</p>
-                <StatusIndication is_active={true} is_deleted={false} />
+                <StatusIndication is_active={data.is_active} is_deleted={data.is_active} />
             </header>
             <div className="content-wrapper">
-                {produceData?.map((row, index) => {
-                    return (
-                        <content is="x3d" key={index}>
-                            <p>{row.name}</p>
-                            <span>{row.value}</span>
-                        </content>
-                    );
-                })}
+                {data?.details?.length > 0 &&
+                    data?.details?.map((row, index) => {
+                        return (
+                            <content is="x3d" key={index}>
+                                <p>{row.name}</p>
+                                <span>{row.value}</span>
+                            </content>
+                        );
+                    })}
             </div>
         </div>
     );

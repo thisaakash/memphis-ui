@@ -13,7 +13,7 @@
 
 import './style.scss';
 
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Checkbox } from 'antd';
 import { Space } from 'antd';
 
@@ -27,73 +27,8 @@ import { StationStoreContext } from '../..';
 import CustomCollapse from '../components/customCollapse';
 import MultiCollapse from '../components/multiCollapse';
 import { useHistory } from 'react-router-dom';
-
-const dataSource = [
-    {
-        id: '1',
-        name: 'Mike',
-        age: 32,
-        address: '10 Downing Street'
-    },
-    {
-        id: '2',
-        name: 'John',
-        age: 42,
-        address: '10 Downing Street'
-    },
-    {
-        id: '3',
-        name: 'Avi',
-        age: 42,
-        address: '10 Downing Street'
-    },
-    {
-        id: '4',
-        name: 'Idan',
-        age: 42,
-        address: '10 Downing Street'
-    }
-];
-
-const produceData = [
-    {
-        name: 'Name',
-        value: 'Logger'
-    },
-    {
-        name: 'User',
-        value: 'root'
-    },
-    {
-        name: 'IP',
-        value: '61.103.206.105'
-    }
-];
-const Details = [
-    {
-        name: 'Message size',
-        value: '10 Bytes'
-    },
-    {
-        name: 'Date Created',
-        value: 'July 7, 2022'
-    },
-    {
-        name: 'Time sent',
-        value: '1:48 PM'
-    }
-];
-
-const message = `{"web-app": {
-    "servlet": [   
-      {
-        "servlet-name": "cofaxCDS",
-        "servlet-class": "org.cofax.cds.CDSServlet",
-        "init-param": {
-          "configGlossary:installationAt": "Philadelphia, PA",
-          "configGlossary:adminEmail": "ksm@pobox.com",
-          "configGlossary:poweredBy": "Cofax",
-          "configGlossary:poweredByIcon": "/images/cofax.gif"}`;
+import { httpRequest } from '../../../../services/http';
+import { ApiEndpoints } from '../../../../const/apiEndpoints';
 
 const CGData = [
     {
@@ -152,20 +87,121 @@ const CGData = [
 
 const Messages = () => {
     const [stationState, stationDispatch] = useContext(StationStoreContext);
-    const [selectedRowIndex, setSelectedRowIndex] = useState('1');
+    const [selectedRowIndex, setSelectedRowIndex] = useState(0);
     const [isCheck, setIsCheck] = useState([]);
+    const [messageDetails, setMessageDetails] = useState({});
     const [isCheckAll, setIsCheckAll] = useState(false);
+    const [resendProcced, setResendProcced] = useState(false);
+    const [ackProcced, setAckProcced] = useState(false);
+    const [loadMessageData, setLoadMessageData] = useState(false);
+    const url = window.location.href;
+    const stationName = url.split('factories/')[1].split('/')[1];
+
     const [tabValue, setTabValue] = useState('0');
     const tabs = ['All', 'Poison'];
     const history = useHistory();
 
-    const onSelectedRow = (rowIndex) => {
+    useEffect(() => {
+        if (stationState?.stationSocketData?.messages.length > 0 && Object.keys(messageDetails).length === 0) {
+            getMessageDetails(false, null, stationState?.stationSocketData?.messages[0].message_seq);
+        }
+    }, [stationState?.stationSocketData?.messages]);
+
+    const getMessageDetails = async (isPoisonMessage, messageId = null, message_seq = null) => {
+        setLoadMessageData(true);
+        try {
+            const data = await httpRequest(
+                'GET',
+                `${ApiEndpoints.GET_MESSAGE_DETAILS}?station_name=${stationName}&is_poison_message=${isPoisonMessage}&message_id=${messageId}&message_seq=${message_seq}`
+            );
+            arrangeData(data);
+            setTimeout(() => {
+                setLoadMessageData(false);
+            }, 1000);
+        } catch (error) {
+            setLoadMessageData(false);
+        }
+    };
+
+    const arrangeData = (data) => {
+        let poisionedCGs = [];
+        if (data) {
+            data.poisoned_cgs.map((row, index) => {
+                let cg = {
+                    name: row.cg_name,
+                    is_active: true,
+                    is_deleted: false,
+                    details: [
+                        {
+                            name: 'unprocessed messages',
+                            value: row?.unprocessed_messages
+                        },
+                        {
+                            name: 'In process Message',
+                            value: row?.in_process_messages
+                        },
+                        {
+                            name: 'poison messages',
+                            value: row?.total_poison_messages
+                        },
+                        {
+                            name: 'max_ack_time',
+                            value: `${row?.max_ack_time_ms}ms`
+                        },
+                        {
+                            name: 'max_message_deliveries',
+                            value: row?.max_msg_deliveries
+                        }
+                    ]
+                };
+                poisionedCGs.push(cg);
+            });
+            let messageDetails = {
+                id: data._id ?? null,
+                messageSeq: data.message_seq,
+                details: [
+                    {
+                        name: 'Message size',
+                        value: convertBytes(data.message?.size)
+                    },
+                    {
+                        name: 'Time Sent',
+                        value: parsingDate(data.message?.time_sent)
+                    }
+                ],
+                producer: {
+                    is_active: data.producer?.is_active,
+                    is_deleted: data.producer?.is_deleted,
+                    details: [
+                        {
+                            name: 'Name',
+                            value: data.producer?.name
+                        },
+                        {
+                            name: 'User',
+                            value: data.producer?.created_by_user
+                        },
+                        {
+                            name: 'IP',
+                            value: data.producer?.client_address
+                        }
+                    ]
+                },
+                message: data.message?.data,
+                poisionedCGs: poisionedCGs
+            };
+            setMessageDetails(messageDetails);
+        }
+    };
+
+    const onSelectedRow = (isPoisonMessage, id, rowIndex) => {
         setSelectedRowIndex(rowIndex);
+        getMessageDetails(isPoisonMessage, isPoisonMessage ? id : null, isPoisonMessage ? null : id);
     };
 
     const onCheckedAll = (e) => {
         setIsCheckAll(!isCheckAll);
-        setIsCheck(dataSource.map((li) => li.id));
+        setIsCheck(stationState?.stationSocketData?.poison_messages.map((li) => li._id));
         if (isCheckAll) {
             setIsCheck([]);
         }
@@ -183,9 +219,37 @@ const Messages = () => {
     };
 
     const handleChangeMenuItem = (newValue) => {
+        getMessageDetails(
+            newValue === '0' ? false : true,
+            newValue === '0' ? null : stationState?.stationSocketData?.poison_messages[0]._id,
+            newValue === '0' ? stationState?.stationSocketData?.messages[0].message_seq : null
+        );
         setTabValue(newValue);
+        setSelectedRowIndex(0);
     };
 
+    const handleAck = async () => {
+        setAckProcced(true);
+        try {
+            await httpRequest('POST', `${ApiEndpoints.ACK_POISION_MESSAGE}`, { poison_message_ids: isCheck });
+            setTimeout(() => {
+                setAckProcced(false);
+            }, 1500);
+        } catch (error) {
+            setAckProcced(false);
+        }
+    };
+    const handleResend = async () => {
+        setResendProcced(true);
+        try {
+            await httpRequest('POST', `${ApiEndpoints.RESEND_POISION_MESSAGE_JOURNEY}`, { poison_message_ids: isCheck });
+            setTimeout(() => {
+                setResendProcced(false);
+            }, 1500);
+        } catch (error) {
+            setResendProcced(false);
+        }
+    };
     return (
         <div className="messages-container">
             <div className="header">
@@ -209,7 +273,8 @@ const Messages = () => {
                             backgroundColorType="purple"
                             fontSize="12px"
                             fontWeight="600"
-                            onClick={() => {}}
+                            isLoading={ackProcced}
+                            onClick={() => handleAck()}
                         />
                         <Button
                             width="100px"
@@ -220,7 +285,8 @@ const Messages = () => {
                             backgroundColorType="purple"
                             fontSize="12px"
                             fontWeight="600"
-                            onClick={() => {}}
+                            isLoading={resendProcced}
+                            onClick={() => handleResend()}
                         />
                     </div>
                 )}
@@ -228,65 +294,112 @@ const Messages = () => {
             <div className="tabs">
                 <CustomTabs value={tabValue} onChange={handleChangeMenuItem} tabs={tabs}></CustomTabs>
             </div>
-            {stationState?.stationSocketData?.messages?.length > 0 ? (
+            {tabValue === '0' && stationState?.stationSocketData?.messages?.length > 0 && (
                 <div className="list-wrapper">
                     <div className="coulmns-table">
-                        <div className={tabValue === '0' ? 'left-coulmn all' : 'left-coulmn'}>
-                            {tabValue === '1' && <Checkbox checked={isCheckAll} id="selectAll" onChange={onCheckedAll} name="selectAll" />}
+                        <div className="left-coulmn all">
                             <p>Message</p>
                         </div>
                         <p className="right-coulmn">Details</p>
                     </div>
                     <div className="list">
-                        <div className={tabValue === '0' ? 'rows-wrapper all' : 'rows-wrapper'}>
-                            {dataSource?.map(({ id, name }) => {
+                        <div className="rows-wrapper all">
+                            {stationState?.stationSocketData?.messages?.map((message, id) => {
                                 return (
-                                    <div className={selectedRowIndex === id ? 'message-row selected' : 'message-row'} key={id} onClick={() => onSelectedRow(id)}>
-                                        {tabValue === '1' && <Checkbox key={id} checked={isCheck.includes(id)} id={id} onChange={handleCheckedClick} name={name} />}
-                                        <OverflowTip text={name} width={'100px'}>
-                                            {name}
+                                    <div
+                                        className={selectedRowIndex === id ? 'message-row selected' : 'message-row'}
+                                        key={id}
+                                        onClick={() => onSelectedRow(false, message.message_seq, id)}
+                                    >
+                                        <OverflowTip text={message?.data} width={'100px'}>
+                                            {message?.data}
                                         </OverflowTip>
                                     </div>
                                 );
                             })}
-
-                            {!stationState?.stationSocketData?.messages && (
-                                <div className="empty-messages">
-                                    <p>Waiting for messages</p>
-                                </div>
-                            )}
                         </div>
                         <div className="message-wrapper">
                             <div className="row-data">
                                 <Space direction="vertical">
-                                    <CustomCollapse header="Producer" status={true} defaultOpen={true} data={produceData} />
-                                    <MultiCollapse header="Failed CGs" data={CGData} />
-                                    <CustomCollapse header="Details" data={Details} />
-                                    <CustomCollapse header="message" defaultOpen={true} data={message} message={true} />
+                                    <CustomCollapse header="Producer" status={true} defaultOpen={true} data={messageDetails.producer} />
+                                    <MultiCollapse header="Failed CGs" data={messageDetails.poisionedCGs} />
+                                    <CustomCollapse status={false} header="Details" data={messageDetails.details} />
+                                    <CustomCollapse status={false} header="message" defaultOpen={true} data={messageDetails.message} message={true} />
                                 </Space>
                             </div>
-                            {tabValue === '1' && (
-                                <Button
-                                    width="96%"
-                                    height="35px"
-                                    placeholder={
-                                        <div className="botton-title">
-                                            <img src={Journey} alt="Journey" />
-                                            <p>Message Journey</p>
-                                        </div>
-                                    }
-                                    colorType="black"
-                                    radiusType="semi-round"
-                                    backgroundColorType="orange"
-                                    fontSize="12px"
-                                    fontWeight="600"
-                                    onClick={() => history.push(`${window.location.pathname}/${'62ceffda8dc73bf4597c2dd3'}`)}
-                                />
-                            )}
                         </div>
                     </div>
                 </div>
-            ) : (
+            )}
+            {tabValue === '1' && stationState?.stationSocketData?.poison_messages?.length > 0 && (
+                <div className="list-wrapper">
+                    <div className="coulmns-table">
+                        <div className="left-coulmn">
+                            <Checkbox checked={isCheckAll} id="selectAll" onChange={onCheckedAll} name="selectAll" />
+                            <p>Message</p>
+                        </div>
+                        <p className="right-coulmn">Details</p>
+                    </div>
+                    <div className="list">
+                        <div className="rows-wrapper">
+                            {stationState?.stationSocketData?.poison_messages?.map((message, id) => {
+                                return (
+                                    <div
+                                        className={selectedRowIndex === id ? 'message-row selected' : 'message-row'}
+                                        key={id}
+                                        onClick={() => onSelectedRow(true, message._id, id)}
+                                    >
+                                        {tabValue === '1' && (
+                                            <Checkbox
+                                                key={message._id}
+                                                checked={isCheck.includes(message._id)}
+                                                id={message._id}
+                                                onChange={handleCheckedClick}
+                                                name={message._id}
+                                            />
+                                        )}
+                                        <OverflowTip text={message.message.data} width={'100px'}>
+                                            {message.message.data}
+                                        </OverflowTip>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                        <div className="message-wrapper">
+                            <div className="row-data">
+                                <Space direction="vertical">
+                                    <CustomCollapse header="Producer" status={true} defaultOpen={true} data={messageDetails.producer} />
+                                    <MultiCollapse header="Failed CGs" data={messageDetails.poisionedCGs} />
+                                    <CustomCollapse status={false} header="Details" data={messageDetails.details} />
+                                    <CustomCollapse status={false} header="message" defaultOpen={true} data={messageDetails.message} message={true} />
+                                </Space>
+                            </div>
+                            <Button
+                                width="96%"
+                                height="40px"
+                                placeholder={
+                                    <div className="botton-title">
+                                        <img src={Journey} alt="Journey" />
+                                        <p>Message Journey</p>
+                                    </div>
+                                }
+                                colorType="black"
+                                radiusType="semi-round"
+                                backgroundColorType="orange"
+                                fontSize="12px"
+                                fontWeight="600"
+                                onClick={() => history.push(`${window.location.pathname}/${messageDetails.id}`)}
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
+            {stationState?.stationSocketData?.poison_messages?.length === 0 && (
+                <div className="empty-messages">
+                    <p>Congrats, No poision message, yet ;)</p>
+                </div>
+            )}
+            {stationState?.stationSocketData?.messages?.length === 0 && (
                 <div className="empty-messages">
                     <p>Waiting for messages</p>
                 </div>

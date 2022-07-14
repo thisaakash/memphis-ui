@@ -30,6 +30,7 @@
     }
     .content-wrapper{
         padding: 15px;
+        padding-right: 2px;
         display: flex;
         height: calc(100% - 30px);
         position: relative;
@@ -68,6 +69,15 @@
         }
         .consumers {
             width: 49%;
+            overflow: auto;
+            .multi {
+                padding-right: 5px;
+                .collapse-child .ant-collapse-item.ant-collapse-no-arrow{
+                    border: 1px solid #EFEFEF !important;
+                    border-radius: 8px !important;
+                    margin-bottom: 8px;        
+                }
+            }
 
         }
     }

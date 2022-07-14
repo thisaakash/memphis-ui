@@ -132,11 +132,14 @@
         .collapse-wrapper{
             background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #FFFFFF 26.87%);
         }
+        .ant-space {
+            width: 100%;
+        }
         .empty-pub-sub{
             display: flex;
-            width: 100%;
+            width: 95%;
             height: 100%;
-            position: relative;
+            position: absolute;
             align-items: center;
             justify-content: center;
             p{
@@ -145,9 +148,6 @@
                 font-weight: 600;
                 font-size: 16px;
             }
-        }
-        .ant-space {
-            width: 100%;
         }
     }
 }

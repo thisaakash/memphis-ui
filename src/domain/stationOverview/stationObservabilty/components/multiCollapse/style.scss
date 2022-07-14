@@ -1,6 +1,15 @@
-.multi{   
+.multi{  
     .ant-collapse-content-box{
         padding: 0 !important;
+    }
+    .consumer-number {
+        background: #DFDFDF;
+        width: 30px;
+        display: flex;
+        justify-content: center;
+        border-radius: 20px;
+        font-weight: 600;
+        margin-left: 10px;
     }
     .collapse-child{
         .collapse-header{

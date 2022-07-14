@@ -26,20 +26,6 @@ import CustomCollapse from '../components/customCollapse';
 import MultiCollapse from '../components/multiCollapse';
 import { Space } from 'antd';
 
-const produceData = [
-    {
-        name: 'Name',
-        value: 'Logger'
-    },
-    {
-        name: 'User',
-        value: 'root'
-    },
-    {
-        name: 'IP',
-        value: '61.103.206.105'
-    }
-];
 const consumeData = [
     {
         name: 'unprocessed messages',
@@ -94,32 +80,128 @@ const CGData = [
     }
 ];
 
-const PubSubList = (props) => {
+const ProduceConsumList = (props) => {
     const [stationState, stationDispatch] = useContext(StationStoreContext);
     const [selectedRowIndex, setSelectedRowIndex] = useState(0);
     const [producersList, setProducersList] = useState([]);
-    const [consumersList, setConsumersList] = useState([]);
+    const [cgsList, setCgsList] = useState([]);
+    const [producerDetails, setProducerDetails] = useState([]);
+    const [cgDetails, setCgDetails] = useState([]);
 
     useEffect(() => {
         if (props.producer) {
-            let activeProducers = stationState?.stationSocketData?.active_producers || [];
-            let killedProducers = stationState?.stationSocketData?.killed_producers || [];
-            let destroyedProducers = stationState?.stationSocketData?.destroyed_producers || [];
-            let primes = activeProducers.concat(killedProducers);
-            primes = primes.concat(destroyedProducers);
-            setProducersList(primes);
+            let result = concatFunction('producer', stationState?.stationSocketData);
+            setProducersList(result);
         } else {
-            let activeConsumers = stationState?.stationSocketData?.active_consumers || [];
-            let killedConsumers = stationState?.stationSocketData?.killed_consumers || [];
-            let destroyedConsumers = stationState?.stationSocketData?.destroyed_consumers || [];
-            let primes = activeConsumers.concat(killedConsumers);
-            primes = primes.concat(destroyedConsumers);
-            setConsumersList(primes);
+            let result = concatFunction('cgs', stationState?.stationSocketData);
+            setCgsList(result);
         }
     }, [stationState?.stationSocketData]);
 
-    const onSelectedRow = (rowIndex) => {
+    useEffect(() => {
+        arrangeData('producer', 0);
+        arrangeData('cgs', 0);
+    }, [producersList, cgsList]);
+
+    const concatFunction = (type, data) => {
+        let connected = [];
+        let deleted = [];
+        let disconnected = [];
+        let concatArrays = [];
+        if (type === 'producer') {
+            connected = data?.connected_producers || [];
+            deleted = data?.deleted_producers || [];
+            disconnected = data?.disconnected_producers || [];
+            concatArrays = connected.concat(deleted);
+            concatArrays = concatArrays.concat(disconnected);
+            return concatArrays;
+        } else if (type === 'cgs') {
+            connected = data?.connected_cgs || [];
+            disconnected = data?.disconnected_cgs || [];
+            deleted = data?.deleted_cgs || [];
+            concatArrays = connected.concat(disconnected);
+            concatArrays = concatArrays.concat(deleted);
+            return concatArrays;
+        } else {
+            connected = data?.connected_consumers || [];
+            disconnected = data?.disconnected_consumers || [];
+            deleted = data?.deleted_consumers || [];
+            concatArrays = connected.concat(disconnected);
+            concatArrays = concatArrays.concat(deleted);
+            return concatArrays;
+        }
+    };
+
+    const onSelectedRow = (rowIndex, type) => {
         setSelectedRowIndex(rowIndex);
+        arrangeData(type, rowIndex);
+    };
+
+    const arrangeData = (type, rowIndex) => {
+        if (type === 'producer') {
+            let details = [
+                {
+                    name: 'Name',
+                    value: producersList[rowIndex]?.name
+                },
+                {
+                    name: 'User',
+                    value: producersList[rowIndex]?.created_by_user
+                },
+                {
+                    name: 'IP',
+                    value: producersList[rowIndex]?.client_address
+                }
+            ];
+            setProducerDetails(details);
+        } else {
+            let concatAllConsumers = concatFunction('consumers', cgsList[rowIndex]);
+            let consumersDetails = [];
+            concatAllConsumers.map((row, index) => {
+                let consumer = {
+                    name: row.name,
+                    is_active: row.is_active,
+                    is_deleted: row.is_deleted,
+                    details: [
+                        {
+                            name: 'user',
+                            value: row.created_by_user
+                        },
+                        {
+                            name: 'IP',
+                            value: row.client_address
+                        }
+                    ]
+                };
+                consumersDetails.push(consumer);
+            });
+            let cgDetails = {
+                details: [
+                    {
+                        name: 'unprocessed messages',
+                        value: cgsList[rowIndex]?.unprocessed_messages
+                    },
+                    {
+                        name: 'In process Message',
+                        value: cgsList[rowIndex]?.in_process_messages
+                    },
+                    {
+                        name: 'poison messages',
+                        value: cgsList[rowIndex]?.poison_messages
+                    },
+                    {
+                        name: 'max_ack_time',
+                        value: `${cgsList[rowIndex]?.max_ack_time_ms}ms`
+                    },
+                    {
+                        name: 'max_message_deliveries',
+                        value: cgsList[rowIndex]?.max_msg_deliveries
+                    }
+                ],
+                consumers: consumersDetails
+            };
+            setCgDetails(cgDetails);
+        }
     };
 
     return (
@@ -150,11 +232,10 @@ const PubSubList = (props) => {
                         producersList?.length > 0 &&
                         producersList?.map((row, index) => {
                             return (
-                                // className={row.is_deleted ? 'pubSub-row deleted' : 'pubSub-row'}
                                 <div
                                     className={selectedRowIndex === index ? (row.is_deleted ? 'pubSub-row selected-deleted' : 'pubSub-row selected') : 'pubSub-row'}
                                     key={index}
-                                    onClick={() => onSelectedRow(index)}
+                                    onClick={() => onSelectedRow(index, 'producer')}
                                 >
                                     <OverflowTip text={row.name} width={'100px'}>
                                         {row.name}
@@ -169,21 +250,24 @@ const PubSubList = (props) => {
                             );
                         })}
                     {!props.producer &&
-                        consumersList?.length > 0 &&
-                        consumersList?.map((row, index) => {
+                        cgsList?.length > 0 &&
+                        cgsList?.map((row, index) => {
                             return (
-                                <div className={selectedRowIndex === index ? 'pubSub-row selected' : 'pubSub-row'} key={index} onClick={() => onSelectedRow(index)}>
-                                    <OverflowTip text={row.consumers_group} width={'85px'}>
-                                        {row.consumers_group}
+                                <div
+                                    className={selectedRowIndex === index ? 'pubSub-row selected' : 'pubSub-row'}
+                                    key={index}
+                                    onClick={() => onSelectedRow(index, 'consumer')}
+                                >
+                                    <OverflowTip text={row.name} width={'85px'}>
+                                        {row.name}
                                     </OverflowTip>
-                                    <OverflowTip text={row.created_by_user} width={'70px'} textAlign={'center'}>
-                                        180,000
+                                    <OverflowTip text={row.unprocessed_messages} width={'70px'} textAlign={'center'}>
+                                        {row.unprocessed_messages}
                                     </OverflowTip>
-                                    <OverflowTip text={row.created_by_user} width={'70px'} textAlign={'center'}>
-                                        100,000
+                                    <OverflowTip text={row.poison_messages} width={'70px'} textAlign={'center'}>
+                                        {row.poison_messages}
                                     </OverflowTip>
                                     <span className="status-icon" style={{ width: '38px' }}>
-                                        {/* {statusIndication(row.is_active, row.is_deleted)} */}
                                         <StatusIndication is_active={row.is_active} is_deleted={row.is_deleted} />
                                     </span>
                                 </div>
@@ -191,15 +275,15 @@ const PubSubList = (props) => {
                         })}
                 </div>
                 <div style={{ marginRight: '10px' }}>
-                    {props.producer && producersList?.length > 0 && <CustomCollapse header="Details" defaultOpen={true} data={produceData} />}
-                    {!props.producer && consumersList?.length > 0 && (
+                    {props.producer && producersList?.length > 0 && <CustomCollapse header="Details" defaultOpen={true} data={producerDetails} />}
+                    {!props.producer && cgsList?.length > 0 && (
                         <Space direction="vertical">
-                            <CustomCollapse header="Details" defaultOpen={true} data={consumeData} />
-                            <MultiCollapse header="Consumers" data={CGData} />
+                            <CustomCollapse status={false} header="Details" defaultOpen={true} data={cgDetails.details} />
+                            <MultiCollapse header="Consumers" data={cgDetails.consumers} />
                         </Space>
                     )}
                 </div>
-                {((props.producer && producersList?.length === 0) || (!props.producer && consumersList?.length === 0)) && (
+                {((props.producer && producersList?.length === 0) || (!props.producer && cgsList?.length === 0)) && (
                     <div className="empty-pub-sub">
                         <p>Waiting for {props.producer ? 'producers' : 'consumers'}</p>
                     </div>
@@ -209,4 +293,4 @@ const PubSubList = (props) => {
     );
 };
 
-export default PubSubList;
+export default ProduceConsumList;

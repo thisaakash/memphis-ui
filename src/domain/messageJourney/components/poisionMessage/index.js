@@ -13,43 +13,47 @@
 
 import './style.scss';
 
-import React from 'react';
+import React, { useState } from 'react';
 import StatusIndication from '../../../../components/indication';
 import Button from '../../../../components/button';
 import CustomCollapse from '../../../stationOverview/stationObservabilty/components/customCollapse';
 import { Space } from 'antd';
+import { httpRequest } from '../../../../services/http';
+import { ApiEndpoints } from '../../../../const/apiEndpoints';
 
-const Details = [
-    {
-        name: 'Message size',
-        value: '10 Bytes'
-    },
-    {
-        name: 'Date Created',
-        value: 'July 7, 2022'
-    },
-    {
-        name: 'Time sent',
-        value: '1:48 PM'
-    }
-];
+const PoisionMessage = ({ stationName, messageId, details, message }) => {
+    const [resendProcced, setResendProcced] = useState(false);
+    const [ackProcced, setAckProcced] = useState(false);
 
-const message = `{"web-app": {
-    "servlet": [   
-      {
-        "servlet-name": "cofaxCDS",
-        "servlet-class": "org.cofax.cds.CDSServlet",
-        "init-param": {
-          "configGlossary:installationAt": "Philadelphia, PA",
-          "configGlossary:adminEmail": "ksm@pobox.com",
-          "configGlossary:poweredBy": "Cofax",
-          "configGlossary:poweredByIcon": "/images/cofax.gif"}`;
-const PoisionMessage = ({ stationName, messageId }) => {
+    const handleAck = async () => {
+        setAckProcced(true);
+        try {
+            await httpRequest('POST', `${ApiEndpoints.ACK_POISION_MESSAGE}`, { poison_message_ids: messageId });
+            setTimeout(() => {
+                setAckProcced(false);
+            }, 1500);
+        } catch (error) {
+            setAckProcced(false);
+        }
+    };
+
+    const handleResend = async () => {
+        setResendProcced(true);
+        try {
+            await httpRequest('POST', `${ApiEndpoints.RESEND_POISION_MESSAGE_JOURNEY}`, { poison_message_ids: messageId });
+            setTimeout(() => {
+                setResendProcced(false);
+            }, 1500);
+        } catch (error) {
+            setResendProcced(false);
+        }
+    };
+
     return (
         <div className="poision-message">
             <header is="x3d">
                 <p>
-                    {stationName} / {messageId}
+                    {stationName} / #{messageId.substring(0, 5)}
                 </p>
                 <div className="btn-row">
                     <Button
@@ -61,7 +65,8 @@ const PoisionMessage = ({ stationName, messageId }) => {
                         backgroundColorType="purple"
                         fontSize="12px"
                         fontWeight="600"
-                        onClick={() => {}}
+                        isLoading={ackProcced}
+                        onClick={() => handleAck()}
                     />
                     <Button
                         width="65px"
@@ -72,14 +77,15 @@ const PoisionMessage = ({ stationName, messageId }) => {
                         backgroundColorType="purple"
                         fontSize="12px"
                         fontWeight="600"
-                        onClick={() => {}}
+                        isLoading={resendProcced}
+                        onClick={() => handleResend()}
                     />
                 </div>
             </header>
             <div className="content-wrapper">
                 <Space direction="vertical">
-                    <CustomCollapse header="Details" defaultOpen={true} data={Details} />
-                    <CustomCollapse header="message" defaultOpen={true} data={message} message={true} />
+                    <CustomCollapse status={false} header="Details" defaultOpen={true} data={details} />
+                    <CustomCollapse status={false} header="message" defaultOpen={true} data={message} message={true} />
                 </Space>
             </div>
         </div>

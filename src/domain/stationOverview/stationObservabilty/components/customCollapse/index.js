@@ -19,10 +19,11 @@ import CollapseArrow from '../../../../../assets/images/collapseArrow.svg';
 import Copy from '../../../../../assets/images/copy.svg';
 import Copied from '../../../../../assets/images/copied.svg';
 import StatusIndication from '../../../../../components/indication';
+import { Details } from '@material-ui/icons';
 
 const { Panel } = Collapse;
 
-const CustomCollapse = ({ status, data, maxWidth, header, defaultOpen, message }) => {
+const CustomCollapse = ({ status, data, header, defaultOpen, message }) => {
     const [activeKey, setActiveKey] = useState(defaultOpen ? ['1'] : []);
     const [copied, setCopied] = useState(false);
 
@@ -45,7 +46,7 @@ const CustomCollapse = ({ status, data, maxWidth, header, defaultOpen, message }
                     <div className="collapse-header">
                         <p className="title">{header}</p>
                         <status is="x3d">
-                            {status && <StatusIndication is_active={true} is_deleted={false} />}
+                            {/* {status && <StatusIndication is_active={data?.is_active} is_deleted={data?.is_deleted} />} */}
                             <img className={activeKey[0] === '1' ? 'collapse-arrow open' : 'collapse-arrow close'} src={CollapseArrow} alt="collapse-arrow" />
                         </status>
                     </div>
@@ -58,15 +59,28 @@ const CustomCollapse = ({ status, data, maxWidth, header, defaultOpen, message }
                         <p>{data}</p>
                     </div>
                 ) : (
-                    data?.length > 0 &&
-                    data?.map((row, index) => {
-                        return (
-                            <content is="x3d" key={index}>
-                                <p>{row.name}</p>
-                                <span>{row.value}</span>
-                            </content>
-                        );
-                    })
+                    <>
+                        {!status &&
+                            data?.length > 0 &&
+                            data?.map((row, index) => {
+                                return (
+                                    <content is="x3d" key={index}>
+                                        <p>{row.name}</p>
+                                        <span>{row.value}</span>
+                                    </content>
+                                );
+                            })}
+                        {status &&
+                            data?.details?.length > 0 &&
+                            data?.details?.map((row, index) => {
+                                return (
+                                    <content is="x3d" key={index}>
+                                        <p>{row.name}</p>
+                                        <span>{row.value}</span>
+                                    </content>
+                                );
+                            })}
+                    </>
                 )}
             </Panel>
         </Collapse>

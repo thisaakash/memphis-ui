@@ -34,6 +34,7 @@ import Modal from '../../../components/modal';
 import pathDomains from '../../../router';
 import { StationStoreContext } from '..';
 import TooltipComponent from '../../../components/tooltip/tooltip';
+import { LOCAL_STORAGE_ENV, LOCAL_STORAGE_NAMESPACE } from '../../../const/localStorageConsts';
 
 const StationOverviewHeader = (props) => {
     const [state, dispatch] = useContext(Context);
@@ -43,11 +44,14 @@ const StationOverviewHeader = (props) => {
     const [open, modalFlip] = useState(false);
     const selectLngOption = ['Go', 'Node.js'];
     const [langSelected, setLangSelected] = useState('Go');
-    const codeExample = CODE_EXAMPLE[langSelected].code;
+    const [codeExample, setCodeExample] = useState('');
+    const url = window.location.href;
+    const stationName = url.split('factories/')[1].split('/')[1];
     const handleSelectLang = (e) => {
         setLangSelected(e);
     };
     useEffect(() => {
+        changeDynamicCode(langSelected);
         switch (stationState?.stationMetaData?.retention_type) {
             case 'message_age_sec':
                 setRetentionValue(convertSecondsToDate(stationState?.stationMetaData?.retention_value));
@@ -62,6 +66,18 @@ const StationOverviewHeader = (props) => {
                 break;
         }
     }, []);
+
+    const changeDynamicCode = (lang) => {
+        let codeEx = CODE_EXAMPLE[lang].code;
+        let host = process.env.REACT_APP_SANDBOX_ENV
+            ? 'broker.sandbox.memphis.dev'
+            : localStorage.getItem(LOCAL_STORAGE_ENV) === 'docker'
+            ? 'localhost'
+            : 'memphis-cluster.' + localStorage.getItem(LOCAL_STORAGE_NAMESPACE) + '.svc.cluster.local';
+        codeEx = codeEx.replaceAll('<memphis-host>', host);
+        codeEx = codeEx.replaceAll('<station_name>', stationName);
+        setCodeExample(codeEx);
+    };
 
     const returnToStaionsList = () => {
         const url = window.location.href;
@@ -196,7 +212,14 @@ const StationOverviewHeader = (props) => {
                     <div className="code-example">
                         <p>Code</p>
                         <div className="code-content">
-                            <CopyBlock language={CODE_EXAMPLE[langSelected].langCode} text={codeExample} showLineNumbers={true} theme={atomOneLight} wrapLines={true} codeBlock />
+                            <CopyBlock
+                                language={CODE_EXAMPLE[langSelected].langCode}
+                                text={codeExample}
+                                showLineNumbers={true}
+                                theme={atomOneLight}
+                                wrapLines={true}
+                                codeBlock
+                            />
                         </div>
                     </div>
                 </div>

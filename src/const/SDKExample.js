@@ -20,16 +20,16 @@ export const CODE_EXAMPLE = {
 (async function () {
     try {
         await memphis.connect({
-            host: "<memphis-cluster>",
-            username: "<user of type application>",
-            connectionToken: "<connectio_token>"
+            host: "<memphis-host>",
+            username: "<application type username>",
+            connectionToken: "<connection_token>"
         });
         
         // consumer
         
         const consumer = await memphis.consumer({
-            stationName: "test",
-            consumerName: "consumer_app",
+            stationName: "<station_name>",
+            consumerName: "myConsumer",
             consumerGroup: ""
         });
         consumer.on("message", message => {
@@ -43,8 +43,8 @@ export const CODE_EXAMPLE = {
         // producer
 
         const producer = await memphis.producer({
-            stationName: "test",
-            producerName: "producer_app"
+            stationName: "<station_name>",
+            producerName: "myProducer"
         });
         for (let index = 0; index < 100; index++) {
             await producer.produce({
@@ -60,7 +60,7 @@ export const CODE_EXAMPLE = {
 })();`
     },
 
-    'Go': {
+    Go: {
         langCode: 'go',
         installation: `go get github.com/memphisdev/memphis.go`,
         code: `package main
@@ -74,14 +74,14 @@ export const CODE_EXAMPLE = {
     )
     
     func main() {
-        conn, err := memphis.Connect("<memphis-host>", "<application type username>", "<broker-token>")
+        conn, err := memphis.Connect("<memphis-host>", "<application type username>", "<connection_token>")
         if err != nil {
             os.Exit(1)
         }
         defer conn.Close()
     
         // producer
-        p, err := conn.CreateProducer("<station-name>", "<producer-name>")
+        p, err := conn.CreateProducer("<station_name>", "myProducer")
         if err != nil {
             fmt.Printf("Producer creation failed: %v\n", err)
             os.Exit(1)
@@ -94,7 +94,7 @@ export const CODE_EXAMPLE = {
         }
     
         // producer
-        consumer, err := conn.CreateConsumer("<station-name>", "<consumer-name>", memphis.PullInterval(15*time.Second))
+        consumer, err := conn.CreateConsumer("<station_name>", "myConsumer", memphis.PullInterval(15*time.Second))
         if err != nil {
             fmt.Printf("Consumer creation failed: %v\n", err)
             os.Exit(1)

@@ -13,15 +13,36 @@
 
 import './style.scss';
 
-import React from 'react';
-import StatusIndication from '../../../../components/indication';
+import React, { useEffect, useState } from 'react';
 import MultiCollapse from '../../../stationOverview/stationObservabilty/components/multiCollapse';
 
-const ConsumerGroup = ({ details, cgData }) => {
+const ConsumerGroup = ({ header, details, cgMembers }) => {
+    const [consumers, setConsumers] = useState([]);
+    useEffect(() => {
+        cgMembers.map((row, index) => {
+            let consumer = {
+                name: row.name,
+                is_active: row.is_active,
+                is_deleted: row.is_deleted,
+                details: [
+                    {
+                        name: 'user',
+                        value: row.created_by_user
+                    },
+                    {
+                        name: 'IP',
+                        value: row.client_address
+                    }
+                ]
+            };
+            setConsumers([...consumers, consumer]);
+        });
+    }, []);
+
     return (
         <div className="consumer-group">
             <header is="x3d">
-                <p>CG 1</p>
+                <p>{header}</p>
             </header>
             <div className="content-wrapper">
                 <div className="details">
@@ -36,7 +57,7 @@ const ConsumerGroup = ({ details, cgData }) => {
                     })}
                 </div>
                 <div className="consumers">
-                    <MultiCollapse data={cgData} />
+                    <MultiCollapse data={consumers} />
                 </div>
             </div>
         </div>

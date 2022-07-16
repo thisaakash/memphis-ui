@@ -14,38 +14,43 @@
 import './style.scss';
 
 import React, { useState } from 'react';
-import StatusIndication from '../../../../components/indication';
 import Button from '../../../../components/button';
 import CustomCollapse from '../../../stationOverview/stationObservabilty/components/customCollapse';
 import { Space } from 'antd';
 import { httpRequest } from '../../../../services/http';
 import { ApiEndpoints } from '../../../../const/apiEndpoints';
 
-const PoisionMessage = ({ stationName, messageId, details, message }) => {
+const PoisionMessage = ({ stationName, messageId, details, message, procssing }) => {
     const [resendProcced, setResendProcced] = useState(false);
     const [ackProcced, setAckProcced] = useState(false);
 
     const handleAck = async () => {
         setAckProcced(true);
+        procssing(true);
         try {
-            await httpRequest('POST', `${ApiEndpoints.ACK_POISION_MESSAGE}`, { poison_message_ids: messageId });
+            await httpRequest('POST', `${ApiEndpoints.ACK_POISION_MESSAGE}`, { poison_message_ids: [messageId] });
             setTimeout(() => {
                 setAckProcced(false);
+                procssing(false);
             }, 1500);
         } catch (error) {
             setAckProcced(false);
+            procssing(false);
         }
     };
 
     const handleResend = async () => {
         setResendProcced(true);
+        procssing(true);
         try {
-            await httpRequest('POST', `${ApiEndpoints.RESEND_POISION_MESSAGE_JOURNEY}`, { poison_message_ids: messageId });
+            await httpRequest('POST', `${ApiEndpoints.RESEND_POISION_MESSAGE_JOURNEY}`, { poison_message_ids: [messageId] });
             setTimeout(() => {
                 setResendProcced(false);
+                procssing(false);
             }, 1500);
         } catch (error) {
             setResendProcced(false);
+            procssing(false);
         }
     };
 

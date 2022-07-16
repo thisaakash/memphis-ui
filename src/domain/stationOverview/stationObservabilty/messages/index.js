@@ -219,11 +219,12 @@ const Messages = () => {
     };
 
     const handleChangeMenuItem = (newValue) => {
-        getMessageDetails(
-            newValue === '0' ? false : true,
-            newValue === '0' ? null : stationState?.stationSocketData?.poison_messages[0]._id,
-            newValue === '0' ? stationState?.stationSocketData?.messages[0].message_seq : null
-        );
+        if (newValue === '0' && stationState?.stationSocketData?.messages.length > 0) {
+            getMessageDetails(false, null, stationState?.stationSocketData?.messages[0].message_seq);
+        }
+        if (newValue === '1' && stationState?.stationSocketData?.poison_messages.length > 0) {
+            getMessageDetails(true, stationState?.stationSocketData?.poison_messages[0]._id, null);
+        }
         setTabValue(newValue);
         setSelectedRowIndex(0);
     };
@@ -273,6 +274,7 @@ const Messages = () => {
                             backgroundColorType="purple"
                             fontSize="12px"
                             fontWeight="600"
+                            disabled={isCheck.length === 0}
                             isLoading={ackProcced}
                             onClick={() => handleAck()}
                         />
@@ -285,6 +287,7 @@ const Messages = () => {
                             backgroundColorType="purple"
                             fontSize="12px"
                             fontWeight="600"
+                            disabled={isCheck.length === 0}
                             isLoading={resendProcced}
                             onClick={() => handleResend()}
                         />

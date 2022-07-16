@@ -45,6 +45,32 @@
         }
         
     }
+    .canvas-wrapper{
+        position: absolute;
+        top: 50px;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: calc(100% - 70px);
+        .edge {
+            stroke-width: 8;
+            // stroke-dasharray: 5;
+            // animation: dashdraw .5s linear infinite;
+        }
+        .producer{
+            stroke: rgba(101, 87, 255, 0.1);
+        }
+        .consumer {
+            stroke: rgba(255, 54, 36, 0.1);
+        }
+        .procssing {
+            stroke-dasharray: 5;
+            animation: dashdraw .5s linear infinite;
+        }
+        @keyframes dashdraw {
+            0% { stroke-dashoffset: 10; }
+        }
+    }
 }
     
     .node-wrapper{

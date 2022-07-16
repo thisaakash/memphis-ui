@@ -17,7 +17,6 @@ import React from 'react';
 import StatusIndication from '../../../../components/indication';
 
 const Producer = ({ data }) => {
-    console.log(data);
     return (
         <div className="poision-producer">
             <header is="x3d">

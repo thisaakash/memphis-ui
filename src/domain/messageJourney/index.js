@@ -34,7 +34,51 @@ const MessageJourney = () => {
     const messageId = url.split('factories/')[1].split('/')[2];
     const stationName = url.split('factories/')[1].split('/')[1];
     const [isLoading, setisLoading] = useState(false);
+    const [procssing, setProcssing] = useState(false);
     const [messageData, setMessageData] = useState({});
+    const [nodes, setNodes] = useState([
+        {
+            id: 1,
+            text: 'Node 1',
+            width: 300,
+            height: 170,
+            data: {
+                value: 'producer'
+            }
+        },
+        {
+            id: 2,
+            text: 'Node 2',
+            width: 300,
+            height: 600,
+            ports: [
+                {
+                    id: 'station',
+                    side: 'EAST',
+                    width: 10,
+                    height: 10,
+                    hidden: true
+                }
+            ],
+            data: {
+                value: 'station'
+            }
+        }
+    ]);
+    const [edges, setEdges] = useState([
+        {
+            id: 1,
+            from: 1,
+            to: 2,
+            fromPort: 1,
+            toPort: 2,
+            selectionDisabled: true,
+            data: {
+                value: 'producer'
+            }
+        }
+    ]);
+
     const history = useHistory();
 
     const getPosionMessageDetails = async () => {
@@ -42,9 +86,6 @@ const MessageJourney = () => {
         try {
             const data = await httpRequest('GET', `${ApiEndpoints.GET_POISION_MESSAGE_JOURNEY}?message_id=${messageId}`);
             arrangeData(data);
-            setTimeout(() => {
-                setisLoading(false);
-            }, 1000);
         } catch (error) {
             setisLoading(false);
             if (error.status === 404 || error.status === 666) {
@@ -62,7 +103,6 @@ const MessageJourney = () => {
         state.socket?.on(`poison_message_journey_data_${messageId}`, (data) => {
             arrangeData(data);
         });
-
         setTimeout(() => {
             state.socket?.emit('register_poison_message_journey_data', messageId);
         }, 1000);
@@ -107,6 +147,52 @@ const MessageJourney = () => {
                         }
                     ]
                 };
+                let node = {
+                    id: index + 3,
+                    text: row.cg_name,
+                    width: 450,
+                    height: 260,
+                    data: {
+                        value: 'consumer',
+                        cgData: [
+                            {
+                                name: 'unprocessed messages',
+                                value: row.unprocessed_messages
+                            },
+                            {
+                                name: 'In process Message',
+                                value: row.in_process_messages
+                            },
+                            {
+                                name: 'poison messages',
+                                value: row.total_poison_messages
+                            },
+                            {
+                                name: 'max_ack_time',
+                                value: `${row.max_ack_time_ms}ms`
+                            },
+                            {
+                                name: 'max_message_deliveries',
+                                value: row.max_msg_deliveries
+                            }
+                        ],
+                        cgMembers: row.cg_members
+                    }
+                };
+                let edge = {
+                    id: index + 2,
+                    from: 2,
+                    to: index + 3,
+                    fromPort: 'station',
+                    toPort: index + 3,
+                    selectionDisabled: true,
+                    data: {
+                        value: 'consumer'
+                    }
+                };
+
+                setNodes([...nodes, node]);
+                setEdges([...edges, edge]);
                 poisionedCGs.push(cg);
             });
             let messageDetails = {
@@ -144,6 +230,9 @@ const MessageJourney = () => {
                 poisionedCGs: poisionedCGs
             };
             setMessageData(messageDetails);
+            setTimeout(() => {
+                setisLoading(false);
+            }, 1000);
         }
     };
 
@@ -163,300 +252,14 @@ const MessageJourney = () => {
                         </p>
                     </div>
 
-                    <div style={{ position: 'absolute', top: '50px', bottom: 0, left: 0, right: 0, height: 'calc(100% - 70px)' }}>
-                        <style>
-                            {`
-                                .edge {
-                                    stroke-width: 8;
-                                    stroke-dasharray: 5
-                                    animation: dashdraw .5s linear infinite;
-                                }
-                                .producer{
-                                    stroke: rgba(101, 87, 255, 0.1);
-                                }
-                                .consumer {
-                                    stroke: rgba(255, 54, 36, 0.1);
-                                }
-                                @keyframes dashdraw {
-                                    0% { stroke-dashoffset: 10; }
-                                }
-                            `}
-                        </style>
+                    <div className="canvas-wrapper">
                         <Canvas
                             className="canvas"
                             readonly={true}
                             direction="RIGHT"
                             // defaultPosition={null}
-                            nodes={[
-                                {
-                                    id: '1',
-                                    text: 'Node 1',
-                                    width: 300,
-                                    height: 170,
-                                    data: {
-                                        value: 'producer'
-                                    }
-                                },
-                                {
-                                    id: '2',
-                                    text: 'Node 2',
-                                    width: 300,
-                                    height: 600,
-                                    ports: [
-                                        {
-                                            id: '2-from',
-                                            side: 'EAST',
-                                            width: 10,
-                                            height: 10,
-                                            hidden: true
-                                        }
-                                    ],
-                                    data: {
-                                        value: 'station'
-                                    }
-                                },
-                                {
-                                    id: '3',
-                                    text: 'Node 3',
-                                    width: 450,
-                                    height: 260,
-                                    data: {
-                                        value: 'consumer',
-                                        consumeData: [
-                                            {
-                                                name: 'unprocessed messages',
-                                                value: '2'
-                                            },
-                                            {
-                                                name: 'In process Message',
-                                                value: '4'
-                                            },
-                                            {
-                                                name: 'poison messages',
-                                                value: '12'
-                                            },
-                                            {
-                                                name: 'max_ack_time',
-                                                value: '12sec'
-                                            },
-                                            {
-                                                name: 'max_message_deliveries',
-                                                value: '421'
-                                            }
-                                        ],
-                                        CGData: [
-                                            {
-                                                name: 'consumer_1',
-                                                status: 'active',
-                                                details: [
-                                                    {
-                                                        name: 'user',
-                                                        value: 'root'
-                                                    },
-                                                    {
-                                                        name: 'IP',
-                                                        value: '130.69.203.16'
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                name: 'CG_2',
-                                                status: 'active',
-                                                details: [
-                                                    {
-                                                        name: 'user',
-                                                        value: 'root'
-                                                    },
-                                                    {
-                                                        name: 'IP',
-                                                        value: '130.69.203.16'
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                name: 'CG_2',
-                                                status: 'active',
-                                                details: [
-                                                    {
-                                                        name: 'user',
-                                                        value: 'root'
-                                                    },
-                                                    {
-                                                        name: 'IP',
-                                                        value: '130.69.203.16'
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                name: 'CG_2',
-                                                status: 'active',
-                                                details: [
-                                                    {
-                                                        name: 'user',
-                                                        value: 'root'
-                                                    },
-                                                    {
-                                                        name: 'IP',
-                                                        value: '130.69.203.16'
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                name: 'CG_2',
-                                                status: 'active',
-                                                details: [
-                                                    {
-                                                        name: 'user',
-                                                        value: 'root'
-                                                    },
-                                                    {
-                                                        name: 'IP',
-                                                        value: '130.69.203.16'
-                                                    }
-                                                ]
-                                            }
-                                        ]
-                                    }
-                                },
-                                {
-                                    id: '4',
-                                    text: 'Node 4',
-                                    width: 450,
-                                    height: 260,
-                                    data: {
-                                        value: 'consumer',
-                                        consumeData: [
-                                            {
-                                                name: 'unprocessed messages',
-                                                value: '2'
-                                            },
-                                            {
-                                                name: 'In process Message',
-                                                value: '4'
-                                            },
-                                            {
-                                                name: 'poison messages',
-                                                value: '12'
-                                            },
-                                            {
-                                                name: 'max_ack_time',
-                                                value: '12sec'
-                                            },
-                                            {
-                                                name: 'max_message_deliveries',
-                                                value: '421'
-                                            }
-                                        ],
-                                        CGData: [
-                                            {
-                                                name: 'consumer_1',
-                                                status: 'active',
-                                                details: [
-                                                    {
-                                                        name: 'user',
-                                                        value: 'root'
-                                                    },
-                                                    {
-                                                        name: 'IP',
-                                                        value: '130.69.203.16'
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                name: 'CG_2',
-                                                status: 'active',
-                                                details: [
-                                                    {
-                                                        name: 'user',
-                                                        value: 'root'
-                                                    },
-                                                    {
-                                                        name: 'IP',
-                                                        value: '130.69.203.16'
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                name: 'CG_2',
-                                                status: 'active',
-                                                details: [
-                                                    {
-                                                        name: 'user',
-                                                        value: 'root'
-                                                    },
-                                                    {
-                                                        name: 'IP',
-                                                        value: '130.69.203.16'
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                name: 'CG_2',
-                                                status: 'active',
-                                                details: [
-                                                    {
-                                                        name: 'user',
-                                                        value: 'root'
-                                                    },
-                                                    {
-                                                        name: 'IP',
-                                                        value: '130.69.203.16'
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                name: 'CG_2',
-                                                status: 'active',
-                                                details: [
-                                                    {
-                                                        name: 'user',
-                                                        value: 'root'
-                                                    },
-                                                    {
-                                                        name: 'IP',
-                                                        value: '130.69.203.16'
-                                                    }
-                                                ]
-                                            }
-                                        ]
-                                    }
-                                }
-                            ]}
-                            edges={[
-                                {
-                                    id: '1-2',
-                                    from: '1',
-                                    to: '2',
-                                    fromPort: '1-from',
-                                    toPort: '2-to',
-                                    selectionDisabled: true,
-                                    data: {
-                                        value: 'producer'
-                                    }
-                                },
-                                {
-                                    id: '2-3',
-                                    from: '2',
-                                    to: '3',
-                                    fromPort: '2-from',
-                                    toPort: '3-from',
-                                    selectionDisabled: true,
-                                    data: {
-                                        value: 'consumer'
-                                    }
-                                },
-                                {
-                                    id: '2-4',
-                                    from: '2',
-                                    to: '4',
-                                    fromPort: '2-from',
-                                    toPort: '4-from',
-                                    selectionDisabled: true,
-                                    data: {
-                                        value: 'consumer'
-                                    }
-                                }
-                            ]}
+                            nodes={nodes}
+                            edges={edges}
                             node={
                                 <Node style={{ stroke: 'transparent', fill: 'transparent', strokeWidth: 1 }} label={<Label style={{ display: 'none' }} />}>
                                     {(event) => (
@@ -468,17 +271,21 @@ const MessageJourney = () => {
                                                     messageId={messageId}
                                                     message={messageData.message}
                                                     details={messageData.details}
+                                                    procssing={(status) => setProcssing(status)}
+                                                    return={() => returnBack()}
                                                 />
                                             )}
                                             {event.node.data.value === 'consumer' && (
-                                                <ConsumerGroup details={event.node.data.consumeData} cgData={event.node.data.CGData} />
+                                                <ConsumerGroup header={event.node.text} details={event.node.data.cgData} cgMembers={event.node.data.cgMembers} />
                                             )}
                                         </foreignObject>
                                     )}
                                 </Node>
                             }
                             arrow={null}
-                            edge={(edge) => <Edge {...edge} className={edge.data.value === 'producer' ? 'edge producer' : 'edge consumer'} />}
+                            edge={(edge) => (
+                                <Edge {...edge} className={edge.data.value === 'producer' ? 'edge producer' : procssing ? 'edge consumer procssing' : 'edge consumer'} />
+                            )}
                         />
                     </div>
                 </div>

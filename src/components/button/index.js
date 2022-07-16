@@ -41,7 +41,8 @@ const Button = (props) => {
         boxShadowStyle,
         minHeight,
         zIndex,
-        border
+        border,
+        alignSelf
     } = props;
 
     const handleClick = (e) => {
@@ -60,7 +61,8 @@ const Button = (props) => {
         textAlign: textAlign,
         marginBottom: marginBottom,
         marginTop: marginTop,
-        marginRight: marginRight
+        marginRight: marginRight,
+        alignSelf: alignSelf
     };
 
     const fieldProps = {

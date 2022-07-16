@@ -1,0 +1,38 @@
+import React, { useContext } from 'react';
+import TitleComponent from '../titleComponent';
+import './style.scss';
+import Button from '../button';
+import { GetStartedStoreContext } from '../../domain/overview/getStarted';
+
+const GetStartedItem = (props) => {
+    const { headerImage, headerTitle, headerDescription, style, children, onNext } = props;
+    const [getStartedState, getStartedDispatch] = useContext(GetStartedStoreContext);
+
+    return (
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div className="get-started-container" style={style?.container}>
+                <img className="header-image" src={headerImage} alt={headerImage} style={style?.image}></img>
+                <TitleComponent className="header-description" headerTitle={headerTitle} headerDescription={headerDescription} style={style}></TitleComponent>
+                {children}
+            </div>
+            <Button
+                width={getStartedState?.currentStep === 5 ? '190px' : '129px'}
+                height="42px"
+                placeholder={getStartedState?.currentStep === 5 ? 'Lanuch Dashboard' : 'Next'}
+                colorType="white"
+                radiusType="circle"
+                alignSelf="flex-end"
+                backgroundColorType={getStartedState?.nextDisable ? '#D8D8D8' : 'purple'}
+                fontSize="16px"
+                fontWeight="bold"
+                htmlType="submit"
+                marginTop="27px"
+                disabled={getStartedState?.nextDisable}
+                onClick={() => onNext()}
+                isLoading={getStartedState?.isLoading}
+            />
+        </div>
+    );
+};
+
+export default GetStartedItem;

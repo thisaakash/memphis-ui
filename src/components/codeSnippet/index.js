@@ -42,7 +42,7 @@ const CodeSnippet = (props) => {
 
     return (
         <div className="editor-code-snippet-container">
-            <EditorCodeSnippet height="30vh" width="37vw" path={languageOption?.name} options={options} language={languageOption?.language} value={codeSnippet} />
+            <EditorCodeSnippet height="30vh" path={languageOption?.name} options={options} language={languageOption?.language} value={codeSnippet} />
             <ClickableImage className="clipboard-image" image={CopyClipboard} onClick={onCopy}></ClickableImage>
         </div>
     );

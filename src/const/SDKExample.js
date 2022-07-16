@@ -126,7 +126,12 @@ consumer.on("message", message => {
 });
 consumer.on("error", error => {
     console.log(error);
-});`;
+});
+} catch (ex) {
+    console.log(ex);
+    memphis.close();
+}
+})();`;
 
 export const CODE_PRODUCE_JAVASCRIPT = `const memphis = require("memphis-dev");
 
@@ -145,7 +150,12 @@ const producer = await memphis.producer({
 await producer.produce({
     message: Buffer.from('Hello world')
 });
-console.log("Message sent");`;
+console.log("Message sent");
+} catch (ex) {
+    console.log(ex);
+    memphis.close();
+}
+})();`;
 
 export const CODE_CONSUME_GO = `package main
 

@@ -5,7 +5,8 @@ import WaitingConsumeData from '../../../../assets/images/waitingConsumeData.svg
 import ProduceConsumeData from '../produceConsumeData';
 import { GetStartedStoreContext } from '..';
 
-const ConsumeData = () => {
+const ConsumeData = (props) => {
+    const { createStationFormRef } = props;
     const [getStartedState, getStartedDispatch] = useContext(GetStartedStoreContext);
 
     const host = process.env.REACT_APP_SANDBOX_ENV ? 'broker.sandbox.memphis.dev' : 'localhost';
@@ -34,6 +35,14 @@ const ConsumeData = () => {
         }
     };
 
+    const onNext = () => {
+        getStartedDispatch({ type: 'SET_CURRENT_STEP', payload: getStartedState?.currentStep + 1 });
+    };
+
+    useEffect(() => {
+        createStationFormRef.current = onNext;
+    }, []);
+
     return (
         <ProduceConsumeData
             headerImage={ConsumeDataImg}
@@ -42,7 +51,7 @@ const ConsumeData = () => {
             waitingTitle={'Waiting to consume messages from the station'}
             languagesOptions={languagesOptions}
             activeData={'active_consumers'}
-            dataName={'demo_consumer_name'}
+            dataName={'consumer_app'}
         ></ProduceConsumeData>
     );
 };

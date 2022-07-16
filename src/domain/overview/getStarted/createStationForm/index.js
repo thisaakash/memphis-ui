@@ -6,8 +6,8 @@ import './style.scss';
 import { convertDateToSeconds, convertSecondsToDateObject } from '../../../../services/valueConvertor';
 import { ApiEndpoints } from '../../../../const/apiEndpoints';
 import { httpRequest } from '../../../../services/http';
-import GetStartedIcon from '../../../../assets/images/getStartedIcon.svg';
 import { GetStartedStoreContext } from '..';
+import TitleComponent from '../../../../components/titleComponent';
 
 const retanionOptions = [
     {
@@ -23,7 +23,7 @@ const retanionOptions = [
     {
         id: 3,
         value: 'messages',
-        label: 'Queue'
+        label: 'Messages'
     }
 ];
 
@@ -131,33 +131,41 @@ const CreateStationForm = (props) => {
 
     const onFinish = async () => {
         try {
-            const values = await creationForm.validateFields();
-            if (values?.errorFields || values.name === undefined || values.factory_name === undefined) {
-                // getStartedDispatch({ type: 'SET_NEXT_DISABLE', payload: true });
-                return;
-            } else {
-                if (values.retention_type === 'message_age_sec') {
-                    values['retention_value'] = convertDateToSeconds(values.days, values.hours, values.minutes, values.seconds);
-                } else if (values.retention_type === 'bytes') {
-                    values['retention_value'] = Number(values.retentionSizeValue);
-                } else {
-                    values['retention_value'] = Number(values.retentionMessagesValue);
-                }
-                if (values.name === getStartedState?.formFieldsCreateStation?.name || values.factory_name === getStartedState?.formFieldsCreateStation?.factory_name) {
+            getStartedDispatch({ type: 'IS_LOADING', payload: true });
+            ////// timeout here //////
+            setTimeout(async () => {
+                const values = await creationForm.validateFields();
+                if (values?.errorFields || values.name === undefined || values.factory_name === undefined) {
+                    // getStartedDispatch({ type: 'SET_NEXT_DISABLE', payload: true });
                     return;
+                } else {
+                    if (values.retention_type === 'message_age_sec') {
+                        values['retention_value'] = convertDateToSeconds(values.days, values.hours, values.minutes, values.seconds);
+                    } else if (values.retention_type === 'bytes') {
+                        values['retention_value'] = Number(values.retentionSizeValue);
+                    } else {
+                        values['retention_value'] = Number(values.retentionMessagesValue);
+                    }
+                    if (
+                        values.name === getStartedState?.formFieldsCreateStation?.name ||
+                        values.factory_name === getStartedState?.formFieldsCreateStation?.factory_name
+                    ) {
+                        return;
+                    }
+                    try {
+                        const bodyRequest = {
+                            name: values.name,
+                            factory_name: values.factory_name,
+                            retention_type: values.retention_type,
+                            retention_value: values.retention_value,
+                            storage_type: values.storage_type,
+                            replicas: values.replicas
+                        };
+                        createStation(bodyRequest);
+                    } catch (error) {}
                 }
-                try {
-                    const bodyRequest = {
-                        name: values.name,
-                        factory_name: values.factory_name,
-                        retention_type: values.retention_type,
-                        retention_value: values.retention_value,
-                        storage_type: values.storage_type,
-                        replicas: values.replicas
-                    };
-                    createStation(bodyRequest);
-                } catch (error) {}
-            }
+            }, 1000);
+            ////// Timeout end //////
         } catch (error) {
             console.log(`validate error ${JSON.stringify(error)}`);
         }
@@ -167,11 +175,17 @@ const CreateStationForm = (props) => {
         try {
             const data = await httpRequest('POST', ApiEndpoints.CREATE_STATION, bodyRequest);
             if (data) {
+                getStartedDispatch({ type: 'IS_LOADING', payload: false });
+                // getStartedDispatch({ type: 'SET_NEXT_DISABLE', payload: false });
+
                 getStartedDispatch({ type: 'SET_FACTORY', payload: bodyRequest.factory_name });
                 getStartedDispatch({ type: 'SET_STATION', payload: data.name });
                 getStartedDispatch({ type: 'SET_FORM_FIELDS_CREATE_STATION', payload: bodyRequest });
+                getStartedDispatch({ type: 'SET_CURRENT_STEP', payload: getStartedState?.currentStep + 1 });
             }
         } catch (error) {
+            getStartedDispatch({ type: 'IS_LOADING', payload: false });
+
             console.log(error);
         }
     };
@@ -184,8 +198,6 @@ const CreateStationForm = (props) => {
 
     return (
         <Form name="form" form={creationForm} autoComplete="off" className="create-station-form-getstarted">
-            <img src={GetStartedIcon} alt="getstarted" width="35.5" height="28.4" className="get-startetd-icon" />
-            <h1 className="header-getstarted-form">Create Station</h1>
             <Form.Item
                 name="factory_name"
                 rules={[
@@ -197,10 +209,11 @@ const CreateStationForm = (props) => {
                 style={{ marginBottom: '10px' }}
             >
                 <div>
-                    <h4 className="field-title">Enter factory name</h4>
-                    <p className="field-description">
-                        A factory presents the application/use case that the user requires to build, and, within it, all the stations (queues) that establish the use case
-                    </p>
+                    <TitleComponent
+                        headerTitle="Enter factory name"
+                        typeTitle="sub-header"
+                        headerDescription="A factory presents the application/use case that the user requires to build, and, within it, all the stations (queues) that establish the use case"
+                    ></TitleComponent>
                     <Input
                         placeholder="Type factory name"
                         type="text"
@@ -229,8 +242,11 @@ const CreateStationForm = (props) => {
                 style={{ marginBottom: '10px' }}
             >
                 <div>
-                    <h4 className="field-title">Enter station name</h4>
-                    <p className="field-description">RabbitMQ has queues, Kafka has topics, and Memphis has stations.</p>
+                    <TitleComponent
+                        headerTitle="Enter station name"
+                        typeTitle="sub-header"
+                        headerDescription="RabbitMQ has queues, Kafka has topics, and Memphis has stations."
+                    ></TitleComponent>
                     <Input
                         placeholder="Type station name"
                         type="text"
@@ -248,8 +264,11 @@ const CreateStationForm = (props) => {
             </Form.Item>
 
             <div className="retention">
-                <h4 className="field-title">Retention type</h4>
-                <p className="field-description">By which criteria messages will be expel from the station</p>
+                <TitleComponent
+                    headerTitle="Retention type"
+                    typeTitle="sub-header"
+                    headerDescription="By which criteria messages will be expel from the station"
+                ></TitleComponent>
                 <Form.Item name="retention_type" initialValue={formFields.retention_type}>
                     <RadioButton
                         className="radio-button"
@@ -335,8 +354,13 @@ const CreateStationForm = (props) => {
             </div>
             <div className="storage-replicas-container">
                 <div className="storage">
-                    <h4 className="field-title">Storage type</h4>
-                    <p className="field-description">Type of message persistence</p>
+                    <TitleComponent
+                        // style={{ width: '15vw' }}
+                        headerTitle="Storage type"
+                        typeTitle="sub-header"
+                        headerDescription="Type of message persistence"
+                        style={{ description: { width: '18vw' } }}
+                    ></TitleComponent>
                     <Form.Item name="storage_type" initialValue={formFields.storage_type}>
                         <RadioButton
                             options={storageOptions}
@@ -347,8 +371,12 @@ const CreateStationForm = (props) => {
                     </Form.Item>
                 </div>
                 <div className="replicas">
-                    <h4 className="field-title">Replicas</h4>
-                    <p className="field-description">Amount of mirrors per message</p>
+                    <TitleComponent
+                        headerTitle="Replicas"
+                        typeTitle="sub-header"
+                        headerDescription="Amount of mirrors per message"
+                        style={{ description: { width: '16vw' } }}
+                    ></TitleComponent>
                     <div className="replicas-value">
                         <Form.Item name="replicas" initialValue={formFields.replicas}>
                             <InputNumber bordered={false} min={1} max={5} keyboard={true} value={formFields.replicas} onChange={(e) => updateFormState('replicas', e)} />

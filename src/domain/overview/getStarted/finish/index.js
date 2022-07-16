@@ -1,6 +1,5 @@
 import React, { useContext, useEffect } from 'react';
 import { Form } from 'antd';
-import ReadyToroll from '../../../../assets/images/readyToRoll.svg';
 import Button from '../../../../components/button';
 import SlackIcon from '../../../../assets/images/slackIcon.svg';
 import GithubIcon from '../../../../assets/images/githubIcon.svg';
@@ -10,14 +9,21 @@ import { GetStartedStoreContext } from '..';
 import pathDomains from '../../../../router';
 import './style.scss';
 
-const Finsih = () => {
+const Finish = (props) => {
+    const { createStationFormRef } = props;
+
     const [creationForm] = Form.useForm();
     const history = useHistory();
     const [getStartedState, getStartedDispatch] = useContext(GetStartedStoreContext);
 
     useEffect(() => {
         getStartedDispatch({ type: 'SET_NEXT_DISABLE', payload: false });
+        createStationFormRef.current = onNext;
     }, []);
+
+    const onNext = () => {
+        window.location.reload(false);
+    };
 
     const onFinish = (e) => {
         e.preventDefault();
@@ -26,9 +32,9 @@ const Finsih = () => {
 
     return (
         <Form name="form" form={creationForm} autoComplete="off" className="finish-container">
-            <img className="image-finish" src={ReadyToroll} height="150px" width="150px" alt="ready-to-roll"></img>
-            <p className="header-finish">You are ready to roll</p>
-            <p className="sub-header-finish">Congratulations - You’ve created your first broker app. </p>
+            {/* <img className="image-finish" src={ReadyToroll} height="150px" width="150px" alt="ready-to-roll"></img>
+            <p className="header-finish">You are ready to roll</p> */}
+            {/* <p className="sub-header-finish">Congratulations - You’ve created your first broker app. </p> */}
             <Button
                 width="192px"
                 height="42px"
@@ -60,4 +66,4 @@ const Finsih = () => {
     );
 };
 
-export default Finsih;
+export default Finish;

@@ -1,15 +1,51 @@
 import React, { createContext, useEffect, useReducer, useRef } from 'react';
-import Button from '../../../components/button';
 import CreateStationForm from './createStationForm';
 import SideStep from './sideStep';
 import './style.scss';
 import CreateAppUser from './createAppUser';
 import ConsumeData from './consumeData';
-import Finsih from './finish';
+import Finish from './finish';
 import Reducer from './hooks/reducer';
 import ProduceData from './produceData';
+import GetStartedItem from '../../../components/getStartedItem';
+import GetStartedIcon from '../../../assets/images/getStartedIcon.svg';
+import AppUserIcon from '../../../assets/images/usersIconActive.svg';
+import ProduceDataImg from '../../../assets/images/produceData.svg';
+import ConsumeDataImg from '../../../assets/images/consumeData.svg';
+import ReadyToroll from '../../../assets/images/readyToRoll.svg';
 
 const steps = [{ stepName: 'Create Station' }, { stepName: 'Create App user' }, { stepName: 'Produce data' }, { stepName: 'Consume data' }, { stepName: 'Finish' }];
+
+const finishStyle = {
+    container: {
+        display: 'flex',
+        flexDirection: 'column',
+        // height: '73%',
+        alignItems: 'center'
+        // justifyContent: 'space-evenly'
+    },
+    header: {
+        fontFamily: 'Inter',
+        fontStyle: 'normal',
+        fontWeight: 600,
+        fontSize: '24px',
+        lineHeight: '29px',
+        color: '#1D1D1D'
+    },
+    description: {
+        fontFamily: 'Inter',
+        fontStyle: 'normal',
+        fontWeight: 400,
+        fontSize: '14px',
+        lineHeight: '120%',
+        textAlign: 'center',
+        color: '#B4B4B4'
+    },
+    image: {
+        width: '150px',
+        height: '150px'
+    }
+};
 
 const GetStarted = (props) => {
     const createStationFormRef = useRef(null);
@@ -31,26 +67,30 @@ const GetStarted = (props) => {
                 }
                 break;
             case 2:
+                createStationFormRef.current();
+
                 // code block
                 //onfinish
                 break;
             case 3:
                 // code block
+                createStationFormRef.current();
                 // produceFormRef.current();
                 break;
             case 4:
+                createStationFormRef.current();
+
                 break;
             case 5:
                 // const pathname = pathDomains.overview;
                 // history.push(location.pathname);
+                createStationFormRef.current();
                 //refresh
-                window.location.reload(false);
+                // window.location.reload(false);
                 return;
             default:
             // code block
         }
-
-        getStartedDispatch({ type: 'SET_CURRENT_STEP', payload: getStartedState?.currentStep + 1 });
     };
 
     const onBack = () => {
@@ -79,43 +119,59 @@ const GetStarted = (props) => {
                     <div>
                         <SideStepList />
                     </div>
+
                     <div>
-                        {getStartedState?.currentStep === 1 && <CreateStationForm createStationFormRef={createStationFormRef} />}
-                        {getStartedState?.currentStep === 2 && <CreateAppUser />}
-                        {getStartedState?.currentStep === 3 && <ProduceData />}
-                        {getStartedState?.currentStep === 4 && <ConsumeData />}
-                        {getStartedState?.currentStep === 5 && <Finsih />}
-                        <div className="btnContainer">
-                            {/* remark the logic for back button for this sprint */}
-                            {/* <Button
-                                width="129px"
-                                height="42px"
-                                placeholder="Back"
-                                colorType="white"
-                                radiusType="circle"
-                                backgroundColorType={getStartedState?.backDisable ? '#D8D8D8' : 'black'}
-                                fontSize="16px"
-                                fontWeight="bold"
-                                disabled={getStartedState?.backDisable}
-                                onClick={onBack}
-                            /> */}
-                            <Button
-                                width={getStartedState?.currentStep === 5 ? '150px' : '129px'}
-                                height="42px"
-                                placeholder={getStartedState?.currentStep === 5 ? 'Lanuch Dashboard' : 'Next'}
-                                colorType="white"
-                                radiusType="circle"
-                                backgroundColorType={getStartedState?.nextDisable ? '#D8D8D8' : 'purple'}
-                                fontSize="16px"
-                                fontWeight="bold"
-                                htmlType="submit"
-                                marginTop="30px"
-                                marginRight="30px"
-                                disabled={getStartedState?.nextDisable}
-                                onClick={onNext}
-                                // isLoading={true}
-                            />
-                        </div>
+                        {getStartedState?.currentStep === 1 && (
+                            <GetStartedItem
+                                headerImage={GetStartedIcon}
+                                headerTitle="Create Station"
+                                headerDescription="Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+                                onNext={() => onNext()}
+                            >
+                                <CreateStationForm createStationFormRef={createStationFormRef} />
+                            </GetStartedItem>
+                        )}
+                        {getStartedState?.currentStep === 2 && (
+                            <GetStartedItem
+                                headerImage={AppUserIcon}
+                                headerTitle="Create app user"
+                                headerDescription="Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+                                onNext={onNext}
+                            >
+                                <CreateAppUser createStationFormRef={createStationFormRef} />
+                            </GetStartedItem>
+                        )}
+                        {getStartedState?.currentStep === 3 && (
+                            <GetStartedItem
+                                headerImage={ProduceDataImg}
+                                headerTitle="Produce data"
+                                headerDescription="Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+                                onNext={onNext}
+                            >
+                                <ProduceData createStationFormRef={createStationFormRef} />
+                            </GetStartedItem>
+                        )}
+                        {getStartedState?.currentStep === 4 && (
+                            <GetStartedItem
+                                headerImage={ConsumeDataImg}
+                                headerTitle="Consume data"
+                                headerDescription="Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+                                onNext={onNext}
+                            >
+                                <ConsumeData createStationFormRef={createStationFormRef} />
+                            </GetStartedItem>
+                        )}
+                        {getStartedState?.currentStep === 5 && (
+                            <GetStartedItem
+                                headerImage={ReadyToroll}
+                                headerTitle="You are ready to roll"
+                                headerDescription="Congratulations - You’ve created your first broker app. "
+                                onNext={onNext}
+                                style={finishStyle}
+                            >
+                                <Finish createStationFormRef={createStationFormRef} />
+                            </GetStartedItem>
+                        )}
                     </div>
                 </div>
             </div>

@@ -50,6 +50,16 @@ const Reducer = (getStartedState, action) => {
                 ...getStartedState,
                 stationData: action.payload
             };
+        case 'IS_APP_USER_CREATED':
+            return {
+                ...getStartedState,
+                isAppUserCreated: action.payload
+            };
+        case 'IS_LOADING':
+            return {
+                ...getStartedState,
+                isLoading: action.payload
+            };
         default:
             return getStartedState;
     }

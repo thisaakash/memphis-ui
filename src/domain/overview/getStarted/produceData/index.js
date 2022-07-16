@@ -6,6 +6,7 @@ import ProduceConsumeData from '../produceConsumeData';
 import { GetStartedStoreContext } from '..';
 
 const ProduceData = (props) => {
+    const { createStationFormRef } = props;
     const [getStartedState, getStartedDispatch] = useContext(GetStartedStoreContext);
     const host = process.env.REACT_APP_SANDBOX_ENV ? 'broker.sandbox.memphis.dev' : 'localhost';
 
@@ -33,6 +34,14 @@ const ProduceData = (props) => {
         }
     };
 
+    const onNext = () => {
+        getStartedDispatch({ type: 'SET_CURRENT_STEP', payload: getStartedState?.currentStep + 1 });
+    };
+
+    useEffect(() => {
+        createStationFormRef.current = onNext;
+    }, []);
+
     return (
         <ProduceConsumeData
             headerImage={ProduceDataImg}
@@ -41,7 +50,7 @@ const ProduceData = (props) => {
             waitingTitle={'We are waiting to produce data'}
             languagesOptions={languagesOptions}
             activeData={'active_producers'}
-            dataName={'demo_producer_name'}
+            dataName={'producer_app'}
         ></ProduceConsumeData>
     );
 };

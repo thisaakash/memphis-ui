@@ -1,17 +1,32 @@
 .create-station-form-getstarted {
-    overflow: auto;
-    min-height: 53vh;
-    min-width: 40vw;
+    // overflow: auto;
+    // min-height: 53vh;
+    // min-width: 40vw;
 
-    padding: 30px;
-    border: 1px solid #f2f2f2;
-    border-radius: 8px;
-    margin-left: 23px;
-
+    // padding: 30px;
+    // border: 1px solid #f2f2f2;
+    // border-radius: 8px;
+    // margin-left: 23px;
+    // height: 55vh;
+    // max-width: 15vw;
     .storage-replicas-container {
         display: flex;
-        justify-content: space-between;
+        width: 100%;
+        // justify-content: space-between;
+
+        .replicas {
+            // width: 10vw;
+            // margin-right: 50%;
+        }
+
+        .storage {
+            // width: 20vw;
+        }
+        // justify-content: space-between;
     }
+    // .custome-header-description-class {
+    //     width: 18vw;
+    // }
 
     .header-getstarted-form {
         width: 168px;

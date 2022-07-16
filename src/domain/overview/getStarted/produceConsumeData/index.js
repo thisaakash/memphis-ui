@@ -8,6 +8,7 @@ import { GetStartedStoreContext } from '..';
 import { httpRequest } from '../../../../services/http';
 import { ApiEndpoints } from '../../../../const/apiEndpoints';
 import './style.scss';
+import TitleComponent from '../../../../components/titleComponent';
 
 const screenEnum = {
     DATA_SNIPPET: 0,
@@ -21,7 +22,8 @@ const ProduceConsumeData = (props) => {
     const [isCopyToClipBoard, setCopyToClipBoard] = useState(screenEnum['DATA_SNIPPET']);
     const [languageOption, setLanguageOption] = useState();
     const [getStartedState, getStartedDispatch] = useContext(GetStartedStoreContext);
-    let intervalStationDetails = null;
+
+    const [intervalStationDetails, setintervalStationDetails] = useState();
 
     const getStationDetails = async () => {
         try {
@@ -38,18 +40,21 @@ const ProduceConsumeData = (props) => {
 
     const onCopyToClipBoard = () => {
         setCopyToClipBoard(screenEnum['DATA_WAITING']);
-
-        intervalStationDetails = window.setInterval(() => {
+        let interval = setInterval(() => {
             getStationDetails();
         }, 3000);
+        setintervalStationDetails(interval);
+        console.log(intervalStationDetails);
     };
 
     useEffect(() => {
-        setLanguageOption(languagesOptions['Node.js']);
+        setLanguageOption(languagesOptions['Go']);
+        //check
+        getStartedDispatch({ type: 'SET_NEXT_DISABLE', payload: true });
     }, []);
 
     useEffect(() => {
-        if (isCopyToClipBoard === screenEnum['DATA_WAITING']) {
+        if (isCopyToClipBoard === screenEnum['DATA_WAITING'] || isCopyToClipBoard === screenEnum['DATA_SNIPPET']) {
             getStartedDispatch({ type: 'SET_NEXT_DISABLE', payload: true });
         } else {
             getStartedDispatch({ type: 'SET_NEXT_DISABLE', payload: false });
@@ -57,6 +62,10 @@ const ProduceConsumeData = (props) => {
 
         if (isCopyToClipBoard === screenEnum['DATA_RECIEVED']) {
             clearInterval(intervalStationDetails);
+            return () => {
+                clearInterval(intervalStationDetails);
+                console.log('clear interval');
+            };
         }
     }, [isCopyToClipBoard]);
 
@@ -68,17 +77,32 @@ const ProduceConsumeData = (props) => {
             getStartedState?.stationData[activeData][0]?.name === dataName
         ) {
             setCopyToClipBoard(screenEnum['DATA_RECIEVED']);
+            clearInterval(intervalStationDetails);
+
+            // return () => {
+            //     clearInterval(intervalStationDetails);
+            //     console.log('clear');
+            //     return;
+            // };
         }
+
+        // if (Object.keys(getStartedState?.stationData[activeData])?.length === 1) {
+        //     clearInterval(intervalStationDetails);
+        //     console.log('clearrr');
+        // }
     }, [[getStartedState?.stationData?.[activeData]]]);
 
     const updateDisplayLanguage = (lang) => {
         setLanguageOption(languagesOptions[lang]);
     };
 
+    const clearInterFunc = () => {
+        console.log(intervalStationDetails);
+        clearInterval(intervalStationDetails);
+    };
+
     return (
         <Form name="form" form={creationForm} autoComplete="off" className="create-produce-data">
-            <img src={headerImage} alt={headerImage} width="40px" height="40px" className="produce-data-icon"></img>
-            <h1 className="header-create-produce-data">{headerTitle}</h1>
             <Form.Item
                 name="languages"
                 rules={[
@@ -89,8 +113,8 @@ const ProduceConsumeData = (props) => {
                 ]}
                 style={{ marginBottom: '0' }}
             >
-                <div>
-                    <h4 className="header-language">Language</h4>
+                <div className="select-container">
+                    <TitleComponent headerTitle="Language" typeTitle="sub-header"></TitleComponent>
                     <SelectComponent
                         initialValue={languageOption?.name}
                         value={languageOption?.name}
@@ -114,13 +138,18 @@ const ProduceConsumeData = (props) => {
                                 width="129px"
                                 height="40px"
                                 placeholder="Skip"
-                                colorType="white"
+                                colorType="black"
                                 radiusType="circle"
-                                backgroundColorType="purple"
+                                backgroundColorType="white"
+                                border="border: 1px solid #EBEBEB"
                                 fontSize="14px"
                                 fontWeight="bold"
+                                // boxShadowStyle="none"
+                                marginBottom="3px"
                                 onClick={() => {
-                                    clearInterval(intervalStationDetails);
+                                    clearInterFunc();
+                                    // clearInterval(intervalStationDetails);
+
                                     getStartedDispatch({ type: 'SET_CURRENT_STEP', payload: getStartedState?.currentStep + 1 });
                                 }}
                             />

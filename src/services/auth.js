@@ -22,7 +22,8 @@ import {
     LOCAL_STORAGE_USER_TYPE,
     LOCAL_STORAGE_ALLOW_ANALYTICS,
     LOCAL_STORAGE_ENV,
-    LOCAL_STORAGE_NAMESPACE
+    LOCAL_STORAGE_NAMESPACE,
+    LOCAL_STORAGE_WELCOME_MESSAGE
 } from '../const/localStorageConsts';
 import pathDomains from '../router';
 
@@ -42,6 +43,9 @@ const AuthService = (function () {
         localStorage.setItem(LOCAL_STORAGE_ALLOW_ANALYTICS, userData.send_analytics);
         localStorage.setItem(LOCAL_STORAGE_ENV, userData.env);
         localStorage.setItem(LOCAL_STORAGE_NAMESPACE, userData.namespace);
+        if (userData.already_logged_in === false) {
+            localStorage.setItem(LOCAL_STORAGE_WELCOME_MESSAGE, true);
+        }
     };
 
     const logout = () => {

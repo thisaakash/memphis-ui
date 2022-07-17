@@ -121,7 +121,7 @@ const ProduceConsumList = (props) => {
             let cgDetails = {
                 details: [
                     {
-                        name: 'unprocessed messages',
+                        name: 'Unprocessed messages',
                         value: cgsList[rowIndex]?.unprocessed_messages
                     },
                     {
@@ -129,15 +129,15 @@ const ProduceConsumList = (props) => {
                         value: cgsList[rowIndex]?.in_process_messages
                     },
                     {
-                        name: 'poison messages',
+                        name: 'Poison messages',
                         value: cgsList[rowIndex]?.poison_messages
                     },
                     {
-                        name: 'max_ack_time',
+                        name: 'Max ack time',
                         value: `${cgsList[rowIndex]?.max_ack_time_ms}ms`
                     },
                     {
-                        name: 'max_message_deliveries',
+                        name: 'Max message deliveries',
                         value: cgsList[rowIndex]?.max_msg_deliveries
                     }
                 ],

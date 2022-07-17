@@ -96,7 +96,7 @@ const Messages = () => {
                         },
                         {
                             name: 'Max ack time',
-                            value: `${row?.max_ack_time_ms}ms`
+                            value: `${numberWithCommas(row?.max_ack_time_ms)}ms`
                         },
                         {
                             name: 'Max message deliveries',

@@ -135,7 +135,7 @@ const ProduceConsumList = (props) => {
                     },
                     {
                         name: 'Max ack time',
-                        value: `${cgsList[rowIndex]?.max_ack_time_ms}ms`
+                        value: `${numberWithCommas(cgsList[rowIndex]?.max_ack_time_ms)}ms`
                     },
                     {
                         name: 'Max message deliveries',

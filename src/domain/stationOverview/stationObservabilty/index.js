@@ -16,7 +16,9 @@ import './style.scss';
 import React, { useContext, useEffect, useRef } from 'react';
 import lottie from 'lottie-web';
 
-import animationData from '../../../assets/lotties/produce-many.json';
+import produceFew from '../../../assets/lotties/produce-few.json';
+import consumer from '../../../assets/lotties/consume.json';
+
 import Messages from './messages';
 import ProduceConsumList from './ProduceConsumList';
 import { StationStoreContext } from '..';
@@ -32,7 +34,7 @@ const StationObservabilty = () => {
             renderer: 'svg',
             loop: true,
             autoplay: true,
-            animationData: animationData
+            animationData: produceFew
         });
     }, [stationState?.stationSocketData?.connected_producers?.length > 0]);
 
@@ -42,7 +44,7 @@ const StationObservabilty = () => {
             renderer: 'svg',
             loop: true,
             autoplay: true,
-            animationData: animationData
+            animationData: consumer
         });
     }, [stationState?.stationSocketData?.connected_cgs?.length > 0]);
 

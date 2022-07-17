@@ -21,7 +21,7 @@ const Producer = ({ data }) => {
         <div className="poision-producer">
             <header is="x3d">
                 <p>Producer</p>
-                <StatusIndication is_active={data.is_active} is_deleted={data.is_active} />
+                <StatusIndication is_active={data?.is_active} is_deleted={data?.is_deleted} />
             </header>
             <div className="content-wrapper">
                 {data?.details?.length > 0 &&

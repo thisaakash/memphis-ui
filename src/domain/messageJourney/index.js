@@ -36,48 +36,8 @@ const MessageJourney = () => {
     const [isLoading, setisLoading] = useState(false);
     const [procssing, setProcssing] = useState(false);
     const [messageData, setMessageData] = useState({});
-    const [nodes, setNodes] = useState([
-        {
-            id: 1,
-            text: 'Node 1',
-            width: 300,
-            height: 170,
-            data: {
-                value: 'producer'
-            }
-        },
-        {
-            id: 2,
-            text: 'Node 2',
-            width: 300,
-            height: 600,
-            ports: [
-                {
-                    id: 'station',
-                    side: 'EAST',
-                    width: 10,
-                    height: 10,
-                    hidden: true
-                }
-            ],
-            data: {
-                value: 'station'
-            }
-        }
-    ]);
-    const [edges, setEdges] = useState([
-        {
-            id: 1,
-            from: 1,
-            to: 2,
-            fromPort: 1,
-            toPort: 2,
-            selectionDisabled: true,
-            data: {
-                value: 'producer'
-            }
-        }
-    ]);
+    const [nodes, setNodes] = useState();
+    const [edges, setEdges] = useState();
 
     const history = useHistory();
 
@@ -114,15 +74,56 @@ const MessageJourney = () => {
     const returnBack = () => {
         history.push(`${pathDomains.factoriesList}/${url.split('factories/')[1].split('/')[0]}/${stationName}`);
     };
-
     const arrangeData = (data) => {
         let poisionedCGs = [];
+        let nodesList = [
+            {
+                id: 1,
+                text: 'Node 1',
+                width: 300,
+                height: 170,
+                data: {
+                    value: 'producer'
+                }
+            },
+            {
+                id: 2,
+                text: 'Node 2',
+                width: 300,
+                height: 600,
+                ports: [
+                    {
+                        id: 'station',
+                        side: 'EAST',
+                        width: 10,
+                        height: 10,
+                        hidden: true
+                    }
+                ],
+                data: {
+                    value: 'station'
+                }
+            }
+        ];
+        let edgesList = [
+            {
+                id: 1,
+                from: 1,
+                to: 2,
+                fromPort: 1,
+                toPort: 2,
+                selectionDisabled: true,
+                data: {
+                    value: 'producer'
+                }
+            }
+        ];
         if (data) {
             data.poisoned_cgs.map((row, index) => {
                 let cg = {
                     name: row.cg_name,
-                    is_active: true,
-                    is_deleted: false,
+                    is_active: row.is_active,
+                    is_deleted: row.is_deleted,
                     cgMembers: row.cg_members,
                     details: [
                         {
@@ -190,11 +191,11 @@ const MessageJourney = () => {
                         value: 'consumer'
                     }
                 };
-
-                setNodes([...nodes, node]);
-                setEdges([...edges, edge]);
+                nodesList.push(node);
+                edgesList.push(edge);
                 poisionedCGs.push(cg);
             });
+
             let messageDetails = {
                 id: data._id ?? null,
                 messageSeq: data.message_seq,
@@ -230,6 +231,8 @@ const MessageJourney = () => {
                 poisionedCGs: poisionedCGs
             };
             setMessageData(messageDetails);
+            setEdges(edgesList);
+            setNodes(nodesList);
             setTimeout(() => {
                 setisLoading(false);
             }, 1000);
@@ -272,7 +275,7 @@ const MessageJourney = () => {
                                                     message={messageData.message}
                                                     details={messageData.details}
                                                     procssing={(status) => setProcssing(status)}
-                                                    return={() => returnBack()}
+                                                    returnBack={() => returnBack()}
                                                 />
                                             )}
                                             {event.node.data.value === 'consumer' && (

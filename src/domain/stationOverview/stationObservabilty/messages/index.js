@@ -30,61 +30,6 @@ import { useHistory } from 'react-router-dom';
 import { httpRequest } from '../../../../services/http';
 import { ApiEndpoints } from '../../../../const/apiEndpoints';
 
-const CGData = [
-    {
-        name: 'CG_1',
-        status: 'active',
-        details: [
-            {
-                name: 'unprocessed messages',
-                value: '2'
-            },
-            {
-                name: 'In process Message',
-                value: '4'
-            },
-            {
-                name: 'poison messages',
-                value: '12'
-            },
-            {
-                name: 'max_ack_time',
-                value: '12sec'
-            },
-            {
-                name: 'max_message_deliveries',
-                value: '421'
-            }
-        ]
-    },
-    {
-        name: 'CG_2',
-        status: 'active',
-        details: [
-            {
-                name: 'unprocessed messages',
-                value: '2'
-            },
-            {
-                name: 'In process Message',
-                value: '4'
-            },
-            {
-                name: 'poison messages',
-                value: '12'
-            },
-            {
-                name: 'max_ack_time',
-                value: '12sec'
-            },
-            {
-                name: 'max_message_deliveries',
-                value: '142'
-            }
-        ]
-    }
-];
-
 const Messages = () => {
     const [stationState, stationDispatch] = useContext(StationStoreContext);
     const [selectedRowIndex, setSelectedRowIndex] = useState(0);
@@ -102,8 +47,8 @@ const Messages = () => {
     const history = useHistory();
 
     useEffect(() => {
-        if (stationState?.stationSocketData?.messages.length > 0 && Object.keys(messageDetails).length === 0) {
-            getMessageDetails(false, null, stationState?.stationSocketData?.messages[0].message_seq);
+        if (stationState?.stationSocketData?.messages?.length > 0 && Object.keys(messageDetails).length === 0) {
+            getMessageDetails(false, null, stationState?.stationSocketData?.messages[0]?.message_seq);
         }
     }, [stationState?.stationSocketData?.messages]);
 
@@ -129,8 +74,8 @@ const Messages = () => {
             data.poisoned_cgs.map((row, index) => {
                 let cg = {
                     name: row.cg_name,
-                    is_active: true,
-                    is_deleted: false,
+                    is_active: row.is_active,
+                    is_deleted: row.is_deleted,
                     details: [
                         {
                             name: 'unprocessed messages',

@@ -16,7 +16,7 @@ import './style.scss';
 import React, { useContext, useEffect, useRef } from 'react';
 import lottie from 'lottie-web';
 
-import animationData from '../../../assets/lotties/thunnel-many.json';
+import animationData from '../../../assets/lotties/produce-many.json';
 import Messages from './messages';
 import ProduceConsumList from './ProduceConsumList';
 import { StationStoreContext } from '..';
@@ -34,7 +34,7 @@ const StationObservabilty = () => {
             autoplay: true,
             animationData: animationData
         });
-    }, [stationState?.stationSocketData?.active_producers?.length > 0]);
+    }, [stationState?.stationSocketData?.connected_producers?.length > 0]);
 
     useEffect(() => {
         lottie.loadAnimation({
@@ -44,17 +44,17 @@ const StationObservabilty = () => {
             autoplay: true,
             animationData: animationData
         });
-    }, [stationState?.stationSocketData?.active_consumers?.length > 0]);
+    }, [stationState?.stationSocketData?.connected_cgs?.length > 0]);
 
     return (
         <div className="station-observabilty-container">
             <ProduceConsumList producer={true} />
             <div className="thunnel-from-sub">
-                {stationState?.stationSocketData?.active_producers?.length > 0 && <div style={{ height: '10vw', width: '10vw' }} ref={fromProducer}></div>}
+                {stationState?.stationSocketData?.connected_producers?.length > 0 && <div style={{ height: '25vw', width: '10vw' }} ref={fromProducer}></div>}
             </div>
             <Messages />
             <div className="thunnel-to-pub">
-                {stationState?.stationSocketData?.active_consumers?.length > 0 && <div style={{ height: '10vw', width: '10vw' }} ref={toConsumer}></div>}
+                {stationState?.stationSocketData?.connected_cgs?.length > 0 && <div style={{ height: '25vw', width: '10vw' }} ref={toConsumer}></div>}
             </div>
             <ProduceConsumList producer={false} />
         </div>

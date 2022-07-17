@@ -15,70 +15,13 @@ import './style.scss';
 
 import React, { useContext, useEffect, useState } from 'react';
 
-import comingSoonBox from '../../../../assets/images/comingSoonBox.svg';
-import TooltipComponent from '../../../../components/tooltip/tooltip';
 import OverflowTip from '../../../../components/tooltip/overflowtip';
-import { DeleteForeverRounded } from '@material-ui/icons';
 
 import { StationStoreContext } from '../..';
 import StatusIndication from '../../../../components/indication';
 import CustomCollapse from '../components/customCollapse';
 import MultiCollapse from '../components/multiCollapse';
 import { Space } from 'antd';
-
-const consumeData = [
-    {
-        name: 'unprocessed messages',
-        value: '2'
-    },
-    {
-        name: 'In process Message',
-        value: '4'
-    },
-    {
-        name: 'poison messages',
-        value: '12'
-    },
-    {
-        name: 'max_ack_time',
-        value: '12sec'
-    },
-    {
-        name: 'max_message_deliveries',
-        value: '421'
-    }
-];
-
-const CGData = [
-    {
-        name: 'consumer_1',
-        status: 'active',
-        details: [
-            {
-                name: 'user',
-                value: 'root'
-            },
-            {
-                name: 'IP',
-                value: '130.69.203.16'
-            }
-        ]
-    },
-    {
-        name: 'CG_2',
-        status: 'active',
-        details: [
-            {
-                name: 'user',
-                value: 'root'
-            },
-            {
-                name: 'IP',
-                value: '130.69.203.16'
-            }
-        ]
-    }
-];
 
 const ProduceConsumList = (props) => {
     const [stationState, stationDispatch] = useContext(StationStoreContext);
@@ -112,8 +55,8 @@ const ProduceConsumList = (props) => {
             connected = data?.connected_producers || [];
             deleted = data?.deleted_producers || [];
             disconnected = data?.disconnected_producers || [];
-            concatArrays = connected.concat(deleted);
-            concatArrays = concatArrays.concat(disconnected);
+            concatArrays = connected.concat(disconnected);
+            concatArrays = concatArrays.concat(deleted);
             return concatArrays;
         } else if (type === 'cgs') {
             connected = data?.connected_cgs || [];

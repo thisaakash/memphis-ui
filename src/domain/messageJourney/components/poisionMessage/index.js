@@ -20,22 +20,20 @@ import { Space } from 'antd';
 import { httpRequest } from '../../../../services/http';
 import { ApiEndpoints } from '../../../../const/apiEndpoints';
 
-const PoisionMessage = ({ stationName, messageId, details, message, procssing }) => {
+const PoisionMessage = ({ stationName, messageId, details, message, procssing, returnBack }) => {
     const [resendProcced, setResendProcced] = useState(false);
     const [ackProcced, setAckProcced] = useState(false);
 
     const handleAck = async () => {
         setAckProcced(true);
-        procssing(true);
         try {
             await httpRequest('POST', `${ApiEndpoints.ACK_POISION_MESSAGE}`, { poison_message_ids: [messageId] });
             setTimeout(() => {
                 setAckProcced(false);
-                procssing(false);
+                returnBack();
             }, 1500);
         } catch (error) {
             setAckProcced(false);
-            procssing(false);
         }
     };
 
@@ -47,7 +45,7 @@ const PoisionMessage = ({ stationName, messageId, details, message, procssing })
             setTimeout(() => {
                 setResendProcced(false);
                 procssing(false);
-            }, 1500);
+            }, 2500);
         } catch (error) {
             setResendProcced(false);
             procssing(false);
@@ -63,7 +61,7 @@ const PoisionMessage = ({ stationName, messageId, details, message, procssing })
                 <div className="btn-row">
                     <Button
                         width="65px"
-                        height="25px"
+                        height="24px"
                         placeholder="Ack"
                         colorType="white"
                         radiusType="circle"

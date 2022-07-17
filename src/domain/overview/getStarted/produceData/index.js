@@ -1,5 +1,4 @@
 import React, { useContext, useEffect } from 'react';
-import ProduceDataImg from '../../../../assets/images/produceData.svg';
 import { CODE_PRODUCE_GO, CODE_PRODUCE_JAVASCRIPT } from '../../../../const/SDKExample';
 import WaitingProduceData from '../../../../assets/images/waitingProduceData.svg';
 import ProduceConsumeData from '../produceConsumeData';
@@ -44,10 +43,9 @@ const ProduceData = (props) => {
 
     return (
         <ProduceConsumeData
-            headerImage={ProduceDataImg}
-            headerTitle={'Produce Data'}
             waitingImage={WaitingProduceData}
             waitingTitle={'We are waiting to produce data'}
+            successfullTitle={'Successfully received'}
             languagesOptions={languagesOptions}
             activeData={'active_producers'}
             dataName={'producer_app'}

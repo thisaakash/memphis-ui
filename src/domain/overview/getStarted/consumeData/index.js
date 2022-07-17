@@ -1,5 +1,4 @@
 import React, { useContext, useEffect } from 'react';
-import ConsumeDataImg from '../../../../assets/images/consumeData.svg';
 import { CODE_CONSUME_JAVASCRIPT, CODE_CONSUME_GO } from '../../../../const/SDKExample';
 import WaitingConsumeData from '../../../../assets/images/waitingConsumeData.svg';
 import ProduceConsumeData from '../produceConsumeData';
@@ -45,10 +44,9 @@ const ConsumeData = (props) => {
 
     return (
         <ProduceConsumeData
-            headerImage={ConsumeDataImg}
-            headerTitle={'Consume data'}
             waitingImage={WaitingConsumeData}
             waitingTitle={'Waiting to consume messages from the station'}
+            successfullTitle={'Start to receive messages.'}
             languagesOptions={languagesOptions}
             activeData={'active_consumers'}
             dataName={'consumer_app'}

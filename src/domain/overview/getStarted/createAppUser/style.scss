@@ -1,48 +1,17 @@
 .create-station-form-create-app-user {
-    // width: 100%;
-    // height: 80%;
-    // padding: 30px;
-    // border: 1px solid #f2f2f2;
-    // border-radius: 8px;
-    // margin-left: 23px;
-    // min-height: 53vh;
-    // min-width: 38vw;
-
-    .app-user-icon {
-        margin-bottom: 13px;
+    .field-title {
+        display: flex;
+        font-weight: 400;
+        font-size: 12px;
+        margin: 0;
     }
-
-    .header-create-app-user {
-        font-family: 'Inter';
-        font-style: normal;
-        font-weight: 600;
-        font-size: 24px;
-        line-height: 29px;
-        color: #1d1d1d;
-        margin-bottom: 20px;
-    }
-    .header-enter-user-name {
-        width: 129px;
-        height: 20px;
-        font-family: 'Inter';
-        font-style: normal;
-        font-weight: 600;
-        font-size: 16px;
-        line-height: 20px;
-        color: #2e2c34;
-        margin-bottom: 20px;
-    }
-    // .create-app-user {
-    //     font-family: 'Inter';
-    //     font-style: normal;
-    //     font-weight: 600;
-    //     font-size: 12px;
-    //     line-height: 16px;
-    // }
 
     .creating-the-user-container {
         text-align: center;
         justify-content: center;
+        border: 1px solid #f3f3f3;
+        border-radius: 4px;
+        height: 144px;
         .create-the-user-header {
             margin-top: 19px;
             font-family: 'Inter';
@@ -55,11 +24,11 @@
     }
 
     .connection-details-container {
-        height: 144px;
+        height: 125px;
         background: rgba(239, 239, 243, 0.05);
         border: 1px solid #f3f3f3;
         border-radius: 4px;
-        margin-top: 29px;
+        margin-top: 15px;
 
         .user-details-container {
             height: 44px;
@@ -93,7 +62,7 @@
             font-size: 14px;
             line-height: 196.5%;
             margin-left: 20px;
-            margin-top: 20px;
+            margin-top: 5px;
             color: #2e2c34;
             height: 50px;
 

@@ -125,12 +125,17 @@ const CreateAppUser = (props) => {
                     style={{ marginBottom: '0' }}
                 >
                     <div>
-                        <TitleComponent
-                            style={{ header: { marginTop: '20px' } }}
-                            headerTitle="Enter user name"
-                            typeTitle="sub-header"
-                            headerDescription="Lorem Ipsum is simply dummy text of the printing and typesetting industry."
-                        ></TitleComponent>
+                        <div style={{ display: 'flex' }}>
+                            <p className="field-title">
+                                <span className="required-field-mark">* </span>
+                            </p>{' '}
+                            <TitleComponent
+                                // style={{ header: { marginTop: '20px' } }}
+                                headerTitle="Enter user name"
+                                typeTitle="sub-header"
+                                headerDescription="Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+                            ></TitleComponent>
+                        </div>
                         <Input
                             placeholder="Type user name"
                             type="text"
@@ -172,7 +177,7 @@ const CreateAppUser = (props) => {
                         </div>
                         <div className="container-username-token">
                             <div className="username-container">
-                                <p className="username">Username: {getStartedState.username}</p>
+                                <p>Username: {getStartedState.username}</p>
                                 {selectedClipboardUserName ? (
                                     <ClickableImage image={SelectedClipboard} className="copy-icon"></ClickableImage>
                                 ) : (
@@ -187,7 +192,7 @@ const CreateAppUser = (props) => {
                                 )}
                             </div>
                             <div className="token-container">
-                                <p className="token">Connection token: {getStartedState?.connectionCreds}</p>
+                                <p>Connection token: {getStartedState?.connectionCreds}</p>
                                 {selectedClipboardToken ? (
                                     <ClickableImage image={SelectedClipboard} className="copy-icon"></ClickableImage>
                                 ) : (

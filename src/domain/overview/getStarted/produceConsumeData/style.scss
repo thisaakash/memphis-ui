@@ -1,11 +1,4 @@
 .create-produce-data {
-    // padding: 25px;
-    // border: 1px solid #f2f2f2;
-    // border-radius: 8px;
-    // margin-left: 13px;
-    // min-height: 53vh;
-    // min-width: 40vw;
-
     .select-container {
         margin-top: 20px;
     }
@@ -44,7 +37,12 @@
         flex-direction: column;
         border: 1px solid #d8d8d8;
         border-radius: 4px;
-        height: 20vh;
+        height: 30vh;
+
+        .image-waiting-successful {
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
 
         .successfully-consume-produce {
             font-family: 'Inter';
@@ -55,13 +53,16 @@
             margin-top: 15px;
         }
         p {
-            font-family: 'Inter';
-            font-style: normal;
-            font-weight: 600;
-            font-size: 18px;
-            line-height: 22px;
-            color: #1d1d1d;
+            top: 0;
         }
+        // p {
+        //     font-family: 'Inter';
+        //     font-style: normal;
+        //     font-weight: 600;
+        //     font-size: 18px;
+        //     line-height: 22px;
+        //     color: #1d1d1d;
+        // }
 
         .ant-btn-primary {
             box-shadow: none;

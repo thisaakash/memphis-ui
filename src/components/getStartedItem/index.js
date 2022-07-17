@@ -9,7 +9,7 @@ const GetStartedItem = (props) => {
     const [getStartedState, getStartedDispatch] = useContext(GetStartedStoreContext);
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div className="get-started-wrapper">
             <div className="get-started-container" style={style?.container}>
                 <img className="header-image" src={headerImage} alt={headerImage} style={style?.image}></img>
                 <TitleComponent className="header-description" headerTitle={headerTitle} headerDescription={headerDescription} style={style}></TitleComponent>
@@ -22,7 +22,7 @@ const GetStartedItem = (props) => {
                 colorType="white"
                 radiusType="circle"
                 alignSelf="flex-end"
-                backgroundColorType={getStartedState?.nextDisable ? '#D8D8D8' : 'purple'}
+                backgroundColorType={'purple'}
                 fontSize="16px"
                 fontWeight="bold"
                 htmlType="submit"

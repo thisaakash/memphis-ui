@@ -32,9 +32,6 @@ const Finish = (props) => {
 
     return (
         <Form name="form" form={creationForm} autoComplete="off" className="finish-container">
-            {/* <img className="image-finish" src={ReadyToroll} height="150px" width="150px" alt="ready-to-roll"></img>
-            <p className="header-finish">You are ready to roll</p> */}
-            {/* <p className="sub-header-finish">Congratulations - You’ve created your first broker app. </p> */}
             <Button
                 width="192px"
                 height="42px"

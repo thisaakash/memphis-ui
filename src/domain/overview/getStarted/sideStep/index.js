@@ -9,7 +9,13 @@ const SideStep = (props) => {
         <div className="side-step-container" style={currentStep === stepNumber ? { backgroundColor: '#F0EEFF' } : {}}>
             <div className="number-name-container">
                 <div className="step-number-container" style={currentStep >= stepNumber ? { backgroundColor: 'white' } : {}}>
-                    {currentStep > stepNumber ? <img src={Done} alt="done"></img> : <p className="step-number">{stepNumber}</p>}
+                    {currentStep > stepNumber ? (
+                        <div className="done-image">
+                            <img src={Done} alt="done" />
+                        </div>
+                    ) : (
+                        <p className="step-number">{stepNumber}</p>
+                    )}
                 </div>
                 <p className="step-name" style={currentStep === stepNumber ? { color: '#2E2C34' } : {}}>
                     {stepName}

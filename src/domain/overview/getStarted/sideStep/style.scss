@@ -20,22 +20,30 @@
         }
 
         .step-number-container {
-            padding: 3.14815px 5.03704px;
             width: 21px;
             height: 21.3px;
             margin-right: 16px;
             background: #ebebeb;
             border-radius: 20.1481px;
-        }
-
-        .step-number {
-            font-family: 'Inter';
-            font-style: normal;
-            font-weight: 600;
-            font-size: 12px;
-            line-height: 15px;
-            text-align: center;
-            color: #000000;
+            .step-number {
+                font-family: 'Inter';
+                font-style: normal;
+                font-weight: 600;
+                font-size: 12px;
+                line-height: 15px;
+                text-align: center;
+                color: #000000;
+                padding: 3.14815px 5.03704px;
+            }
+            .done-image {
+                padding: 0px;
+                align-self: center;
+                margin-right: 16px;
+                width: 21px;
+                height: 21.3px;
+                top: 0px;
+                left: 0px;
+            }
         }
     }
 

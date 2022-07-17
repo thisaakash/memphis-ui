@@ -15,19 +15,8 @@ const CodeSnippet = (props) => {
         scrollBeyondLastLine: false,
         selectionHighlight: true,
         scrollbar: {
-            // vertical: 'hidden',
-            // scrollBeyondLastLine: false,
-            // scrollPredominantAxis: false,
-            // scrollBeyondLastLine: 1,
-            // selectOnLineNumbers: false,
-            // scrollBeyondLastColumn: false,
             verticalScrollbarSize: 3
-            // selectionClipboard: true
-            // selectOnLineNumbers: true
-            // smoothScrolling: true
-            // handleMouseWheel: false
         }
-        // overviewRulerBorder: false
     });
 
     const onCopy = () => {
@@ -42,7 +31,7 @@ const CodeSnippet = (props) => {
 
     return (
         <div className="editor-code-snippet-container">
-            <EditorCodeSnippet height="30vh" path={languageOption?.name} options={options} language={languageOption?.language} value={codeSnippet} />
+            <EditorCodeSnippet height="23vh" path={languageOption?.name} options={options} language={languageOption?.language} value={codeSnippet} />
             <ClickableImage className="clipboard-image" image={CopyClipboard} onClick={onCopy}></ClickableImage>
         </div>
     );

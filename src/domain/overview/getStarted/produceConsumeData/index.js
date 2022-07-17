@@ -17,7 +17,7 @@ const screenEnum = {
 };
 
 const ProduceConsumeData = (props) => {
-    const { headerImage, headerTitle, waitingImage, waitingTitle, languagesOptions, activeData, dataName } = props;
+    const { waitingImage, waitingTitle, successfullTitle, languagesOptions, activeData, dataName } = props;
     const [creationForm] = Form.useForm();
     const [isCopyToClipBoard, setCopyToClipBoard] = useState(screenEnum['DATA_SNIPPET']);
     const [languageOption, setLanguageOption] = useState();
@@ -49,8 +49,6 @@ const ProduceConsumeData = (props) => {
 
     useEffect(() => {
         setLanguageOption(languagesOptions['Go']);
-        //check
-        getStartedDispatch({ type: 'SET_NEXT_DISABLE', payload: true });
     }, []);
 
     useEffect(() => {
@@ -60,7 +58,7 @@ const ProduceConsumeData = (props) => {
             getStartedDispatch({ type: 'SET_NEXT_DISABLE', payload: false });
         }
 
-        if (isCopyToClipBoard === screenEnum['DATA_RECIEVED']) {
+        if (isCopyToClipBoard === screenEnum['DATA_RECIEVED'] || isCopyToClipBoard === screenEnum['DATA_SNIPPET']) {
             clearInterval(intervalStationDetails);
             return () => {
                 clearInterval(intervalStationDetails);
@@ -114,25 +112,34 @@ const ProduceConsumeData = (props) => {
                 style={{ marginBottom: '0' }}
             >
                 <div className="select-container">
-                    <TitleComponent headerTitle="Language" typeTitle="sub-header"></TitleComponent>
-                    <SelectComponent
-                        initialValue={languageOption?.name}
-                        value={languageOption?.name}
-                        colorType="navy"
-                        backgroundColorType="none"
-                        borderColorType="gray"
-                        radiusType="semi-round"
-                        width="450px"
-                        height="40px"
-                        options={Object.keys(languagesOptions).map((lang) => languagesOptions[lang].name)}
-                        onChange={(e) => updateDisplayLanguage(e)}
-                        dropdownClassName="select-options"
-                    />
+                    {isCopyToClipBoard === screenEnum['DATA_SNIPPET'] ? (
+                        <div>
+                            <TitleComponent headerTitle="Language" typeTitle="sub-header"></TitleComponent>
+                            <SelectComponent
+                                initialValue={languageOption?.name}
+                                value={languageOption?.name}
+                                colorType="navy"
+                                backgroundColorType="none"
+                                borderColorType="gray"
+                                radiusType="semi-round"
+                                width="450px"
+                                height="40px"
+                                options={Object.keys(languagesOptions).map((lang) => languagesOptions[lang].name)}
+                                onChange={(e) => updateDisplayLanguage(e)}
+                                dropdownClassName="select-options"
+                            />
+                        </div>
+                    ) : null}
                 </div>
                 {isCopyToClipBoard === screenEnum['DATA_WAITING'] ? (
                     <div className="data-waiting-container">
-                        <img height="75px" width="100px" src={waitingImage} alt="waiting-data"></img>
-                        <p>{waitingTitle}</p>
+                        <img className="image-waiting-successful" src={waitingImage} alt="waiting-data"></img>
+                        <TitleComponent
+                            headerTitle={waitingTitle}
+                            typeTitle="sub-header"
+                            headerDescription="Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+                            style={{ header: { fontSize: '18px' } }}
+                        ></TitleComponent>
                         <div>
                             <Button
                                 width="129px"
@@ -157,8 +164,13 @@ const ProduceConsumeData = (props) => {
                     </div>
                 ) : isCopyToClipBoard === screenEnum['DATA_RECIEVED'] ? (
                     <div className="successfully-container">
-                        <img src={SuccessfullyReceivedProduce} alt="successfully-received-produce"></img>
-                        <p className="successfully-consume-produce">Successfully Received</p>
+                        <img className="image-waiting-successful" src={SuccessfullyReceivedProduce} alt="successfully-received-produce"></img>
+                        <TitleComponent
+                            headerTitle={successfullTitle}
+                            typeTitle="sub-header"
+                            headerDescription="Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+                            style={{ header: { fontSize: '18px' } }}
+                        ></TitleComponent>
                     </div>
                 ) : (
                     <CodeSnippet

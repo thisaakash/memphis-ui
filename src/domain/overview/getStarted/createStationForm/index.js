@@ -132,7 +132,6 @@ const CreateStationForm = (props) => {
     const onFinish = async () => {
         try {
             getStartedDispatch({ type: 'IS_LOADING', payload: true });
-            ////// timeout here //////
             setTimeout(async () => {
                 const values = await creationForm.validateFields();
                 if (values?.errorFields || values.name === undefined || values.factory_name === undefined) {
@@ -165,7 +164,6 @@ const CreateStationForm = (props) => {
                     } catch (error) {}
                 }
             }, 1000);
-            ////// Timeout end //////
         } catch (error) {
             console.log(`validate error ${JSON.stringify(error)}`);
         }
@@ -209,11 +207,18 @@ const CreateStationForm = (props) => {
                 style={{ marginBottom: '10px' }}
             >
                 <div>
-                    <TitleComponent
-                        headerTitle="Enter factory name"
-                        typeTitle="sub-header"
-                        headerDescription="A factory presents the application/use case that the user requires to build, and, within it, all the stations (queues) that establish the use case"
-                    ></TitleComponent>
+                    <div style={{ display: 'flex' }}>
+                        <p className="field-title">
+                            <span className="required-field-mark">* </span>
+                        </p>
+
+                        <TitleComponent
+                            headerTitle="Enter factory name"
+                            typeTitle="sub-header"
+                            headerDescription="A factory presents the application/use case that the user requires to build, and, within it, all the stations (queues) that establish the use case"
+                        ></TitleComponent>
+                    </div>
+
                     <Input
                         placeholder="Type factory name"
                         type="text"
@@ -242,11 +247,17 @@ const CreateStationForm = (props) => {
                 style={{ marginBottom: '10px' }}
             >
                 <div>
-                    <TitleComponent
-                        headerTitle="Enter station name"
-                        typeTitle="sub-header"
-                        headerDescription="RabbitMQ has queues, Kafka has topics, and Memphis has stations."
-                    ></TitleComponent>
+                    <div style={{ display: 'flex' }}>
+                        <p className="field-title">
+                            <span className="required-field-mark">* </span>
+                        </p>{' '}
+                        <TitleComponent
+                            headerTitle="Enter station name"
+                            typeTitle="sub-header"
+                            headerDescription="RabbitMQ has queues, Kafka has topics, and Memphis has stations."
+                        ></TitleComponent>
+                    </div>
+
                     <Input
                         placeholder="Type station name"
                         type="text"
@@ -263,7 +274,7 @@ const CreateStationForm = (props) => {
                 </div>
             </Form.Item>
 
-            <div className="retention">
+            <div>
                 <TitleComponent
                     headerTitle="Retention type"
                     typeTitle="sub-header"
@@ -313,7 +324,7 @@ const CreateStationForm = (props) => {
                 )}
                 {formFields.retention_type === 'bytes' && (
                     <Form.Item name="retentionSizeValue" initialValue={retentionSizeValue}>
-                        <div className="size-value">
+                        <div>
                             <Input
                                 placeholder="Type"
                                 type="number"
@@ -333,7 +344,7 @@ const CreateStationForm = (props) => {
                 )}
                 {formFields.retention_type === 'messages' && (
                     <Form.Item name="retentionMessagesValue" initialValue={retentionMessagesValue}>
-                        <div className="messages-value">
+                        <div>
                             <Input
                                 placeholder="Type"
                                 type="number"
@@ -353,7 +364,7 @@ const CreateStationForm = (props) => {
                 )}
             </div>
             <div className="storage-replicas-container">
-                <div className="storage">
+                <div>
                     <TitleComponent
                         // style={{ width: '15vw' }}
                         headerTitle="Storage type"
@@ -370,14 +381,14 @@ const CreateStationForm = (props) => {
                         />
                     </Form.Item>
                 </div>
-                <div className="replicas">
+                <div>
                     <TitleComponent
                         headerTitle="Replicas"
                         typeTitle="sub-header"
                         headerDescription="Amount of mirrors per message"
                         style={{ description: { width: '16vw' } }}
                     ></TitleComponent>
-                    <div className="replicas-value">
+                    <div>
                         <Form.Item name="replicas" initialValue={formFields.replicas}>
                             <InputNumber bordered={false} min={1} max={5} keyboard={true} value={formFields.replicas} onChange={(e) => updateFormState('replicas', e)} />
                         </Form.Item>

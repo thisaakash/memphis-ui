@@ -1,32 +1,14 @@
 .create-station-form-getstarted {
-    // overflow: auto;
-    // min-height: 53vh;
-    // min-width: 40vw;
-
-    // padding: 30px;
-    // border: 1px solid #f2f2f2;
-    // border-radius: 8px;
-    // margin-left: 23px;
-    // height: 55vh;
-    // max-width: 15vw;
+    .field-title {
+        display: flex;
+        font-weight: 400;
+        font-size: 12px;
+        margin: 0;
+    }
     .storage-replicas-container {
         display: flex;
         width: 100%;
-        // justify-content: space-between;
-
-        .replicas {
-            // width: 10vw;
-            // margin-right: 50%;
-        }
-
-        .storage {
-            // width: 20vw;
-        }
-        // justify-content: space-between;
     }
-    // .custome-header-description-class {
-    //     width: 18vw;
-    // }
 
     .header-getstarted-form {
         width: 168px;
@@ -45,14 +27,6 @@
     .get-started-icon {
         margin-top: 39px;
         margin-left: 49px;
-    }
-
-    .field-title {
-        font-weight: 600;
-        font-size: 16px;
-        margin: 0;
-        display: flex;
-        color: #2e2c34;
     }
 
     .field-description {
@@ -99,19 +73,19 @@
             }
         }
     }
-    .retention-type {
-        .ant-radio-group.ant-radio-button-wrapper:first-child {
-            background-color: purple;
-        }
-        .ant-radio-button-wrapper {
-            background-color: 'red';
-            display: flex;
-            margin-bottom: 100px;
-        }
-        .ant-radio-button-wrapper:last-child {
-            background-color: purple;
-        }
-    }
+    // .retention-type {
+    //     .ant-radio-group.ant-radio-button-wrapper:first-child {
+    //         // background-color: purple;
+    //     }
+    //     .ant-radio-button-wrapper {
+    //         // background-color: 'red';
+    //         display: flex;
+    //         margin-bottom: 100px;
+    //     }
+    //     .ant-radio-button-wrapper:last-child {
+    //         // background-color: purple;
+    //     }
+    // }
     .time-value {
         display: flex;
         margin-top: 15px;

@@ -68,6 +68,8 @@ export function getBackgroundColor(backgroundColor) {
             return '#5CA6A0';
         case 'black':
             return '#18171E';
+        case 'gray':
+            return '#A9A9A9';
         case 'none':
             return 'transparent';
         default:

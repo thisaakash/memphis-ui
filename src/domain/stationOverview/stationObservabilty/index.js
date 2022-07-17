@@ -18,6 +18,7 @@ import lottie from 'lottie-web';
 
 import produceFew from '../../../assets/lotties/produce-few.json';
 import consumer from '../../../assets/lotties/consume.json';
+import consumePoision from '../../../assets/lotties/consume_poision.json';
 
 import Messages from './messages';
 import ProduceConsumList from './ProduceConsumList';
@@ -44,7 +45,8 @@ const StationObservabilty = () => {
             renderer: 'svg',
             loop: true,
             autoplay: true,
-            animationData: consumer
+            animationData:
+                stationState?.stationSocketData?.connected_cgs?.length > 0 && stationState?.stationSocketData?.poison_messages?.length > 0 ? consumePoision : consumer
         });
     }, [stationState?.stationSocketData?.connected_cgs?.length > 0]);
 

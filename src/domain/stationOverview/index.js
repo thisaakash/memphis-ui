@@ -99,12 +99,12 @@ const StationOverview = () => {
     return (
         <StationStoreContext.Provider value={[stationState, stationDispatch]}>
             <React.Fragment>
-                {isLoading && (
+                {!isLoading && (
                     <div className="loader-uploading">
                         <Loader />
                     </div>
                 )}
-                {!isLoading && (
+                {isLoading && (
                     <div className="station-overview-container">
                         <div className="overview-header">
                             <StationOverviewHeader />

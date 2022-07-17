@@ -15,10 +15,10 @@ import React from 'react';
 import TooltipComponent from '../tooltip/tooltip';
 import { DeleteForeverRounded } from '@material-ui/icons';
 
-const StatusIndication = ({ is_active, is_deleted }) => {
+const StatusIndication = ({ is_active, is_deleted, in_process }) => {
     if (is_active) {
         return (
-            <TooltipComponent text="Live" minWidth="35px">
+            <TooltipComponent text="Connected" minWidth="35px">
                 <div className="circle-status active">
                     <div className="dot active-dot"></div>
                 </div>

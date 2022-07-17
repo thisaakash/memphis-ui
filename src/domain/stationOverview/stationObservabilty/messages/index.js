@@ -17,7 +17,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Checkbox } from 'antd';
 import { Space } from 'antd';
 
-import { convertBytes, parsingDate } from '../../../../services/valueConvertor';
+import { convertBytes, numberWithCommas, parsingDate } from '../../../../services/valueConvertor';
 import Journey from '../../../../assets/images/journey.svg';
 import OverflowTip from '../../../../components/tooltip/overflowtip';
 import CustomTabs from '../../../../components/Tabs';
@@ -49,8 +49,13 @@ const Messages = () => {
     useEffect(() => {
         if (stationState?.stationSocketData?.messages?.length > 0 && Object.keys(messageDetails).length === 0) {
             getMessageDetails(false, null, stationState?.stationSocketData?.messages[0]?.message_seq);
+        } else if (tabValue === '0' && stationState?.stationSocketData?.messages?.length > 0) {
+            getMessageDetails(false, null, stationState?.stationSocketData?.messages[0]?.message_seq);
         }
-    }, [stationState?.stationSocketData?.messages]);
+        if (tabValue === '1' && stationState?.stationSocketData?.poison_messages?.length > 0) {
+            getMessageDetails(true, stationState?.stationSocketData?.poison_messages[0]?._id, null);
+        }
+    }, [stationState?.stationSocketData?.messages, stationState?.stationSocketData?.poison_messages]);
 
     const getMessageDetails = async (isPoisonMessage, messageId = null, message_seq = null) => {
         setLoadMessageData(true);
@@ -78,16 +83,16 @@ const Messages = () => {
                     is_deleted: row.is_deleted,
                     details: [
                         {
-                            name: 'Unprocessed messages',
-                            value: row?.unprocessed_messages
-                        },
-                        {
-                            name: 'In process Message',
-                            value: row?.in_process_messages
-                        },
-                        {
                             name: 'Poison messages',
-                            value: row?.total_poison_messages
+                            value: numberWithCommas(row?.total_poison_messages)
+                        },
+                        {
+                            name: 'Unprocessed messages',
+                            value: numberWithCommas(row?.unprocessed_messages)
+                        },
+                        {
+                            name: 'In process message',
+                            value: numberWithCommas(row?.in_process_messages)
                         },
                         {
                             name: 'Max ack time',
@@ -110,7 +115,7 @@ const Messages = () => {
                         value: convertBytes(data.message?.size)
                     },
                     {
-                        name: 'Time Sent',
+                        name: 'Time sent',
                         value: parsingDate(data.message?.time_sent)
                     }
                 ],
@@ -164,11 +169,11 @@ const Messages = () => {
     };
 
     const handleChangeMenuItem = (newValue) => {
-        if (newValue === '0' && stationState?.stationSocketData?.messages.length > 0) {
-            getMessageDetails(false, null, stationState?.stationSocketData?.messages[0].message_seq);
+        if (newValue === '0' && stationState?.stationSocketData?.messages?.length > 0) {
+            getMessageDetails(false, null, stationState?.stationSocketData?.messages[0]?.message_seq);
         }
-        if (newValue === '1' && stationState?.stationSocketData?.poison_messages.length > 0) {
-            getMessageDetails(true, stationState?.stationSocketData?.poison_messages[0]._id, null);
+        if (newValue === '1' && stationState?.stationSocketData?.poison_messages?.length > 0) {
+            getMessageDetails(true, stationState?.stationSocketData?.poison_messages[0]?._id, null);
         }
         setTabValue(newValue);
         setSelectedRowIndex(0);
@@ -269,10 +274,10 @@ const Messages = () => {
                         <div className="message-wrapper">
                             <div className="row-data">
                                 <Space direction="vertical">
-                                    <CustomCollapse header="Producer" status={true} defaultOpen={true} data={messageDetails.producer} />
-                                    <MultiCollapse header="Failed CGs" data={messageDetails.poisionedCGs} />
+                                    <CustomCollapse header="Producer" status={true} data={messageDetails.producer} />
+                                    <MultiCollapse header="Failed CGs" defaultOpen={true} data={messageDetails.poisionedCGs} />
                                     <CustomCollapse status={false} header="Details" data={messageDetails.details} />
-                                    <CustomCollapse status={false} header="message" defaultOpen={true} data={messageDetails.message} message={true} />
+                                    <CustomCollapse status={false} header="Message" defaultOpen={true} data={messageDetails.message} message={true} />
                                 </Space>
                             </div>
                         </div>
@@ -342,14 +347,14 @@ const Messages = () => {
                     </div>
                 </div>
             )}
-            {stationState?.stationSocketData?.poison_messages?.length === 0 && (
-                <div className="empty-messages">
-                    <p>Congrats, No poision message, yet ;)</p>
-                </div>
-            )}
-            {stationState?.stationSocketData?.messages?.length === 0 && (
+            {tabValue === '0' && stationState?.stationSocketData?.messages?.length === 0 && (
                 <div className="empty-messages">
                     <p>Waiting for messages</p>
+                </div>
+            )}
+            {tabValue === '1' && stationState?.stationSocketData?.poison_messages?.length === 0 && (
+                <div className="empty-messages">
+                    <p>Congrats, No poision message, yet ;)</p>
                 </div>
             )}
         </div>

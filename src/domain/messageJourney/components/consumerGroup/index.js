@@ -26,7 +26,7 @@ const ConsumerGroup = ({ header, details, cgMembers }) => {
                 is_deleted: row.is_deleted,
                 details: [
                     {
-                        name: 'user',
+                        name: 'User',
                         value: row.created_by_user
                     },
                     {

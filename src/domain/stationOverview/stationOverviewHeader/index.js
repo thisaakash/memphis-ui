@@ -34,6 +34,7 @@ import pathDomains from '../../../router';
 import { StationStoreContext } from '..';
 import TooltipComponent from '../../../components/tooltip/tooltip';
 import Auditing from '../auditing';
+import { InfoOutlined } from '@material-ui/icons';
 
 const StationOverviewHeader = (props) => {
     const [state, dispatch] = useContext(Context);
@@ -172,8 +173,8 @@ const StationOverviewHeader = (props) => {
             </div>
             <Modal
                 header="SDK"
-                minHeight="650px"
-                minWidth="500px"
+                minHeight="700px"
+                minWidth="700px"
                 closeAction={() => setSdkModal(false)}
                 clickOutside={() => setSdkModal(false)}
                 open={sdkModal}
@@ -218,13 +219,22 @@ const StationOverviewHeader = (props) => {
                 </div>
             </Modal>
             <Modal
-                header="Audit"
+                header={
+                    <div className="audit-header">
+                        <p className="title">Audit</p>
+                        <div className="msg">
+                            <InfoOutlined />
+                            <p>Showing last 5 days logs</p>
+                        </div>
+                    </div>
+                }
                 minHeight="400px"
                 minWidth="800px"
                 closeAction={() => setAuditModal(false)}
                 clickOutside={() => setAuditModal(false)}
                 open={auditModal}
                 hr={false}
+                className="audit"
             >
                 <Auditing />
             </Modal>

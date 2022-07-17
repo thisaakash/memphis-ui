@@ -26,7 +26,6 @@ const { Panel } = Collapse;
 const CustomCollapse = ({ status, data, header, defaultOpen, message }) => {
     const [activeKey, setActiveKey] = useState(defaultOpen ? ['1'] : []);
     const [copied, setCopied] = useState(false);
-
     const onChange = (key) => {
         setActiveKey(key);
     };

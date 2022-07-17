@@ -60,7 +60,7 @@ const PoisionMessage = ({ stationName, messageId, details, message, procssing, r
                 </p>
                 <div className="btn-row">
                     <Button
-                        width="65px"
+                        width="75px"
                         height="24px"
                         placeholder="Ack"
                         colorType="white"
@@ -72,7 +72,7 @@ const PoisionMessage = ({ stationName, messageId, details, message, procssing, r
                         onClick={() => handleAck()}
                     />
                     <Button
-                        width="65px"
+                        width="90px"
                         height="24px"
                         placeholder="Resend"
                         colorType="white"

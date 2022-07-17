@@ -20,7 +20,7 @@ import StatusIndication from '../../../../../components/indication';
 
 const { Panel } = Collapse;
 
-const MultiCollapse = ({ status, data, header, defaultOpen }) => {
+const MultiCollapse = ({ data, header, defaultOpen }) => {
     const [activeKey, setActiveKey] = useState(defaultOpen ? ['1'] : []);
     const [activeChiledKey, setActiveChiledKey] = useState();
 

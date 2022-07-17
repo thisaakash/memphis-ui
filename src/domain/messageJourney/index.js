@@ -26,7 +26,7 @@ import { Canvas, Node, Edge, Label } from 'reaflow';
 import Producer from './components/producer';
 import PoisionMessage from './components/poisionMessage';
 import ConsumerGroup from './components/consumerGroup';
-import { convertBytes, parsingDate } from '../../services/valueConvertor';
+import { convertBytes, numberWithCommas, parsingDate } from '../../services/valueConvertor';
 
 const MessageJourney = () => {
     const [state, dispatch] = useContext(Context);
@@ -127,16 +127,16 @@ const MessageJourney = () => {
                     cgMembers: row.cg_members,
                     details: [
                         {
-                            name: 'Unprocessed messages',
-                            value: row?.unprocessed_messages
-                        },
-                        {
-                            name: 'In process Message',
-                            value: row?.in_process_messages
-                        },
-                        {
                             name: 'Poison messages',
-                            value: row?.total_poison_messages
+                            value: numberWithCommas(row?.total_poison_messages)
+                        },
+                        {
+                            name: 'Unprocessed messages',
+                            value: numberWithCommas(row?.unprocessed_messages)
+                        },
+                        {
+                            name: 'In process message',
+                            value: numberWithCommas(row?.in_process_messages)
                         },
                         {
                             name: 'Max ack time',
@@ -157,16 +157,16 @@ const MessageJourney = () => {
                         value: 'consumer',
                         cgData: [
                             {
-                                name: 'Unprocessed messages',
-                                value: row.unprocessed_messages
-                            },
-                            {
-                                name: 'In process Message',
-                                value: row.in_process_messages
-                            },
-                            {
                                 name: 'Poison messages',
-                                value: row.total_poison_messages
+                                value: numberWithCommas(row.total_poison_messages)
+                            },
+                            {
+                                name: 'Unprocessed messages',
+                                value: numberWithCommas(row.unprocessed_messages)
+                            },
+                            {
+                                name: 'In process message',
+                                value: numberWithCommas(row.in_process_messages)
                             },
                             {
                                 name: 'Max ack time',
@@ -205,7 +205,7 @@ const MessageJourney = () => {
                         value: convertBytes(data.message?.size)
                     },
                     {
-                        name: 'Time Sent',
+                        name: 'Time sent',
                         value: parsingDate(data.message?.time_sent)
                     }
                 ],

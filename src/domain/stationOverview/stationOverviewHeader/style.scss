@@ -153,7 +153,32 @@
         }
         
     }
-   
+}
+.modal-header{
+    .audit-header{
+        display: flex;
+        .title {
+            font-weight: 700;
+            font-size: 18px;
+            margin: 0;
+        }
+        .msg{
+            display: flex;
+            align-items:center;
+            margin-left: 16px;
+            color: #737373;
+            svg {
+                width: 11px;
+                margin-right: 5px;
+                height: 100%;
+            }
+            p{
+                margin: 0;
+                font-size: 10px;
+                font-weight: 500;
+            }
+        }
+    }
 }
 .sdk-details-container{
     gap: 30px;
@@ -181,7 +206,7 @@
             border: 1px solid var(--gray);
             box-sizing: border-box;
             border-radius: 4px;
-            height: 320px;
+            height: 350px;
             overflow:auto;
             p{
                 margin: 0;

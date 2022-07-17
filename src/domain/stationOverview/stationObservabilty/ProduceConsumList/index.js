@@ -22,6 +22,7 @@ import StatusIndication from '../../../../components/indication';
 import CustomCollapse from '../components/customCollapse';
 import MultiCollapse from '../components/multiCollapse';
 import { Space } from 'antd';
+import { numberWithCommas } from '../../../../services/valueConvertor';
 
 const ProduceConsumList = (props) => {
     const [stationState, stationDispatch] = useContext(StationStoreContext);
@@ -107,7 +108,7 @@ const ProduceConsumList = (props) => {
                     is_deleted: row.is_deleted,
                     details: [
                         {
-                            name: 'user',
+                            name: 'User',
                             value: row.created_by_user
                         },
                         {
@@ -121,16 +122,16 @@ const ProduceConsumList = (props) => {
             let cgDetails = {
                 details: [
                     {
-                        name: 'Unprocessed messages',
-                        value: cgsList[rowIndex]?.unprocessed_messages
-                    },
-                    {
-                        name: 'In process Message',
-                        value: cgsList[rowIndex]?.in_process_messages
-                    },
-                    {
                         name: 'Poison messages',
-                        value: cgsList[rowIndex]?.poison_messages
+                        value: numberWithCommas(cgsList[rowIndex]?.poison_messages)
+                    },
+                    {
+                        name: 'Unprocessed messages',
+                        value: numberWithCommas(cgsList[rowIndex]?.unprocessed_messages)
+                    },
+                    {
+                        name: 'In process message',
+                        value: numberWithCommas(cgsList[rowIndex]?.in_process_messages)
                     },
                     {
                         name: 'Max ack time',
@@ -147,10 +148,20 @@ const ProduceConsumList = (props) => {
         }
     };
 
+    const returnClassName = (index, is_deleted) => {
+        if (selectedRowIndex === index) {
+            if (is_deleted) {
+                return 'pubSub-row selected deleted';
+            } else return 'pubSub-row selected';
+        } else if (is_deleted) {
+            return 'pubSub-row deleted';
+        } else return 'pubSub-row';
+    };
+
     return (
         <div className="pubSub-list-container">
             <div className="header">
-                <p className="title">{props.producer ? 'Producers' : 'Consumers Group'}</p>
+                <p className="title">{props.producer ? 'Producers' : 'Consumer groups'}</p>
                 {/* <p className="add-connector-button">{props.producer ? 'Add producer' : 'Add consumer'}</p> */}
             </div>
             {props.producer && (
@@ -162,9 +173,9 @@ const ProduceConsumList = (props) => {
             )}
             {!props.producer && (
                 <div className="coulmns-table">
-                    <span style={{ width: '85px' }}>Name</span>
-                    <span style={{ width: '70px', textAlign: 'center' }}>Unprocessed</span>
-                    <span style={{ width: '70px', textAlign: 'center' }}>Poison</span>
+                    <span style={{ width: '75px' }}>Name</span>
+                    <span style={{ width: '65px', textAlign: 'center' }}>Poison</span>
+                    <span style={{ width: '75px', textAlign: 'center' }}>Unprocessed</span>
                     <span style={{ width: '35px', textAlign: 'center' }}>Status</span>
                 </div>
             )}
@@ -175,11 +186,7 @@ const ProduceConsumList = (props) => {
                         producersList?.length > 0 &&
                         producersList?.map((row, index) => {
                             return (
-                                <div
-                                    className={selectedRowIndex === index ? (row.is_deleted ? 'pubSub-row selected-deleted' : 'pubSub-row selected') : 'pubSub-row'}
-                                    key={index}
-                                    onClick={() => onSelectedRow(index, 'producer')}
-                                >
+                                <div className={returnClassName(index, row.is_deleted)} key={index} onClick={() => onSelectedRow(index, 'producer')}>
                                     <OverflowTip text={row.name} width={'100px'}>
                                         {row.name}
                                     </OverflowTip>
@@ -196,19 +203,15 @@ const ProduceConsumList = (props) => {
                         cgsList?.length > 0 &&
                         cgsList?.map((row, index) => {
                             return (
-                                <div
-                                    className={selectedRowIndex === index ? 'pubSub-row selected' : 'pubSub-row'}
-                                    key={index}
-                                    onClick={() => onSelectedRow(index, 'consumer')}
-                                >
-                                    <OverflowTip text={row.name} width={'85px'}>
+                                <div className={returnClassName(index, row.is_deleted)} key={index} onClick={() => onSelectedRow(index, 'consumer')}>
+                                    <OverflowTip text={row.name} width={'75px'}>
                                         {row.name}
                                     </OverflowTip>
-                                    <OverflowTip text={row.unprocessed_messages} width={'70px'} textAlign={'center'}>
-                                        {row.unprocessed_messages}
-                                    </OverflowTip>
-                                    <OverflowTip text={row.poison_messages} width={'70px'} textAlign={'center'}>
+                                    <OverflowTip text={row.poison_messages} width={'60px'} textAlign={'center'}>
                                         {row.poison_messages}
+                                    </OverflowTip>
+                                    <OverflowTip text={row.unprocessed_messages} width={'75px'} textAlign={'center'}>
+                                        {row.unprocessed_messages}
                                     </OverflowTip>
                                     <span className="status-icon" style={{ width: '38px' }}>
                                         <StatusIndication is_active={row.is_active} is_deleted={row.is_deleted} />

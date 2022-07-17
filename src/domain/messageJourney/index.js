@@ -127,7 +127,7 @@ const MessageJourney = () => {
                     cgMembers: row.cg_members,
                     details: [
                         {
-                            name: 'unprocessed messages',
+                            name: 'Unprocessed messages',
                             value: row?.unprocessed_messages
                         },
                         {
@@ -135,15 +135,15 @@ const MessageJourney = () => {
                             value: row?.in_process_messages
                         },
                         {
-                            name: 'poison messages',
+                            name: 'Poison messages',
                             value: row?.total_poison_messages
                         },
                         {
-                            name: 'max_ack_time',
+                            name: 'Max ack time',
                             value: `${row?.max_ack_time_ms}ms`
                         },
                         {
-                            name: 'max_message_deliveries',
+                            name: 'Max message deliveries',
                             value: row?.max_msg_deliveries
                         }
                     ]
@@ -157,7 +157,7 @@ const MessageJourney = () => {
                         value: 'consumer',
                         cgData: [
                             {
-                                name: 'unprocessed messages',
+                                name: 'Unprocessed messages',
                                 value: row.unprocessed_messages
                             },
                             {
@@ -165,15 +165,15 @@ const MessageJourney = () => {
                                 value: row.in_process_messages
                             },
                             {
-                                name: 'poison messages',
+                                name: 'Poison messages',
                                 value: row.total_poison_messages
                             },
                             {
-                                name: 'max_ack_time',
+                                name: 'Max ack time',
                                 value: `${row.max_ack_time_ms}ms`
                             },
                             {
-                                name: 'max_message_deliveries',
+                                name: 'Max message deliveries',
                                 value: row.max_msg_deliveries
                             }
                         ],

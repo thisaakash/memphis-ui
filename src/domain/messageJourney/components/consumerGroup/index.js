@@ -42,7 +42,7 @@ const ConsumerGroup = ({ header, details, cgMembers }) => {
     return (
         <div className="consumer-group">
             <header is="x3d">
-                <p>{header}</p>
+                <p>CG - {header}</p>
             </header>
             <div className="content-wrapper">
                 <div className="details">

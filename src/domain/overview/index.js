@@ -41,6 +41,7 @@ import { PRIVACY_URL } from '../../config';
 import { ApiEndpoints } from '../../const/apiEndpoints';
 import { httpRequest } from '../../services/http';
 import Loader from '../../components/loader';
+import GetStarted from './getStarted';
 import { Link } from 'react-router-dom';
 
 const Desktop = ({ children }) => {
@@ -61,6 +62,7 @@ function OverView() {
     const [username, SetUsername] = useState('');
     const [isLoading, setisLoading] = useState(false);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
+    const [allStations, setAllStations] = useState([]);
     const [showWelcome, setShowWelcome] = useState(true);
     const [welcomeMessage, setWelcomeMessage] = useState('');
 
@@ -78,6 +80,7 @@ function OverView() {
     };
 
     useEffect(() => {
+        getAllStations();
         dispatch({ type: 'SET_ROUTE', payload: 'overview' });
         setShowWelcome(process.env.REACT_APP_SANDBOX_ENV && localStorage.getItem(LOCAL_STORAGE_WELCOME_MESSAGE) === 'true');
         setWelcomeMessage(process.env.REACT_APP_SANDBOX_ENV ? 'Hey ' + capitalizeFirst(localStorage.getItem(LOCAL_STORAGE_USER_NAME)) + ',' : '');
@@ -127,6 +130,16 @@ function OverView() {
         analyticsModalFlip(false);
         dispatch({ type: 'ANALYTICS_MODAL', payload: false });
     };
+
+    const getAllStations = async () => {
+        try {
+            const res = await httpRequest('GET', `${ApiEndpoints.GET_ALL_STATIONS}`);
+            setAllStations(res);
+        } catch (err) {
+            return;
+        }
+    };
+
     return (
         <div className="overview-container">
             {isLoading && (
@@ -172,11 +185,17 @@ function OverView() {
                         />
                     </div>
                     <div className="overview-components">
-                        <div className="left-side">
-                            <GenericDetails />
-                            <FailedStations />
-                            <Throughput />
-                        </div>
+                        {allStations.length === 0 || localStorage.getItem(LOCAL_STORAGE_ALREADY_LOGGED_IN) === 'false' ? (
+                            <div className="left-side">
+                                <GetStarted />
+                            </div>
+                        ) : (
+                            <div className="left-side">
+                                <GenericDetails />
+                                <FailedStations />
+                                <Throughput />
+                            </div>
+                        )}
                         <div className="right-side">
                             <Resources />
                             <SysComponents />

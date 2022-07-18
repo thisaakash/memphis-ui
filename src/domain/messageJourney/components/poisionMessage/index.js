@@ -21,32 +21,31 @@ import { httpRequest } from '../../../../services/http';
 import { ApiEndpoints } from '../../../../const/apiEndpoints';
 import { message as messageAnt } from 'antd';
 
-const PoisionMessage = ({ stationName, messageId, details, message, procssing, returnBack }) => {
-    const [resendProcced, setResendProcced] = useState(false);
-    const [ignoreProcced, setIgnoreProcced] = useState(false);
+const PoisionMessage = ({ stationName, messageId, details, message, processing, returnBack }) => {
+    const [resendProcess, setResendProcess] = useState(false);
+    const [ignoreProcess, setIgnoreProcess] = useState(false);
 
-    const handleAck = async () => {
-        setIgnoreProcced(true);
+    const handleIgnore = async () => {
+        setIgnoreProcess(true);
         try {
             await httpRequest('POST', `${ApiEndpoints.ACK_POISION_MESSAGE}`, { poison_message_ids: [messageId] });
             setTimeout(() => {
-                setIgnoreProcced(false);
+                setIgnoreProcess(false);
                 returnBack();
             }, 1500);
         } catch (error) {
-            setIgnoreProcced(false);
+            setIgnoreProcess(false);
         }
     };
 
     const handleResend = async () => {
-        setResendProcced(true);
-        procssing(true);
+        setResendProcess(true);
+        processing(true);
         try {
             await httpRequest('POST', `${ApiEndpoints.RESEND_POISION_MESSAGE_JOURNEY}`, { poison_message_ids: [messageId] });
             setTimeout(() => {
-              
-                setResendProcced(false);
-                procssing(false);
+                setResendProcess(false);
+                processing(false);
                 messageAnt.success({
                     key: 'memphisSuccessMessage',
                     content: 'The message was sent successfully',
@@ -56,8 +55,8 @@ const PoisionMessage = ({ stationName, messageId, details, message, procssing, r
                 });
             }, 1500);
         } catch (error) {
-            setResendProcced(false);
-            procssing(false);
+            setResendProcess(false);
+            processing(false);
         }
     };
 
@@ -77,8 +76,8 @@ const PoisionMessage = ({ stationName, messageId, details, message, procssing, r
                         backgroundColorType="purple"
                         fontSize="12px"
                         fontWeight="600"
-                        isLoading={ignoreProcced}
-                        onClick={() => handleAck()}
+                        isLoading={ignoreProcess}
+                        onClick={() => handleIgnore()}
                     />
                     <Button
                         width="90px"
@@ -89,7 +88,7 @@ const PoisionMessage = ({ stationName, messageId, details, message, procssing, r
                         backgroundColorType="purple"
                         fontSize="12px"
                         fontWeight="600"
-                        isLoading={resendProcced}
+                        isLoading={resendProcess}
                         onClick={() => handleResend()}
                     />
                 </div>

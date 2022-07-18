@@ -20,6 +20,22 @@ export const convertDateToSeconds = (days, hours, minutes, seconds) => {
     return totalSeconds;
 };
 
+export const convertSecondsToDateObject = (seconds) => {
+    const days = Math.floor(seconds / 86400);
+    seconds -= days * 86400;
+    const hours = Math.floor(seconds / 3600);
+    seconds -= hours * 3600;
+    const minutes = Math.floor(seconds / 60);
+    seconds -= minutes * 60;
+
+    return {
+        days,
+        hours,
+        minutes,
+        seconds
+    };
+};
+
 export const convertSecondsToDate = (seconds) => {
     const days = Math.floor(seconds / 86400);
     seconds -= days * 86400;

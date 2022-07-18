@@ -63,7 +63,8 @@ const OverflowTip = (props) => {
                     textOverflow: 'ellipsis',
                     width: props.width || null,
                     cursor: props.cursor || 'default',
-                    textAlign: props.textAlign || null
+                    textAlign: props.textAlign || null,
+                    color: props.textColor || null
                 }}
             >
                 {props.children}

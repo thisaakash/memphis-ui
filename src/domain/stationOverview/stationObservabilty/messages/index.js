@@ -226,10 +226,16 @@ const Messages = () => {
             <div className="header">
                 <div className="left-side">
                     <p className="title">Station</p>
-                    {stationState?.stationSocketData?.messages?.length > 0 && (
+                    {tabValue === '0' && stationState?.stationSocketData?.messages?.length > 0 && (
                         <div className="messages-amount">
                             <InfoOutlined />
                             <p>Showing last {stationState?.stationSocketData?.messages?.length} messages</p>
+                        </div>
+                    )}
+                    {tabValue === '1' && stationState?.stationSocketData?.poison_messages?.length > 0 && (
+                        <div className="messages-amount">
+                            <InfoOutlined />
+                            <p>Showing last {stationState?.stationSocketData?.poison_messages?.length} messages</p>
                         </div>
                     )}
                 </div>
@@ -284,7 +290,7 @@ const Messages = () => {
                                         key={id}
                                         onClick={() => onSelectedRow(false, message.message_seq, id)}
                                     >
-                                        <OverflowTip text={message?.data} width={'100px'}>
+                                        <OverflowTip text={message?.data} width={'300px'}>
                                             {message?.data}
                                         </OverflowTip>
                                     </div>
@@ -331,7 +337,7 @@ const Messages = () => {
                                                 name={message._id}
                                             />
                                         )}
-                                        <OverflowTip text={message.message.data} width={'100px'}>
+                                        <OverflowTip text={message.message.data} width={'300px'}>
                                             {message.message.data}
                                         </OverflowTip>
                                     </div>
@@ -367,7 +373,7 @@ const Messages = () => {
                     </div>
                 </div>
             )}
-            {tabValue === '0' && stationState?.stationSocketData?.messages?.length === 0 && (
+            {tabValue === '0' && stationState?.stationSocketData?.messages === null && (
                 <div className="empty-messages">
                     <p>Waiting for messages</p>
                 </div>

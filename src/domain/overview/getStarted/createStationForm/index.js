@@ -193,7 +193,6 @@ const CreateStationForm = (props) => {
             }
         } catch (error) {
             getStartedDispatch({ type: 'IS_LOADING', payload: false });
-
             console.log(error);
         }
     };

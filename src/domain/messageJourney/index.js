@@ -34,7 +34,7 @@ const MessageJourney = () => {
     const messageId = url.split('factories/')[1].split('/')[2];
     const stationName = url.split('factories/')[1].split('/')[1];
     const [isLoading, setisLoading] = useState(false);
-    const [procssing, setProcssing] = useState(false);
+    const [processing, setProcessing] = useState(false);
     const [messageData, setMessageData] = useState({});
     const [nodes, setNodes] = useState();
     const [edges, setEdges] = useState();
@@ -274,7 +274,7 @@ const MessageJourney = () => {
                                                     messageId={messageId}
                                                     message={messageData.message}
                                                     details={messageData.details}
-                                                    procssing={(status) => setProcssing(status)}
+                                                    processing={(status) => setProcessing(status)}
                                                     returnBack={() => returnBack()}
                                                 />
                                             )}
@@ -287,7 +287,10 @@ const MessageJourney = () => {
                             }
                             arrow={null}
                             edge={(edge) => (
-                                <Edge {...edge} className={edge.data.value === 'producer' ? 'edge producer' : procssing ? 'edge consumer procssing' : 'edge consumer'} />
+                                <Edge
+                                    {...edge}
+                                    className={edge.data.value === 'producer' ? 'edge producer' : processing ? 'edge consumer processing' : 'edge consumer'}
+                                />
                             )}
                         />
                     </div>

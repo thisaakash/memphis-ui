@@ -22,6 +22,10 @@
         margin-top: 20px;
         .ant-space {
             width: 100%;
+            .ant-collapse-content-box {
+                max-height: 300px;
+                overflow: auto;
+            }
         }
     }
 }

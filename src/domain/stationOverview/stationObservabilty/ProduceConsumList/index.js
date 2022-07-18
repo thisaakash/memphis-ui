@@ -207,7 +207,7 @@ const ProduceConsumList = (props) => {
                                     <OverflowTip text={row.name} width={'75px'}>
                                         {row.name}
                                     </OverflowTip>
-                                    <OverflowTip text={row.poison_messages} width={'60px'} textAlign={'center'}>
+                                    <OverflowTip text={row.poison_messages} width={'60px'} textAlign={'center'} textColor={row.poison_messages > 0 ? '#F7685B' : null}>
                                         {row.poison_messages}
                                     </OverflowTip>
                                     <OverflowTip text={row.unprocessed_messages} width={'75px'} textAlign={'center'}>

@@ -128,7 +128,7 @@ const GetStarted = (props) => {
                             <GetStartedItem
                                 headerImage={GetStartedIcon}
                                 headerTitle="Create Station"
-                                headerDescription="Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+                                headerDescription="Station is the object that stores data"
                                 onNext={() => onNext()}
                             >
                                 <CreateStationForm createStationFormRef={createStationFormRef} />
@@ -137,8 +137,8 @@ const GetStarted = (props) => {
                         {getStartedState?.currentStep === 2 && (
                             <GetStartedItem
                                 headerImage={AppUserIcon}
-                                headerTitle="Create app user"
-                                headerDescription="Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+                                headerTitle="Create application user"
+                                headerDescription="User of type application is for connecting apps"
                                 onNext={onNext}
                             >
                                 <CreateAppUser createStationFormRef={createStationFormRef} />
@@ -148,7 +148,7 @@ const GetStarted = (props) => {
                             <GetStartedItem
                                 headerImage={ProduceDataImg}
                                 headerTitle="Produce data"
-                                headerDescription="Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+                                headerDescription="Choose your preferred SDK, copy and paste the code to your IDE, and run your app to produce data to memphis station"
                                 onNext={onNext}
                             >
                                 <ProduceData createStationFormRef={createStationFormRef} />
@@ -158,7 +158,7 @@ const GetStarted = (props) => {
                             <GetStartedItem
                                 headerImage={ConsumeDataImg}
                                 headerTitle="Consume data"
-                                headerDescription="Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+                                headerDescription="Choose your preferred SDK, copy and paste the code to your IDE, and run your app to consume data from memphis station"
                                 onNext={onNext}
                             >
                                 <ConsumeData createStationFormRef={createStationFormRef} />
@@ -168,7 +168,7 @@ const GetStarted = (props) => {
                             <GetStartedItem
                                 headerImage={ReadyToroll}
                                 headerTitle="You are ready to roll"
-                                headerDescription="Congratulations - You’ve created your first broker app. "
+                                headerDescription="Congratulations - You’ve created your first broker app"
                                 onNext={onNext}
                                 style={finishStyle}
                             >

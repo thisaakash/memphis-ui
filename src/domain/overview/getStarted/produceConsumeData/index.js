@@ -136,12 +136,7 @@ const ProduceConsumeData = (props) => {
                 {isCopyToClipBoard === screenEnum['DATA_WAITING'] ? (
                     <div className="data-waiting-container">
                         <img className="image-waiting-successful" src={waitingImage} alt="waiting-data"></img>
-                        <TitleComponent
-                            headerTitle={waitingTitle}
-                            typeTitle="sub-header"
-                            headerDescription="Lorem Ipsum is simply dummy text of the printing and typesetting industry."
-                            style={{ header: { fontSize: '18px' } }}
-                        ></TitleComponent>
+                        <TitleComponent headerTitle={waitingTitle} typeTitle="sub-header" style={{ header: { fontSize: '18px' } }}></TitleComponent>
                         <div>
                             <Button
                                 width="129px"
@@ -165,12 +160,7 @@ const ProduceConsumeData = (props) => {
                 ) : isCopyToClipBoard === screenEnum['DATA_RECIEVED'] ? (
                     <div className="successfully-container">
                         <img className="image-waiting-successful" src={SuccessfullyReceivedProduce} alt="successfully-received-produce"></img>
-                        <TitleComponent
-                            headerTitle={successfullTitle}
-                            typeTitle="sub-header"
-                            headerDescription="Lorem Ipsum is simply dummy text of the printing and typesetting industry."
-                            style={{ header: { fontSize: '18px' } }}
-                        ></TitleComponent>
+                        <TitleComponent headerTitle={successfullTitle} typeTitle="sub-header" style={{ header: { fontSize: '18px' } }}></TitleComponent>
                     </div>
                 ) : (
                     <CodeSnippet

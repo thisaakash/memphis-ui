@@ -60,7 +60,7 @@ const ProduceData = (props) => {
     return (
         <ProduceConsumeData
             waitingImage={WaitingProduceData}
-            waitingTitle={'We are waiting to produce data'}
+            waitingTitle={'We are waiting for produced data'}
             successfullTitle={'Successfully received'}
             languagesOptions={languagesOptions}
             activeData={'connected_producers'}

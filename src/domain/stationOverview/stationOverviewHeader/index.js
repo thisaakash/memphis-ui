@@ -35,6 +35,7 @@ import { StationStoreContext } from '..';
 import TooltipComponent from '../../../components/tooltip/tooltip';
 import Auditing from '../auditing';
 import { InfoOutlined } from '@material-ui/icons';
+import { LOCAL_STORAGE_ENV, LOCAL_STORAGE_NAMESPACE } from '../../../const/localStorageConsts';
 
 const StationOverviewHeader = (props) => {
     const [state, dispatch] = useContext(Context);
@@ -43,14 +44,16 @@ const StationOverviewHeader = (props) => {
     const [retentionValue, setRetentionValue] = useState('');
     const [sdkModal, setSdkModal] = useState(false);
     const [auditModal, setAuditModal] = useState(false);
-    const [open, modalFlip] = useState(false);
     const selectLngOption = ['Go', 'Node.js'];
     const [langSelected, setLangSelected] = useState('Go');
-    const codeExample = CODE_EXAMPLE[langSelected].code;
+    const [codeExample, setCodeExample] = useState('');
+    const url = window.location.href;
+    const stationName = url.split('factories/')[1].split('/')[1];
     const handleSelectLang = (e) => {
         setLangSelected(e);
     };
     useEffect(() => {
+        changeDynamicCode(langSelected);
         switch (stationState?.stationMetaData?.retention_type) {
             case 'message_age_sec':
                 setRetentionValue(convertSecondsToDate(stationState?.stationMetaData?.retention_value));
@@ -65,6 +68,18 @@ const StationOverviewHeader = (props) => {
                 break;
         }
     }, []);
+
+    const changeDynamicCode = (lang) => {
+        let codeEx = CODE_EXAMPLE[lang].code;
+        let host = process.env.REACT_APP_SANDBOX_ENV
+            ? 'broker.sandbox.memphis.dev'
+            : localStorage.getItem(LOCAL_STORAGE_ENV) === 'docker'
+            ? 'localhost'
+            : 'memphis-cluster.' + localStorage.getItem(LOCAL_STORAGE_NAMESPACE) + '.svc.cluster.local';
+        codeEx = codeEx.replaceAll('<memphis-host>', host);
+        codeEx = codeEx.replaceAll('<station_name>', stationName);
+        setCodeExample(codeEx);
+    };
 
     const returnToStaionsList = () => {
         const url = window.location.href;

@@ -24,7 +24,7 @@ export const ApiEndpoints = {
     EDIT_COMPANY_LOGO: '/usermgmt/editCompanyLogo',
     REMOVE_COMPANY_LOGO: '/usermgmt/removeCompanyLogo',
     EDIT_ANALYTICS: '/usermgmt/editAnalytics',
-    GOOGLE_LOGIN: '/sandbox/login',
+    SANDBOX_LOGIN: '/sandbox/login',
 
     //Factory
     CREATE_FACTORY: '/factories/createFactory',
@@ -38,6 +38,10 @@ export const ApiEndpoints = {
     REMOVE_STATION: '/stations/removeStation',
     GET_STATION: '/stations/getStation',
     GET_ALL_STATIONS: '/stations/getAllStations',
+    GET_POISION_MESSAGE_JOURNEY: '/stations/getPoisonMessageJourney',
+    GET_MESSAGE_DETAILS: '/stations/getMessageDetails',
+    ACK_POISION_MESSAGE: '/stations/ackPoisonMessages',
+    RESEND_POISION_MESSAGE_JOURNEY: '/stations/resendPoisonMessages',
 
     //Producers
     GET_ALL_PRODUCERS_BY_STATION: '/producers/getAllProducersByStation',

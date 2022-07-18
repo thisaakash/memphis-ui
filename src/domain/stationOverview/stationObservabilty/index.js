@@ -14,49 +14,38 @@
 import './style.scss';
 
 import React, { useContext, useEffect, useRef } from 'react';
-import lottie from 'lottie-web';
+import Lottie from 'lottie-react';
 
-import animationData from '../../../assets/lotties/thunnel-many.json';
-import Messages from './messages';
-import PubSubList from './pubSubList';
+import consumePoision from '../../../assets/lotties/consume_poision.json';
+import consumeEmpty from '../../../assets/lotties/consume_empty.json';
+import produceEmpty from '../../../assets/lotties/produce_empty.json';
+import produce from '../../../assets/lotties/produce-many.json';
+import consumer from '../../../assets/lotties/consume.json';
+import ProduceConsumList from './ProduceConsumList';
 import { StationStoreContext } from '..';
+import Messages from './messages';
 
 const StationObservabilty = () => {
-    const fromProducer = useRef(null);
-    const toConsumer = useRef(null);
     const [stationState, stationDispatch] = useContext(StationStoreContext);
-
-    useEffect(() => {
-        lottie.loadAnimation({
-            container: fromProducer.current,
-            renderer: 'svg',
-            loop: true,
-            autoplay: true,
-            animationData: animationData
-        });
-    }, [stationState?.stationSocketData?.active_producers?.length > 0]);
-
-    useEffect(() => {
-        lottie.loadAnimation({
-            container: toConsumer.current,
-            renderer: 'svg',
-            loop: true,
-            autoplay: true,
-            animationData: animationData
-        });
-    }, [stationState?.stationSocketData?.active_consumers?.length > 0]);
 
     return (
         <div className="station-observabilty-container">
-            <PubSubList producer={true} />
+            <ProduceConsumList producer={true} />
             <div className="thunnel-from-sub">
-                {stationState?.stationSocketData?.active_producers?.length > 0 && <div style={{ height: '10vw', width: '10vw' }} ref={fromProducer}></div>}
+                {stationState?.stationSocketData?.connected_producers?.length === 0 && <Lottie animationData={produceEmpty} loop={true} />}
+                {stationState?.stationSocketData?.connected_producers?.length > 0 && <Lottie animationData={produce} loop={true} />}
             </div>
             <Messages />
             <div className="thunnel-to-pub">
-                {stationState?.stationSocketData?.active_consumers?.length > 0 && <div style={{ height: '10vw', width: '10vw' }} ref={toConsumer}></div>}
+                {stationState?.stationSocketData?.connected_cgs?.length === 0 && <Lottie animationData={consumeEmpty} loop={true} />}
+                {stationState?.stationSocketData?.connected_cgs?.length > 0 && stationState?.stationSocketData?.poison_messages?.length > 0 && (
+                    <Lottie animationData={consumePoision} loop={true} />
+                )}
+                {stationState?.stationSocketData?.connected_cgs?.length > 0 && stationState?.stationSocketData?.poison_messages?.length === 0 && (
+                    <Lottie animationData={consumer} loop={true} />
+                )}
             </div>
-            <PubSubList producer={false} />
+            <ProduceConsumList producer={false} />
         </div>
     );
 };

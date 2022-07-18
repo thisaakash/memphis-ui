@@ -109,3 +109,9 @@ export const convertBytes = (bytes) => {
         return '0 Bytes';
     }
 };
+
+export const numberWithCommas = (x) => {
+    if (x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    } else return 0;
+};

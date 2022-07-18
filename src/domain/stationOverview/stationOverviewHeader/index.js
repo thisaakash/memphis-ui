@@ -78,7 +78,7 @@ const StationOverviewHeader = (props) => {
                 <div className="station-details">
                     <h1 className="station-name">{stationState?.stationMetaData?.name}</h1>
                     <span className="created-by">
-                        Created by <b>{stationState?.stationMetaData?.created_by_user}</b> at {stationState?.stationMetaData?.creation_date}
+                        Created by {stationState?.stationMetaData?.created_by_user} at {stationState?.stationMetaData?.creation_date}
                     </span>
                 </div>
                 <div id="e2e-tests-station-close-btn">
@@ -224,7 +224,7 @@ const StationOverviewHeader = (props) => {
                         <p className="title">Audit</p>
                         <div className="msg">
                             <InfoOutlined />
-                            <p>Showing last 5 days logs</p>
+                            <p>Showing last 5 days</p>
                         </div>
                     </div>
                 }

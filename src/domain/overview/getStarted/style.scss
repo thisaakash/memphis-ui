@@ -10,8 +10,6 @@
     min-height: 530px;
 
     .btnContainer {
-        // remark space between style because the back button
-        // justify-content: space-between;
         display: flex;
         margin-top: 7px;
         margin-bottom: 30px;
@@ -19,8 +17,6 @@
     }
 
     .getstarted-header {
-        font-family: 'Inter';
-        font-style: normal;
         font-weight: 600;
         font-size: 24px;
         line-height: 29px;
@@ -28,8 +24,6 @@
     }
 
     .getstarted-header-description {
-        font-family: 'Inter';
-        font-style: normal;
         font-weight: 400;
         font-size: 12px;
         line-height: 15px;

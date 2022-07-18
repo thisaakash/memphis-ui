@@ -119,11 +119,7 @@ function OverView() {
     const getAllStations = async () => {
         try {
             const res = await httpRequest('GET', `${ApiEndpoints.GET_ALL_STATIONS}`);
-            if (res) {
-                setAllStations(res);
-            } else {
-                console.log('There are no stations');
-            }
+            setAllStations(res);
         } catch (err) {
             return;
         }

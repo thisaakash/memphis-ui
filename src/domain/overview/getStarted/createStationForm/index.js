@@ -1,3 +1,16 @@
+// Copyright 2021-2022 The Memphis Authors
+// Licensed under the GNU General Public License v3.0 (the “License”);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// https://www.gnu.org/licenses/gpl-3.0.en.html
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an “AS IS” BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 import React, { useState, useEffect, useContext } from 'react';
 import { Form, InputNumber } from 'antd';
 import Input from '../../../../components/Input';
@@ -135,7 +148,6 @@ const CreateStationForm = (props) => {
             setTimeout(async () => {
                 const values = await creationForm.validateFields();
                 if (values?.errorFields || values.name === undefined || values.factory_name === undefined) {
-                    // getStartedDispatch({ type: 'SET_NEXT_DISABLE', payload: true });
                     return;
                 } else {
                     if (values.retention_type === 'message_age_sec') {
@@ -174,8 +186,6 @@ const CreateStationForm = (props) => {
             const data = await httpRequest('POST', ApiEndpoints.CREATE_STATION, bodyRequest);
             if (data) {
                 getStartedDispatch({ type: 'IS_LOADING', payload: false });
-                // getStartedDispatch({ type: 'SET_NEXT_DISABLE', payload: false });
-
                 getStartedDispatch({ type: 'SET_FACTORY', payload: bodyRequest.factory_name });
                 getStartedDispatch({ type: 'SET_STATION', payload: data.name });
                 getStartedDispatch({ type: 'SET_FORM_FIELDS_CREATE_STATION', payload: bodyRequest });

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { CODE_CONSUME_JAVASCRIPT, CODE_CONSUME_GO } from '../../../../const/SDKExample';
+import { CODE_CONSUME_JAVASCRIPT, CODE_CONSUME_GO, CODE_CONSUME_PYTHON } from '../../../../const/SDKExample';
 import WaitingConsumeData from '../../../../assets/images/waitingConsumeData.svg';
 import ProduceConsumeData from '../produceConsumeData';
 import { GetStartedStoreContext } from '..';
@@ -19,11 +19,14 @@ const ConsumeData = (props) => {
                 .replace('<connection_token>', getStartedState?.connectionCreds)
                 .replace('<station_name>', getStartedState?.stationName)
         },
-        // Python: {
-        //     name: 'Python',
-        //     language: 'python',
-        //     value: `print('hello')`
-        // },
+        Python: {
+            name: 'Python',
+            language: 'python',
+            value: CODE_CONSUME_PYTHON.replace('<username>', getStartedState?.username)
+                .replace('<memphis_host>', host)
+                .replace('<connection_token>', getStartedState?.connectionCreds)
+                .replace('<station_name>', getStartedState?.stationName)
+        },
         'Node.js': {
             name: 'Node.js',
             language: 'javascript',

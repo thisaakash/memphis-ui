@@ -47,7 +47,7 @@ const ProduceData = (props) => {
             waitingTitle={'We are waiting to produce data'}
             successfullTitle={'Successfully received'}
             languagesOptions={languagesOptions}
-            activeData={'active_producers'}
+            activeData={'connected_producers'}
             dataName={'producer_app'}
         ></ProduceConsumeData>
     );

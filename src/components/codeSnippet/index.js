@@ -14,6 +14,7 @@ const CodeSnippet = (props) => {
         minimap: { enabled: false },
         scrollBeyondLastLine: false,
         selectionHighlight: true,
+        renderLineHighlight: 'none',
         scrollbar: {
             verticalScrollbarSize: 3,
             horizontalScrollbarSize: 3

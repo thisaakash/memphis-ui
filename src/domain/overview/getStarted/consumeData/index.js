@@ -48,7 +48,7 @@ const ConsumeData = (props) => {
             waitingTitle={'Waiting to consume messages from the station'}
             successfullTitle={'Start to receive messages.'}
             languagesOptions={languagesOptions}
-            activeData={'active_consumers'}
+            activeData={'connected_cgs'}
             dataName={'consumer_app'}
         ></ProduceConsumeData>
     );

@@ -1,16 +1,18 @@
 .station-overview-container {
     width: calc(100% - 70px);
     position: absolute;
-    padding: 2vw;
+    padding: 1vw;
     height: calc(100%);
-    min-width: 1000px;
     overflow: auto;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     gap: 15px;
     .overview-header{
-        min-width: 1000px;
+        min-width: 1170px;
+    }
+    .station-observability{
+        min-width: 1170px;
     }
     .overview-top {
         display: flex;
@@ -27,6 +29,7 @@
     }
     .overview-bottom {
         width: 100%;
+        min-width: 1000px;
         display: flex;
         position: relative;
     }

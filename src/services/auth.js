@@ -11,7 +11,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { ApiEndpoints } from '../const/apiEndpoints';
 import {
     LOCAL_STORAGE_ALREADY_LOGGED_IN,
     LOCAL_STORAGE_AVATAR_ID,
@@ -21,10 +20,12 @@ import {
     LOCAL_STORAGE_USER_ID,
     LOCAL_STORAGE_USER_NAME,
     LOCAL_STORAGE_USER_TYPE,
-    LOCAL_STORAGE_ALLOW_ANALYTICS
+    LOCAL_STORAGE_ALLOW_ANALYTICS,
+    LOCAL_STORAGE_ENV,
+    LOCAL_STORAGE_NAMESPACE,
+    LOCAL_STORAGE_WELCOME_MESSAGE
 } from '../const/localStorageConsts';
 import pathDomains from '../router';
-import { httpRequest } from './http';
 
 const AuthService = (function () {
     const saveToLocalStorage = (userData) => {
@@ -40,18 +41,14 @@ const AuthService = (function () {
         localStorage.setItem(LOCAL_STORAGE_USER_TYPE, userData.user_type);
         localStorage.setItem(LOCAL_STORAGE_EXPIRED_TOKEN, expiryToken);
         localStorage.setItem(LOCAL_STORAGE_ALLOW_ANALYTICS, userData.send_analytics);
+        localStorage.setItem(LOCAL_STORAGE_ENV, userData.env);
+        localStorage.setItem(LOCAL_STORAGE_NAMESPACE, userData.namespace);
+        if (userData.already_logged_in === false) {
+            localStorage.setItem(LOCAL_STORAGE_WELCOME_MESSAGE, true);
+        }
     };
 
-    const logout = async () => {
-        if (localStorage.getItem(LOCAL_STORAGE_TOKEN)) {
-            try {
-                await httpRequest('POST', ApiEndpoints.LOGOUT);
-            } catch (error) {
-                localStorage.clear();
-                window.location.assign(pathDomains.login);
-                return;
-            }
-        }
+    const logout = () => {
         localStorage.clear();
         window.location.assign(pathDomains.login);
     };

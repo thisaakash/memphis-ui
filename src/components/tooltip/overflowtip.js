@@ -25,7 +25,8 @@ const OverflowTip = (props) => {
             margin: '5px',
             fontFamily: 'Inter',
             boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px',
-            whiteSpace: 'pre-line'
+            whiteSpace: 'pre-line',
+            textAlign: props.center ? 'center' : 'start'
         },
         arrow: {
             color: props.color === 'white' ? '#f7f7f7' : '#2B2E3F'
@@ -62,7 +63,8 @@ const OverflowTip = (props) => {
                     textOverflow: 'ellipsis',
                     width: props.width || null,
                     cursor: props.cursor || 'default',
-                    textAlign: props.textAlign || null
+                    textAlign: props.textAlign || null,
+                    color: props.textColor || null
                 }}
             >
                 {props.children}

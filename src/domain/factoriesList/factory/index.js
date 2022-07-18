@@ -92,7 +92,7 @@ const Factory = (props) => {
                 </Link>
                 <div className="factory-owner">
                     <div className="user-avatar">
-                        <img src={botUrl} width={25} height={25} alt="bot"></img>
+                        <img className="sandboxUserImg" src={botUrl} width={25} height={25} alt="bot"></img>
                     </div>
                     <div className="user-details">
                         <p>{props.content.created_by_user}</p>

@@ -78,8 +78,8 @@ const SelectComponent = (props) => {
                 {customOptions && options}
                 {!customOptions &&
                     options.map((option) => (
-                        <Option key={option.id || option} disabled={option.disabled || false}>
-                            {option.name || option}
+                        <Option key={option?.id || option} disabled={option?.disabled || false}>
+                            {option?.name || option}
                         </Option>
                     ))}
             </Select>

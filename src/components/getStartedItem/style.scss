@@ -1,0 +1,20 @@
+.get-started-wrapper {
+    display: flex;
+    flex-direction: column;
+    .get-started-container {
+        height: 55vh;
+        width: 38vw;
+        overflow-y: auto;
+        margin-left: 23px;
+        box-sizing: border-box;
+        background: #ffffff;
+        border: 1px solid #f2f2f2;
+        border-radius: 8px;
+        padding: 25px;
+
+        .header-image {
+            width: 30px;
+            height: 30px;
+        }
+    }
+}

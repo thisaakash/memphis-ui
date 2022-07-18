@@ -23,6 +23,7 @@ import pathDomains from '../../../router';
 
 const SysComponents = () => {
     const [state, dispatch] = useContext(Context);
+
     return (
         <div className="overview-wrapper sys-components-container">
             <span className="overview-components-header">
@@ -49,7 +50,7 @@ const SysComponents = () => {
                 {state?.monitor_data?.system_components &&
                     state?.monitor_data?.system_components?.map((comp, i) => {
                         return (
-                            <div key={`${comp.podName}${i}`}>
+                            <div style={{ lineHeight: '30px' }} key={`${comp.podName}${i}`}>
                                 <Divider />
                                 <div className="sys-components">
                                     <p>{comp.component}</p>

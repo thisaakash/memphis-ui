@@ -145,7 +145,7 @@ const CreateAppUser = (props) => {
                             <TitleComponent
                                 headerTitle="Enter user name"
                                 typeTitle="sub-header"
-                                headerDescription="Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+                                // headerDescription="Lorem Ipsum is simply dummy text of the printing and typesetting industry."
                             ></TitleComponent>
                         </div>
                         <Input
@@ -179,7 +179,7 @@ const CreateAppUser = (props) => {
                 {isCreatedUser === screenEnum['DATA_WAITING'] ? (
                     <div className="creating-the-user-container">
                         <img src={CreatingTheUser} alt="creating-the-user"></img>
-                        <p className="create-the-user-header">We are creating the user</p>
+                        <p className="create-the-user-header">User is getting created</p>
                     </div>
                 ) : isCreatedUser === screenEnum['DATA_RECIEVED'] ? (
                     <div className="connection-details-container">

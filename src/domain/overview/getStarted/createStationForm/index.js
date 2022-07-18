@@ -263,7 +263,7 @@ const CreateStationForm = (props) => {
                         <TitleComponent
                             headerTitle="Enter station name"
                             typeTitle="sub-header"
-                            headerDescription="RabbitMQ has queues, Kafka has topics, and Memphis has stations."
+                            headerDescription="RabbitMQ has queues, Kafka has topics, and Memphis has stations"
                         ></TitleComponent>
                     </div>
 

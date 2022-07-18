@@ -208,7 +208,7 @@ const CreateAppUser = (props) => {
                             </div>
                         </div>
                         <div className="information-container">
-                            <img src={Information} alt="information" width="13.33px" height="13.33px" className="information-img" />
+                            <img src={Information} alt="information" className="information-img" />
                             <p className="information">Please note when you close this modal, you will not be able to restore your user details!!</p>
                         </div>
                     </div>

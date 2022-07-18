@@ -9,9 +9,6 @@
     .creating-the-user-container {
         text-align: center;
         justify-content: center;
-        border: 1px solid #f3f3f3;
-        border-radius: 4px;
-        height: 144px;
         .create-the-user-header {
             margin-top: 19px;
             font-family: 'Inter';
@@ -23,6 +20,7 @@
         }
     }
 
+    .creating-the-user-container,
     .connection-details-container {
         height: 125px;
         background: rgba(239, 239, 243, 0.05);
@@ -85,13 +83,16 @@
 
     .information-container {
         display: flex;
-        justify-content: flex-start;
+        justify-content: center;
         align-items: center;
         margin-top: 35px;
+        text-align: center;
 
         .information-img {
-            margin-bottom: 10px;
             margin-right: 5px;
+            align-self: center;
+            width: 13.33px;
+            height: 13.33px;
         }
         .information {
             font-family: 'Inter';
@@ -100,6 +101,7 @@
             font-size: 12px;
             line-height: 150%;
             color: #b4b4b4;
+            margin: 0;
         }
     }
 }

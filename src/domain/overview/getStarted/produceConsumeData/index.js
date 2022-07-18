@@ -22,7 +22,6 @@ const ProduceConsumeData = (props) => {
     const [isCopyToClipBoard, setCopyToClipBoard] = useState(screenEnum['DATA_SNIPPET']);
     const [languageOption, setLanguageOption] = useState();
     const [getStartedState, getStartedDispatch] = useContext(GetStartedStoreContext);
-
     const [intervalStationDetails, setintervalStationDetails] = useState();
 
     const getStationDetails = async () => {
@@ -44,11 +43,13 @@ const ProduceConsumeData = (props) => {
             getStationDetails();
         }, 3000);
         setintervalStationDetails(interval);
-        console.log(intervalStationDetails);
     };
 
     useEffect(() => {
         setLanguageOption(languagesOptions['Go']);
+        return () => {
+            clearInterval(intervalStationDetails);
+        };
     }, []);
 
     useEffect(() => {
@@ -58,13 +59,12 @@ const ProduceConsumeData = (props) => {
             getStartedDispatch({ type: 'SET_NEXT_DISABLE', payload: false });
         }
 
-        if (isCopyToClipBoard === screenEnum['DATA_RECIEVED'] || isCopyToClipBoard === screenEnum['DATA_SNIPPET']) {
+        if (isCopyToClipBoard === screenEnum['DATA_RECIEVED']) {
             clearInterval(intervalStationDetails);
-            return () => {
-                clearInterval(intervalStationDetails);
-                console.log('clear interval');
-            };
         }
+        return () => {
+            clearInterval(intervalStationDetails);
+        };
     }, [isCopyToClipBoard]);
 
     useEffect(() => {
@@ -75,28 +75,17 @@ const ProduceConsumeData = (props) => {
             getStartedState?.stationData[activeData][0]?.name === dataName
         ) {
             setCopyToClipBoard(screenEnum['DATA_RECIEVED']);
-            clearInterval(intervalStationDetails);
-
-            // return () => {
-            //     clearInterval(intervalStationDetails);
-            //     console.log('clear');
-            //     return;
-            // };
+            // clearInterval(intervalStationDetails);
         }
-
-        // if (Object.keys(getStartedState?.stationData[activeData])?.length === 1) {
-        //     clearInterval(intervalStationDetails);
-        //     console.log('clearrr');
-        // }
+        return () => {
+            if (isCopyToClipBoard === screenEnum['DATA_RECIEVED']) {
+                clearInterval(intervalStationDetails);
+            }
+        };
     }, [[getStartedState?.stationData?.[activeData]]]);
 
     const updateDisplayLanguage = (lang) => {
         setLanguageOption(languagesOptions[lang]);
-    };
-
-    const clearInterFunc = () => {
-        console.log(intervalStationDetails);
-        clearInterval(intervalStationDetails);
     };
 
     return (
@@ -151,11 +140,9 @@ const ProduceConsumeData = (props) => {
                                 border="border: 1px solid #EBEBEB"
                                 fontSize="14px"
                                 fontWeight="bold"
-                                // boxShadowStyle="none"
                                 marginBottom="3px"
                                 onClick={() => {
-                                    clearInterFunc();
-                                    // clearInterval(intervalStationDetails);
+                                    clearInterval(intervalStationDetails);
 
                                     getStartedDispatch({ type: 'SET_CURRENT_STEP', payload: getStartedState?.currentStep + 1 });
                                 }}

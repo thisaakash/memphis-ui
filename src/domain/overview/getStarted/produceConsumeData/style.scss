@@ -29,15 +29,15 @@
 
     .data-waiting-container,
     .successfully-container {
-        margin-top: 15px;
         padding: 10px;
         text-align: center;
         display: flex;
         align-items: center;
+        justify-content: space-evenly;
         flex-direction: column;
         border: 1px solid #d8d8d8;
         border-radius: 4px;
-        height: 30vh;
+        height: 34vh;
 
         .image-waiting-successful {
             margin-top: 10px;

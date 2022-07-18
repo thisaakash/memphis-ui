@@ -12,6 +12,7 @@
 // limitations under the License.
 
 import './style.scss';
+import { message } from 'antd';
 
 import React, { useContext, useEffect, useState } from 'react';
 import { Checkbox } from 'antd';
@@ -193,6 +194,7 @@ const Messages = () => {
                 setIgnoreProcced(false);
                 stationDispatch({ type: 'SET_POISINS_MESSAGES', payload: poisions });
                 setIsCheck([]);
+                setIsCheckAll(false);
             }, 1500);
         } catch (error) {
             setIgnoreProcced(false);
@@ -204,6 +206,15 @@ const Messages = () => {
             await httpRequest('POST', `${ApiEndpoints.RESEND_POISION_MESSAGE_JOURNEY}`, { poison_message_ids: isCheck });
             setTimeout(() => {
                 setResendProcced(false);
+                message.success({
+                    key: 'memphisSuccessMessage',
+                    content: isCheck.length === 1 ? 'The message was sent successfully' : 'The messages were sent successfully',
+                    duration: 5,
+                    style: { cursor: 'pointer' },
+                    onClick: () => message.destroy('memphisSuccessMessage')
+                });
+                setIsCheck([]);
+                setIsCheckAll(false);
             }, 1500);
         } catch (error) {
             setResendProcced(false);

@@ -44,7 +44,7 @@ const Messages = () => {
     const stationName = url.split('factories/')[1].split('/')[1];
 
     const [tabValue, setTabValue] = useState('0');
-    const tabs = ['All', 'Dead letter'];
+    const tabs = ['All', 'Dead-letter'];
     const history = useHistory();
 
     useEffect(() => {
@@ -374,7 +374,7 @@ const Messages = () => {
             )}
             {tabValue === '1' && stationState?.stationSocketData?.poison_messages?.length === 0 && (
                 <div className="empty-messages">
-                    <p>Congrats, No messages in your station's dead letter, yet ;)</p>
+                    <p>Congrats, No messages in your station's dead-letter, yet ;)</p>
                 </div>
             )}
         </div>

@@ -19,6 +19,7 @@ import CustomCollapse from '../../../stationOverview/stationObservabilty/compone
 import { Space } from 'antd';
 import { httpRequest } from '../../../../services/http';
 import { ApiEndpoints } from '../../../../const/apiEndpoints';
+import { message as messageAnt } from 'antd';
 
 const PoisionMessage = ({ stationName, messageId, details, message, procssing, returnBack }) => {
     const [resendProcced, setResendProcced] = useState(false);
@@ -43,9 +44,17 @@ const PoisionMessage = ({ stationName, messageId, details, message, procssing, r
         try {
             await httpRequest('POST', `${ApiEndpoints.RESEND_POISION_MESSAGE_JOURNEY}`, { poison_message_ids: [messageId] });
             setTimeout(() => {
+              
                 setResendProcced(false);
                 procssing(false);
-            }, 2500);
+                messageAnt.success({
+                    key: 'memphisSuccessMessage',
+                    content: 'The message was sent successfully',
+                    duration: 5,
+                    style: { cursor: 'pointer' },
+                    onClick: () => message.destroy('memphisSuccessMessage')
+                });
+            }, 1500);
         } catch (error) {
             setResendProcced(false);
             procssing(false);

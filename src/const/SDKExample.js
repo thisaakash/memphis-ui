@@ -115,5 +115,34 @@ export const CODE_EXAMPLE = {
         consumer.Consume(handler)
         time.Sleep(30 * time.Second)
     }`
+    },
+
+    Python: {
+        langCode: 'python',
+        installation: `pip install memphis-py`,
+        code: `import asyncio
+        from memphis import Memphis
+        
+        async def main():
+            try:
+                memphis = Memphis()
+                await memphis.connect(host="<memphis-host>", username="<application type username>", connection_token="<connection_token>")
+        
+                // producer
+                producer = await memphis.producer(station_name="<station-name>", producer_name="myProducer")
+                for i in range(100):
+                    await producer.produce(bytearray('Message #'+str(i)+': Hello world', 'utf-8'))
+
+                // consumer
+                consumer = await memphis.consumer(station_name="<station-name>", consumer_name="myConsumer", consumer_group="")
+                consumer.consume(msg_handler)
+                await asyncio.sleep(5)
+            except Exception as e:
+                print(e)
+            finally:
+                await memphis.close()
+        
+        if __name__ == '__main__':
+            asyncio.run(main())`
     }
 };

@@ -20,8 +20,6 @@ import StationObservabilty from './stationObservabilty';
 import { ApiEndpoints } from '../../const/apiEndpoints';
 import { httpRequest } from '../../services/http';
 import { Context } from '../../hooks/store';
-import Throughput from './throughput';
-import Auditing from './auditing';
 import pathDomains from '../../router';
 
 import Reducer from './hooks/reducer';
@@ -84,8 +82,8 @@ const StationOverview = () => {
 
     useEffect(() => {
         state.socket?.on(`station_overview_data_${stationName}`, (data) => {
-            // sortData(data);
-            // stationDispatch({ type: 'SET_SOCKET_DATA', payload: data });
+            sortData(data);
+            stationDispatch({ type: 'SET_SOCKET_DATA', payload: data });
         });
 
         setTimeout(() => {

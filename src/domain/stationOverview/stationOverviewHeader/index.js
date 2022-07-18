@@ -44,13 +44,15 @@ const StationOverviewHeader = (props) => {
     const [retentionValue, setRetentionValue] = useState('');
     const [sdkModal, setSdkModal] = useState(false);
     const [auditModal, setAuditModal] = useState(false);
-    const selectLngOption = ['Go', 'Node.js'];
+    const selectLngOption = ['Go', 'Node.js', 'Python'];
     const [langSelected, setLangSelected] = useState('Go');
     const [codeExample, setCodeExample] = useState('');
     const url = window.location.href;
     const stationName = url.split('factories/')[1].split('/')[1];
     const handleSelectLang = (e) => {
         setLangSelected(e);
+        changeDynamicCode(e)
+
     };
     useEffect(() => {
         changeDynamicCode(langSelected);
@@ -74,8 +76,8 @@ const StationOverviewHeader = (props) => {
         let host = process.env.REACT_APP_SANDBOX_ENV
             ? 'broker.sandbox.memphis.dev'
             : localStorage.getItem(LOCAL_STORAGE_ENV) === 'docker'
-            ? 'localhost'
-            : 'memphis-cluster.' + localStorage.getItem(LOCAL_STORAGE_NAMESPACE) + '.svc.cluster.local';
+                ? 'localhost'
+                : 'memphis-cluster.' + localStorage.getItem(LOCAL_STORAGE_NAMESPACE) + '.svc.cluster.local';
         codeEx = codeEx.replaceAll('<memphis-host>', host);
         codeEx = codeEx.replaceAll('<station_name>', stationName);
         setCodeExample(codeEx);

@@ -16,7 +16,7 @@ import axios from 'axios';
 
 import { SERVER_URL, SHOWABLE_ERROR_STATUS_CODE, AUTHENTICATION_ERROR_STATUS_CODE } from '../config';
 import { ApiEndpoints } from '../const/apiEndpoints';
-import { LOCAL_STORAGE_TOKEN } from '../const/localStorageConsts.js';
+import { LOCAL_STORAGE_TOKEN, LOCAL_STORAGE_EXPIRED_TOKEN } from '../const/localStorageConsts.js';
 import AuthService from './auth';
 
 export async function httpRequest(method, endPointUrl, data = {}, headers = {}, queryParams = {}, authNeeded = true, timeout = 0) {
@@ -51,9 +51,18 @@ export async function httpRequest(method, endPointUrl, data = {}, headers = {}, 
             window.location.assign('/login');
         }
         if (err?.response?.data?.message !== undefined && err?.response?.status === SHOWABLE_ERROR_STATUS_CODE) {
+            message.warning({
+                key: 'memphisWarningMessage',
+                content: err?.response?.data?.message,
+                duration: 5,
+                style: { cursor: 'pointer' },
+                onClick: () => message.destroy('memphisWarningMessage')
+            });
+        }
+        if (err?.response?.data?.message !== undefined && err?.response?.status === 500) {
             message.error({
                 key: 'memphisErrorMessage',
-                content: err?.response?.data?.message,
+                content: 'We have some issues. Please contact support.',
                 duration: 5,
                 style: { cursor: 'pointer' },
                 onClick: () => message.destroy('memphisErrorMessage')
@@ -70,7 +79,14 @@ export async function handleRefreshTokenRequest() {
     try {
         const url = `${SERVER_URL}${ApiEndpoints.REFRESH_TOKEN}`;
         const res = await HTTP({ method: 'POST', url });
-        await AuthService.saveToLocalStorage(res.data);
+        const now = new Date();
+        const expiryToken = now.getTime() + res.data.expires_in;
+        if (process.env.REACT_APP_SANDBOX_ENV) {
+            localStorage.setItem(LOCAL_STORAGE_TOKEN, res.data.jwt);
+            localStorage.setItem(LOCAL_STORAGE_EXPIRED_TOKEN, expiryToken);
+        } else {
+            await AuthService.saveToLocalStorage(res.data);
+        }
         return true;
     } catch (err) {
         localStorage.clear();

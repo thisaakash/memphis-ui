@@ -47,12 +47,13 @@ const Auditing = () => {
     };
 
     return (
-        <div className="auditing-container">
-            {tabValue === 0 && <p className="audit-hint">*last 30 days</p>}
-            <CustomTabs value={tabValue} onChange={handleChangeMenuItem} tabs={tabs}></CustomTabs>
-            <Divider />
-            <div className="auditing-body">{tabValue === 0 && <GenericList tab={tabValue} columns={auditColumns} />}</div>
-        </div>
+        // <div className="auditing-container">
+        //     {tabValue === 0 && <p className="audit-hint">*last 30 days</p>}
+        //     <CustomTabs value={tabValue} onChange={handleChangeMenuItem} tabs={tabs}></CustomTabs>
+        //     <Divider />
+        //     <div className="auditing-body">{tabValue === 0 && <GenericList tab={tabValue} columns={auditColumns} />}</div>
+        // </div>
+        <GenericList tab={tabValue} columns={auditColumns} />
     );
 };
 

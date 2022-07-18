@@ -15,7 +15,6 @@ export const ApiEndpoints = {
     //Auth
     LOGIN: '/usermgmt/login',
     REFRESH_TOKEN: '/usermgmt/refreshToken',
-    LOGOUT: '/usermgmt/logout',
     ADD_USER: '/usermgmt/addUser',
     GET_ALL_USERS: '/usermgmt/getAllUsers',
     REMOVE_USER: '/usermgmt/removeUser',
@@ -25,6 +24,7 @@ export const ApiEndpoints = {
     EDIT_COMPANY_LOGO: '/usermgmt/editCompanyLogo',
     REMOVE_COMPANY_LOGO: '/usermgmt/removeCompanyLogo',
     EDIT_ANALYTICS: '/usermgmt/editAnalytics',
+    SANDBOX_LOGIN: '/sandbox/login',
 
     //Factory
     CREATE_FACTORY: '/factories/createFactory',
@@ -37,6 +37,11 @@ export const ApiEndpoints = {
     CREATE_STATION: '/stations/createStation',
     REMOVE_STATION: '/stations/removeStation',
     GET_STATION: '/stations/getStation',
+    GET_ALL_STATIONS: '/stations/getAllStations',
+    GET_POISION_MESSAGE_JOURNEY: '/stations/getPoisonMessageJourney',
+    GET_MESSAGE_DETAILS: '/stations/getMessageDetails',
+    ACK_POISION_MESSAGE: '/stations/ackPoisonMessages',
+    RESEND_POISION_MESSAGE_JOURNEY: '/stations/resendPoisonMessages',
 
     //Producers
     GET_ALL_PRODUCERS_BY_STATION: '/producers/getAllProducersByStation',

@@ -22,7 +22,10 @@ import SysComponents from './sysComponents';
 import { Context } from '../../hooks/store';
 import Throughput from './throughput';
 import Resources from './resources';
-import io from 'socket.io-client';
+
+import docsIcon from '../../assets/images/docsIcon.png';
+import discordIcon from '../../assets/images/discordColor.png';
+import slackIcon from '../../assets/images/slackColor.png';
 
 import Button from '../../components/button';
 import CreateStationDetails from '../../components/createStationDetails';
@@ -31,13 +34,15 @@ import {
     LOCAL_STORAGE_ALLOW_ANALYTICS,
     LOCAL_STORAGE_ALREADY_LOGGED_IN,
     LOCAL_STORAGE_AVATAR_ID,
-    LOCAL_STORAGE_TOKEN,
-    LOCAL_STORAGE_USER_NAME
+    LOCAL_STORAGE_USER_NAME,
+    LOCAL_STORAGE_WELCOME_MESSAGE
 } from '../../const/localStorageConsts';
-import { PRIVACY_URL, SOCKET_URL } from '../../config';
+import { PRIVACY_URL } from '../../config';
 import { ApiEndpoints } from '../../const/apiEndpoints';
 import { httpRequest } from '../../services/http';
 import Loader from '../../components/loader';
+import GetStarted from './getStarted';
+import { Link } from 'react-router-dom';
 
 const Desktop = ({ children }) => {
     const isDesktop = useMediaQuery({ minWidth: 850 });
@@ -54,8 +59,12 @@ function OverView() {
     const [analyticsModal, analyticsModalFlip] = useState(true);
     const createStationRef = useRef(null);
     const [botUrl, SetBotUrl] = useState(require('../../assets/images/bots/1.svg'));
+    const [username, SetUsername] = useState('');
     const [isLoading, setisLoading] = useState(false);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
+    const [allStations, setAllStations] = useState([]);
+    const [showWelcome, setShowWelcome] = useState(true);
+    const [welcomeMessage, setWelcomeMessage] = useState('');
 
     const getOverviewData = async () => {
         setisLoading(true);
@@ -71,41 +80,39 @@ function OverView() {
     };
 
     useEffect(() => {
+        getAllStations();
         dispatch({ type: 'SET_ROUTE', payload: 'overview' });
+        setShowWelcome(process.env.REACT_APP_SANDBOX_ENV && localStorage.getItem(LOCAL_STORAGE_WELCOME_MESSAGE) === 'true');
+        setWelcomeMessage(process.env.REACT_APP_SANDBOX_ENV ? 'Hey ' + capitalizeFirst(localStorage.getItem(LOCAL_STORAGE_USER_NAME)) + ',' : '');
         getOverviewData();
         setBotImage(state?.userData?.avatar_id || localStorage.getItem(LOCAL_STORAGE_AVATAR_ID));
+        SetUsername(localStorage.getItem(LOCAL_STORAGE_USER_NAME));
         analyticsModalFlip(
             localStorage.getItem(LOCAL_STORAGE_ALREADY_LOGGED_IN) === 'false' && localStorage.getItem(LOCAL_STORAGE_ALLOW_ANALYTICS) === 'true' && state?.analytics_modal
         );
     }, []);
 
     useEffect(() => {
-        if (isDataLoaded) {
-            const socket = io.connect(SOCKET_URL, {
-                path: '/api/socket.io',
-                query: {
-                    authorization: localStorage.getItem(LOCAL_STORAGE_TOKEN)
-                },
-                reconnection: false
-            });
-            socket.on('main_overview_data', (data) => {
-                data.stations?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
-                dispatch({ type: 'SET_MONITOR_DATA', payload: data });
-            });
+        state.socket?.on('main_overview_data', (data) => {
+            data.stations?.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
+            dispatch({ type: 'SET_MONITOR_DATA', payload: data });
+        });
 
-            setTimeout(() => {
-                socket.emit('register_main_overview_data');
-                setisLoading(false);
-            }, 1000);
-            return () => {
-                socket.emit('deregister');
-                socket.close();
-            };
-        }
-    }, [isDataLoaded]);
+        setTimeout(() => {
+            state.socket?.emit('register_main_overview_data');
+            setisLoading(false);
+        }, 1000);
+        return () => {
+            state.socket?.emit('deregister');
+        };
+    }, [state.socket]);
 
     const setBotImage = (botId) => {
         SetBotUrl(require(`../../assets/images/bots/${botId}.svg`));
+    };
+
+    const capitalizeFirst = (str) => {
+        return str.charAt(0).toUpperCase() + str.slice(1);
     };
 
     const dontSendAnalytics = async () => {
@@ -124,6 +131,15 @@ function OverView() {
         dispatch({ type: 'ANALYTICS_MODAL', payload: false });
     };
 
+    const getAllStations = async () => {
+        try {
+            const res = await httpRequest('GET', `${ApiEndpoints.GET_ALL_STATIONS}`);
+            setAllStations(res);
+        } catch (err) {
+            return;
+        }
+    };
+
     return (
         <div className="overview-container">
             {isLoading && (
@@ -136,13 +152,20 @@ function OverView() {
                     <div className="header">
                         <div className="header-welcome">
                             <div className="bot-wrapper">
-                                <img src={botUrl} width={40} height={40} alt="bot"></img>
+                                <img
+                                    className="sandboxUserImg"
+                                    src={localStorage.getItem('profile_pic') || botUrl} // profile_pic is available only in sandbox env
+                                    referrerPolicy="no-referrer"
+                                    width={localStorage.getItem('profile_pic') ? 60 : 40}
+                                    height={localStorage.getItem('profile_pic') ? 60 : 40}
+                                    alt="bot"
+                                ></img>
                             </div>
                             <div className="dynamic-sentences">
                                 {localStorage.getItem(LOCAL_STORAGE_ALREADY_LOGGED_IN) === 'true' ? (
-                                    <h1>Welcome Back, {localStorage.getItem(LOCAL_STORAGE_USER_NAME)}</h1>
+                                    <h1>Welcome Back, {username}</h1>
                                 ) : (
-                                    <h1>Welcome Aboard, {localStorage.getItem(LOCAL_STORAGE_USER_NAME)}</h1>
+                                    <h1>Welcome Aboard, {username}</h1>
                                 )}
                                 {/* <p className="ok-status">You’re a memphis superhero! All looks good!</p> */}
                             </div>
@@ -162,11 +185,17 @@ function OverView() {
                         />
                     </div>
                     <div className="overview-components">
-                        <div className="left-side">
-                            <GenericDetails />
-                            <FailedStations />
-                            <Throughput />
-                        </div>
+                        {allStations.length === 0 || localStorage.getItem(LOCAL_STORAGE_ALREADY_LOGGED_IN) === 'false' ? (
+                            <div className="left-side">
+                                <GetStarted />
+                            </div>
+                        ) : (
+                            <div className="left-side">
+                                <GenericDetails />
+                                <FailedStations />
+                                <Throughput />
+                            </div>
+                        )}
                         <div className="right-side">
                             <Resources />
                             <SysComponents />
@@ -191,6 +220,70 @@ function OverView() {
                 open={open}
             >
                 <CreateStationDetails chooseFactoryField={true} createStationRef={createStationRef} />
+            </Modal>
+            <Modal
+                header={''}
+                height="300px"
+                minWidth="630px"
+                hr={false}
+                closeAction={() => {
+                    setShowWelcome(false);
+                    localStorage.setItem(LOCAL_STORAGE_WELCOME_MESSAGE, false);
+                }}
+                clickOutside={() => {
+                    setShowWelcome(false);
+                    localStorage.setItem(LOCAL_STORAGE_WELCOME_MESSAGE, false);
+                }}
+                open={showWelcome}
+            >
+                <div className="sandbox-welcome">
+                    <label className="welcome-header">{welcomeMessage}</label>
+                    <br />
+                    <label>
+                        We are super happy to have you with us!
+                        <br />
+                        Please bear in mind that it is a sandbox environment and under constant modifications.
+                        <br />
+                        Downtime and bugs might occur.
+                    </label>
+                    <br />
+                    {/* <br /> */}
+                    <div className="sandbox-welcome-links">
+                        <br />
+                        <label>
+                            <Link to={{ pathname: 'https://docs.memphis.dev' }} target="_blank">
+                                <img src={docsIcon} alt="docs" className="sandbox-icon"></img>
+                            </Link>
+                        </label>
+                        <label>
+                            <Link to={{ pathname: 'https://join.slack.com/t/memphiscommunity/shared_invite/zt-1bdp9ydfk-QpwYIOTz4nkvTGtEL6kJYQ' }} target="_blank">
+                                <img src={slackIcon} alt="slack" className="sandbox-icon"></img>
+                            </Link>
+                            <Link to={{ pathname: 'https://discord.com/invite/WZpysvAeTf' }} target="_blank">
+                                {'  '}
+                                <img src={discordIcon} alt="discord" className="sandbox-icon"></img>
+                            </Link>
+                        </label>
+                    </div>
+                    <br />
+                    <div className="welcome-modal-btn">
+                        <Button
+                            width="120px"
+                            height="36px"
+                            placeholder={'Get started'}
+                            colorType="white"
+                            radiusType="circle"
+                            backgroundColorType="purple"
+                            fontSize="14px"
+                            fontWeight="600"
+                            aria-haspopup="true"
+                            onClick={() => {
+                                setShowWelcome(false);
+                                localStorage.setItem(LOCAL_STORAGE_WELCOME_MESSAGE, false);
+                            }}
+                        />
+                    </div>
+                </div>
             </Modal>
             <Modal
                 header="Memphis Analytics"

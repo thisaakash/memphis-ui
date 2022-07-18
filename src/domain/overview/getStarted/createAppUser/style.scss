@@ -1,0 +1,99 @@
+.create-station-form-create-app-user {
+    .field-title {
+        display: flex;
+        font-weight: 400;
+        font-size: 12px;
+        margin: 0;
+    }
+
+    .creating-the-user-container {
+        text-align: center;
+        justify-content: center;
+        .create-the-user-header {
+            margin-top: 19px;
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 20px;
+            color: #979797;
+        }
+    }
+
+    .creating-the-user-container,
+    .connection-details-container {
+        height: 125px;
+        background: rgba(239, 239, 243, 0.05);
+        border: 1px solid #f3f3f3;
+        border-radius: 4px;
+        margin-top: 15px;
+
+        .user-details-container {
+            height: 44px;
+            display: flex;
+            padding-left: 20px;
+            justify-content: flex-start;
+
+            background: #f6f6fc;
+            align-items: center;
+
+            .user-check {
+                margin-bottom: 5px;
+                margin-right: 5px;
+            }
+
+            .user-connection-details {
+                font-weight: 600;
+                font-size: 14px;
+                align-self: flex-end;
+
+                color: #2e2c34;
+            }
+        }
+
+        .container-username-token {
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 196.5%;
+            margin-left: 20px;
+            margin-top: 5px;
+            color: #2e2c34;
+            height: 50px;
+
+            .username-container,
+            .token-container {
+                display: flex;
+                align-items: center;
+
+                p {
+                    margin: 0;
+                }
+
+                .copy-icon {
+                    padding: 7;
+                    height: 50;
+                }
+            }
+        }
+    }
+
+    .information-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 35px;
+        text-align: center;
+
+        .information-img {
+            margin-right: 5px;
+            align-self: center;
+            width: 13.33px;
+            height: 13.33px;
+        }
+        .information {
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 150%;
+            color: #b4b4b4;
+            margin: 0;
+        }
+    }
+}

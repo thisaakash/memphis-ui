@@ -21,3 +21,6 @@ export const LOCAL_STORAGE_USER_TYPE = 'user_type';
 export const LOCAL_STORAGE_USER_ID = 'user_id';
 export const LOCAL_STORAGE_TOKEN = 'jwt';
 export const LOCAL_STORAGE_ALLOW_ANALYTICS = 'allow_analytics';
+export const LOCAL_STORAGE_ENV = 'env';
+export const LOCAL_STORAGE_NAMESPACE = 'namespace';
+export const LOCAL_STORAGE_WELCOME_MESSAGE = 'welcome_message';

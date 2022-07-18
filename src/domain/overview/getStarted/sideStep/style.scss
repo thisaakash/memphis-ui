@@ -1,0 +1,50 @@
+.side-step-container {
+    display: flex;
+    width: 226px;
+    height: 48px;
+    border-radius: 4px;
+    justify-content: space-between;
+    align-items: flex-end;
+
+    .number-name-container {
+        display: flex;
+        margin-left: 12px;
+
+        .step-name {
+            font-weight: 600;
+            font-size: 15px;
+            line-height: 20px;
+            color: #747474;
+        }
+
+        .step-number-container {
+            width: 21px;
+            height: 21.3px;
+            margin-right: 16px;
+            background: #ebebeb;
+            border-radius: 20.1481px;
+            .step-number {
+                font-weight: 600;
+                font-size: 12px;
+                line-height: 15px;
+                text-align: center;
+                color: #000000;
+                padding: 3.14815px 5.03704px;
+            }
+            .done-image {
+                padding: 0px;
+                align-self: center;
+                margin-right: 16px;
+                width: 21px;
+                height: 21.3px;
+                top: 0px;
+                left: 0px;
+            }
+        }
+    }
+
+    .arrow-container {
+        align-self: center;
+        margin-right: 15px;
+    }
+}

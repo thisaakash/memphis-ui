@@ -15,7 +15,6 @@ import './style.scss';
 
 import React, { useContext, useEffect, useState } from 'react';
 import { CopyBlock, atomOneLight } from 'react-code-blocks';
-import CloseIcon from '@material-ui/icons/Close';
 import { useHistory } from 'react-router-dom';
 import { Progress } from 'antd';
 
@@ -34,20 +33,28 @@ import Modal from '../../../components/modal';
 import pathDomains from '../../../router';
 import { StationStoreContext } from '..';
 import TooltipComponent from '../../../components/tooltip/tooltip';
+import Auditing from '../auditing';
+import { InfoOutlined } from '@material-ui/icons';
+import { LOCAL_STORAGE_ENV, LOCAL_STORAGE_NAMESPACE } from '../../../const/localStorageConsts';
 
 const StationOverviewHeader = (props) => {
     const [state, dispatch] = useContext(Context);
     const [stationState, stationDispatch] = useContext(StationStoreContext);
     const history = useHistory();
     const [retentionValue, setRetentionValue] = useState('');
-    const [open, modalFlip] = useState(false);
-    const selectLngOption = ['Node.js'];
-    const [langSelected, setLangSelected] = useState('Node.js');
-    const codeExample = process.env.DOCKER_ENV ? DOCKER_CODE_EXAMPLE : CODE_EXAMPLE;
+    const [sdkModal, setSdkModal] = useState(false);
+    const [auditModal, setAuditModal] = useState(false);
+    const selectLngOption = ['Go', 'Node.js'];
+    const [langSelected, setLangSelected] = useState('Go');
+    const [codeExample, setCodeExample] = useState('');
+    const url = window.location.href;
+    const stationName = url.split('factories/')[1].split('/')[1];
     const handleSelectLang = (e) => {
         setLangSelected(e);
+        changeDynamicCode(e);
     };
     useEffect(() => {
+        changeDynamicCode(langSelected);
         switch (stationState?.stationMetaData?.retention_type) {
             case 'message_age_sec':
                 setRetentionValue(convertSecondsToDate(stationState?.stationMetaData?.retention_value));
@@ -63,6 +70,18 @@ const StationOverviewHeader = (props) => {
         }
     }, []);
 
+    const changeDynamicCode = (lang) => {
+        let codeEx = CODE_EXAMPLE[lang].code;
+        let host = process.env.REACT_APP_SANDBOX_ENV
+            ? 'broker.sandbox.memphis.dev'
+            : localStorage.getItem(LOCAL_STORAGE_ENV) === 'docker'
+            ? 'localhost'
+            : 'memphis-cluster.' + localStorage.getItem(LOCAL_STORAGE_NAMESPACE) + '.svc.cluster.local';
+        codeEx = codeEx.replaceAll('<memphis-host>', host);
+        codeEx = codeEx.replaceAll('<station_name>', stationName);
+        setCodeExample(codeEx);
+    };
+
     const returnToStaionsList = () => {
         const url = window.location.href;
         const staionName = url.split('factories/')[1].split('/')[0];
@@ -72,7 +91,12 @@ const StationOverviewHeader = (props) => {
     return (
         <div className="station-overview-header">
             <div className="title-wrapper">
-                <h1 className="station-name">Overview - {stationState?.stationMetaData?.name}</h1>
+                <div className="station-details">
+                    <h1 className="station-name">{stationState?.stationMetaData?.name}</h1>
+                    <span className="created-by">
+                        Created by {stationState?.stationMetaData?.created_by_user} at {stationState?.stationMetaData?.creation_date}
+                    </span>
+                </div>
                 <div id="e2e-tests-station-close-btn">
                     <Button
                         width="80px"
@@ -80,29 +104,13 @@ const StationOverviewHeader = (props) => {
                         placeholder="Back"
                         colorType="white"
                         radiusType="circle"
-                        backgroundColorType="purple"
+                        backgroundColorType="navy"
                         fontSize="13px"
                         fontWeight="600"
-                        border="purple"
+                        border="navy"
                         onClick={() => returnToStaionsList()}
                     />
-
-                    {/* <CloseIcon onClick={() => returnToStaionsList()} style={{ cursor: 'pointer' }} /> */}
                 </div>
-            </div>
-            <div className="sdk-button">
-                <Button
-                    width="105px"
-                    height="22px"
-                    placeholder="Code example"
-                    colorType="white"
-                    radiusType="circle"
-                    backgroundColorType="purple"
-                    fontSize="13px"
-                    fontWeight="600"
-                    border="purple"
-                    onClick={() => modalFlip(true)}
-                />
             </div>
             <div className="details">
                 <div className="main-details">
@@ -122,8 +130,8 @@ const StationOverviewHeader = (props) => {
                             <img src={awaitingIcon} width={22} height={44} alt="awaitingIcon" />
                         </div>
                         <div className="more-details">
-                            <p className="number">{stationState?.stationSocketData?.total_messages || 0}</p>
                             <p className="title">Total messages</p>
+                            <p className="number">{stationState?.stationSocketData?.total_messages || 0}</p>
                         </div>
                     </div>
                     <TooltipComponent text="Include extra bytes added by memphis." width={'220px'} cursor="pointer">
@@ -132,8 +140,8 @@ const StationOverviewHeader = (props) => {
                                 <img src={averageMesIcon} width={24} height={24} alt="averageMesIcon" />
                             </div>
                             <div className="more-details">
-                                <p className="number">{convertBytes(stationState?.stationSocketData?.average_message_size)}</p>
                                 <p className="title">Av. message size</p>
+                                <p className="number">{convertBytes(stationState?.stationSocketData?.average_message_size)}</p>
                             </div>
                         </div>
                     </TooltipComponent>
@@ -168,8 +176,26 @@ const StationOverviewHeader = (props) => {
                         </div>
                     </div> */}
                 </div>
+                <div className="info-buttons">
+                    <div className="sdk">
+                        <p>SDK</p>
+                        <span onClick={() => setSdkModal(true)}>View Details ></span>
+                    </div>
+                    <div className="audit">
+                        <p>Audit</p>
+                        <span onClick={() => setAuditModal(true)}>View Details ></span>
+                    </div>
+                </div>
             </div>
-            <Modal header="SDK" minHeight="650px" minWidth="500px" closeAction={() => modalFlip(false)} clickOutside={() => modalFlip(false)} open={open} hr={false}>
+            <Modal
+                header="SDK"
+                minHeight="700px"
+                minWidth="700px"
+                closeAction={() => setSdkModal(false)}
+                clickOutside={() => setSdkModal(false)}
+                open={sdkModal}
+                hr={false}
+            >
                 <div className="sdk-details-container">
                     <div className="select-lan">
                         <p>Language</p>
@@ -190,16 +216,43 @@ const StationOverviewHeader = (props) => {
                         <p>Installation</p>
                         <div className="install-copy">
                             <p></p>
-                            <CopyBlock language={'jsx'} text={'npm i memphis-dev --save'} showLineNumbers={false} theme={atomOneLight} wrapLines={true} codeBlock />
+                            <CopyBlock text={CODE_EXAMPLE[langSelected].installation} showLineNumbers={false} theme={atomOneLight} wrapLines={true} codeBlock />
                         </div>
                     </div>
                     <div className="code-example">
-                        <p>which should output something like</p>
+                        <p>Code</p>
                         <div className="code-content">
-                            <CopyBlock language={'jsx'} text={codeExample} showLineNumbers={true} theme={atomOneLight} wrapLines={true} codeBlock />
+                            <CopyBlock
+                                language={CODE_EXAMPLE[langSelected].langCode}
+                                text={codeExample}
+                                showLineNumbers={true}
+                                theme={atomOneLight}
+                                wrapLines={true}
+                                codeBlock
+                            />
                         </div>
                     </div>
                 </div>
+            </Modal>
+            <Modal
+                header={
+                    <div className="audit-header">
+                        <p className="title">Audit</p>
+                        <div className="msg">
+                            <InfoOutlined />
+                            <p>Showing last 5 days</p>
+                        </div>
+                    </div>
+                }
+                minHeight="400px"
+                minWidth="800px"
+                closeAction={() => setAuditModal(false)}
+                clickOutside={() => setAuditModal(false)}
+                open={auditModal}
+                hr={false}
+                className="audit"
+            >
+                <Auditing />
             </Modal>
         </div>
     );

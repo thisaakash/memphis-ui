@@ -22,18 +22,18 @@ import { ApiEndpoints } from '../../../../const/apiEndpoints';
 
 const PoisionMessage = ({ stationName, messageId, details, message, procssing, returnBack }) => {
     const [resendProcced, setResendProcced] = useState(false);
-    const [ackProcced, setAckProcced] = useState(false);
+    const [ignoreProcced, setIgnoreProcced] = useState(false);
 
     const handleAck = async () => {
-        setAckProcced(true);
+        setIgnoreProcced(true);
         try {
             await httpRequest('POST', `${ApiEndpoints.ACK_POISION_MESSAGE}`, { poison_message_ids: [messageId] });
             setTimeout(() => {
-                setAckProcced(false);
+                setIgnoreProcced(false);
                 returnBack();
             }, 1500);
         } catch (error) {
-            setAckProcced(false);
+            setIgnoreProcced(false);
         }
     };
 
@@ -62,13 +62,13 @@ const PoisionMessage = ({ stationName, messageId, details, message, procssing, r
                     <Button
                         width="75px"
                         height="24px"
-                        placeholder="Ack"
+                        placeholder="Ignore"
                         colorType="white"
                         radiusType="circle"
                         backgroundColorType="purple"
                         fontSize="12px"
                         fontWeight="600"
-                        isLoading={ackProcced}
+                        isLoading={ignoreProcced}
                         onClick={() => handleAck()}
                     />
                     <Button
@@ -88,7 +88,7 @@ const PoisionMessage = ({ stationName, messageId, details, message, procssing, r
             <div className="content-wrapper">
                 <Space direction="vertical">
                     <CustomCollapse status={false} header="Details" defaultOpen={true} data={details} />
-                    <CustomCollapse status={false} header="message" defaultOpen={true} data={message} message={true} />
+                    <CustomCollapse status={false} header="Payload" defaultOpen={true} data={message} message={true} />
                 </Space>
             </div>
         </div>

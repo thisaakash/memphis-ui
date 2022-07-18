@@ -37,13 +37,13 @@ const Messages = () => {
     const [messageDetails, setMessageDetails] = useState({});
     const [isCheckAll, setIsCheckAll] = useState(false);
     const [resendProcced, setResendProcced] = useState(false);
-    const [ackProcced, setAckProcced] = useState(false);
+    const [ignoreProcced, setIgnoreProcced] = useState(false);
     const [loadMessageData, setLoadMessageData] = useState(false);
     const url = window.location.href;
     const stationName = url.split('factories/')[1].split('/')[1];
 
     const [tabValue, setTabValue] = useState('0');
-    const tabs = ['All', 'Poison'];
+    const tabs = ['All', 'Dead letter'];
     const history = useHistory();
 
     useEffect(() => {
@@ -180,14 +180,22 @@ const Messages = () => {
     };
 
     const handleAck = async () => {
-        setAckProcced(true);
+        setIgnoreProcced(true);
         try {
             await httpRequest('POST', `${ApiEndpoints.ACK_POISION_MESSAGE}`, { poison_message_ids: isCheck });
+            let poisions = stationState?.stationSocketData?.poison_messages;
+            isCheck.map((messageId, index) => {
+                poisions = poisions?.filter((item) => {
+                    return item._id !== messageId;
+                });
+            });
             setTimeout(() => {
-                setAckProcced(false);
+                setIgnoreProcced(false);
+                stationDispatch({ type: 'SET_POISINS_MESSAGES', payload: poisions });
+                setIsCheck([]);
             }, 1500);
         } catch (error) {
-            setAckProcced(false);
+            setIgnoreProcced(false);
         }
     };
     const handleResend = async () => {
@@ -201,6 +209,7 @@ const Messages = () => {
             setResendProcced(false);
         }
     };
+
     return (
         <div className="messages-container">
             <div className="header">
@@ -218,14 +227,14 @@ const Messages = () => {
                         <Button
                             width="80px"
                             height="32px"
-                            placeholder="Ack"
+                            placeholder="Ignore"
                             colorType="white"
                             radiusType="circle"
                             backgroundColorType="purple"
                             fontSize="12px"
                             fontWeight="600"
                             disabled={isCheck.length === 0}
-                            isLoading={ackProcced}
+                            isLoading={ignoreProcced}
                             onClick={() => handleAck()}
                         />
                         <Button
@@ -277,7 +286,7 @@ const Messages = () => {
                                     <CustomCollapse header="Producer" status={true} data={messageDetails.producer} />
                                     <MultiCollapse header="Failed CGs" defaultOpen={true} data={messageDetails.poisionedCGs} />
                                     <CustomCollapse status={false} header="Details" data={messageDetails.details} />
-                                    <CustomCollapse status={false} header="Message" defaultOpen={true} data={messageDetails.message} message={true} />
+                                    <CustomCollapse status={false} header="Payload" defaultOpen={true} data={messageDetails.message} message={true} />
                                 </Space>
                             </div>
                         </div>
@@ -321,10 +330,10 @@ const Messages = () => {
                         <div className="message-wrapper">
                             <div className="row-data">
                                 <Space direction="vertical">
-                                    <CustomCollapse header="Producer" status={true} defaultOpen={true} data={messageDetails.producer} />
-                                    <MultiCollapse header="Failed CGs" data={messageDetails.poisionedCGs} />
+                                    <CustomCollapse header="Producer" status={true} data={messageDetails.producer} />
+                                    <MultiCollapse header="Failed CGs" defaultOpen={true} data={messageDetails.poisionedCGs} />
                                     <CustomCollapse status={false} header="Details" data={messageDetails.details} />
-                                    <CustomCollapse status={false} header="message" defaultOpen={true} data={messageDetails.message} message={true} />
+                                    <CustomCollapse status={false} header="Payload" defaultOpen={true} data={messageDetails.message} message={true} />
                                 </Space>
                             </div>
                             <Button
@@ -354,7 +363,7 @@ const Messages = () => {
             )}
             {tabValue === '1' && stationState?.stationSocketData?.poison_messages?.length === 0 && (
                 <div className="empty-messages">
-                    <p>Congrats, No poision message, yet ;)</p>
+                    <p>Congrats, No messages in your station's dead letter, yet ;)</p>
                 </div>
             )}
         </div>

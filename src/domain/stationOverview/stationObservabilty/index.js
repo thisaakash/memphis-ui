@@ -19,7 +19,7 @@ import Lottie from 'lottie-react';
 import consumePoision from '../../../assets/lotties/consume_poision.json';
 import consumeEmpty from '../../../assets/lotties/consume_empty.json';
 import produceEmpty from '../../../assets/lotties/produce_empty.json';
-import produceFew from '../../../assets/lotties/produce-few.json';
+import produce from '../../../assets/lotties/produce-many.json';
 import consumer from '../../../assets/lotties/consume.json';
 import ProduceConsumList from './ProduceConsumList';
 import { StationStoreContext } from '..';
@@ -33,7 +33,7 @@ const StationObservabilty = () => {
             <ProduceConsumList producer={true} />
             <div className="thunnel-from-sub">
                 {stationState?.stationSocketData?.connected_producers?.length === 0 && <Lottie animationData={produceEmpty} loop={true} />}
-                {stationState?.stationSocketData?.connected_producers?.length > 0 && <Lottie animationData={produceFew} loop={true} />}
+                {stationState?.stationSocketData?.connected_producers?.length > 0 && <Lottie animationData={produce} loop={true} />}
             </div>
             <Messages />
             <div className="thunnel-to-pub">

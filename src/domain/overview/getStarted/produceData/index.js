@@ -31,14 +31,14 @@ const ProduceData = (props) => {
                 .replace('<connection_token>', getStartedState?.connectionCreds)
                 .replace('<station_name>', getStartedState?.stationName)
         },
-        Python: {
-            name: 'Python',
-            language: 'python',
-            value: CODE_PRODUCE_PYTHON.replace('<username>', getStartedState?.username)
-                .replace('<memphis_host>', host)
-                .replace('<connection_token>', getStartedState?.connectionCreds)
-                .replace('<station_name>', getStartedState?.stationName)
-        },
+        // Python: {
+        //     name: 'Python',
+        //     language: 'python',
+        //     value: CODE_PRODUCE_PYTHON.replace('<username>', getStartedState?.username)
+        //         .replace('<memphis_host>', host)
+        //         .replace('<connection_token>', getStartedState?.connectionCreds)
+        //         .replace('<station_name>', getStartedState?.stationName)
+        // },
         'Node.js': {
             name: 'Node.js',
             language: 'javascript',

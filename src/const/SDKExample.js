@@ -222,3 +222,51 @@ func main() {
 		os.Exit(1)
 	}
 }`;
+
+export const CODE_CONSUME_PYTHON = `import asyncio
+from memphis import Memphis
+
+
+async def main():
+    async def msg_handler(msg):
+        print("message: ", msg.get_data())
+        await msg.ack()
+
+    try:
+        memphis = Memphis()
+        await memphis.connect(host="<memphis_host>", username="<username>", connection_token="<connection_token>")
+
+        consumer = await memphis.consumer(station_name="<station_name>", consumer_name="consumer_app", consumer_group="")
+        consumer.consume(msg_handler)
+        await asyncio.sleep(5)
+
+    except Exception as e:
+        print(e)
+
+    finally:
+        await memphis.close()
+
+if __name__ == '__main__':
+    asyncio.run(main())`;
+
+export const CODE_PRODUCE_PYTHON = `import asyncio
+from memphis import Memphis
+
+
+async def main():
+    try:
+        memphis = Memphis()
+        await memphis.connect(host="<memphis_host>", username="<username>", connection_token="<connection_token>")
+
+        producer = await memphis.producer(station_name="<station_name>", producer_name="producer_app")
+        for i in range(100):
+            await producer.produce(bytearray('Message #'+str(i)+': Hello world', 'utf-8'))
+
+    except Exception as e:
+        print(e)
+
+    finally:
+        await memphis.close()
+
+if __name__ == '__main__':
+    asyncio.run(main())`;

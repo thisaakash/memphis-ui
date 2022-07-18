@@ -16,8 +16,8 @@ const CodeSnippet = (props) => {
         selectionHighlight: true,
         renderLineHighlight: 'none',
         scrollbar: {
-            verticalScrollbarSize: 3,
-            horizontalScrollbarSize: 3
+            verticalScrollbarSize: 3
+            // horizontalScrollbarSize: 3
         }
     });
 

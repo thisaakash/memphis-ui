@@ -90,8 +90,6 @@ const StationsList = () => {
             setBotImage(data.user_avatar_id || botId);
             setParseDate(parsingDate(data.creation_date));
             setFactoryDetails(data);
-            setFactoryName(data.name);
-            setFactoryDescription(data.description);
         });
 
         state.socket?.on('error', (error) => {

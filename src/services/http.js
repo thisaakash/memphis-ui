@@ -51,9 +51,18 @@ export async function httpRequest(method, endPointUrl, data = {}, headers = {}, 
             window.location.assign('/login');
         }
         if (err?.response?.data?.message !== undefined && err?.response?.status === SHOWABLE_ERROR_STATUS_CODE) {
+            message.warning({
+                key: 'memphisWarningMessage',
+                content: err?.response?.data?.message,
+                duration: 5,
+                style: { cursor: 'pointer' },
+                onClick: () => message.destroy('memphisWarningMessage')
+            });
+        }
+        if (err?.response?.data?.message !== undefined && err?.response?.status === 500) {
             message.error({
                 key: 'memphisErrorMessage',
-                content: err?.response?.data?.message,
+                content: 'We have some issues. Please contact support.',
                 duration: 5,
                 style: { cursor: 'pointer' },
                 onClick: () => message.destroy('memphisErrorMessage')
